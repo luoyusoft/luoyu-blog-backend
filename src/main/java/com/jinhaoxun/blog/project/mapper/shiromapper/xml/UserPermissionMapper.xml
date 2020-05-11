@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinhaoxun.blog.project.dao.shiromapper.UserPermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jinhaoxun.blog.project.tt.pojo.shiro.UserPermission">
+        <id column="USER_PERMISSION_ID" property="userPermissionId" />
+        <result column="TYPE" property="type" />
+        <result column="CODE" property="code" />
+        <result column="USER_ID" property="userId" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="CREATER_ID" property="createrId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        USER_PERMISSION_ID, TYPE, CODE, USER_ID, CREATE_TIME, CREATER_ID
+    </sql>
+
+    <select id="selectPermissionSet" parameterType="Long" resultType="string">
+        SELECT CONCAT(TYPE,CODE)
+        FROM USER_PERMISSION
+        WHERE USER_ID = #{userId}
+    </select>
+
+</mapper>

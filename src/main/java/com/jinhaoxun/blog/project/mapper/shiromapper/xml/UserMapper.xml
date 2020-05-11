@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinhaoxun.blog.project.dao.shiromapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jinhaoxun.blog.project.tt.pojo.shiro.User">
+        <id column="USER_ID" property="userId" />
+        <result column="EMAIL" property="email" />
+        <result column="PHONE" property="phone" />
+        <result column="BAN" property="ban" />
+        <result column="STATUS" property="status" />
+        <result column="USER_NAME" property="userName" />
+        <result column="PASSWORD" property="password" />
+        <result column="NAME" property="name" />
+        <result column="AGE" property="age" />
+        <result column="SEX" property="sex" />
+        <result column="INTEGRAL" property="integral" />
+        <result column="VERMICELLI" property="vermicelli" />
+        <result column="ARTICLE" property="article" />
+        <result column="RANKING" property="ranking" />
+        <result column="REGION" property="region" />
+        <result column="OCCUPATION" property="occupation" />
+        <result column="DYNAMIC" property="dynamic" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="UPDATE_TIME" property="updateTime" />
+        <result column="UPDATER_ID" property="updaterId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        USER_ID, EMAIL, PHONE, BAN, STATUS,USER_NAME, PASSWORD, NAME, AGE, SEX, INTEGRAL, VERMICELLI, ARTICLE, RANKING, REGION, OCCUPATION, DYNAMIC, CREATE_TIME, UPDATE_TIME, UPDATER_ID
+    </sql>
+
+    <select id="selectIdByPhone" parameterType="string" resultType="Long">
+        SELECT USER_ID
+        FROM USER
+        WHERE PHONE = #{phone}
+    </select>
+
+    <select id="selectPassword" parameterType="Long" resultType="string">
+        SELECT PASSWORD
+        FROM USER
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="selectBan" parameterType="Long" resultType="boolean">
+        SELECT BAN
+        FROM USER
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="selectStatus" parameterType="Long" resultType="boolean">
+        SELECT STATUS
+        FROM USER
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="selectName" parameterType="Long" resultType="string">
+        SELECT NAME
+        FROM USER
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <update id="updateStatus" parameterType="Long">
+        UPDATE USER
+        SET STATUS = false
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <update id="updatePassword" parameterType="Long">
+        UPDATE USER
+        SET PASSWORD = #{password}
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <update id="updateBan" parameterType="Long">
+        UPDATE USER
+        SET Ban = #{ban}
+        WHERE USER_ID = #{userId}
+    </update>
+</mapper>

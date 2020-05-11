@@ -1,0 +1,167 @@
+# http 服务端口
+custom:
+  server:
+    http:
+      port: 8080
+
+# 开启 https 支持
+server:
+  http2:
+    enabled: true
+  # https 服务端口
+  port: 8443
+  servlet:
+    # 接口统一前缀
+    context-path: /api
+  # 指定 ssl 证书
+  ssl:
+    key-store: classpath:javalsj.jks
+    key-store-password: 83e9j2By
+  # 配置 undertow 服务器
+  undertow:
+    buffer-size: 512
+    io-threads: 2
+    worker-threads: 20
+
+spring:
+  # 开启 spring aop
+  # aop:
+  # auto: true
+  # 指定 spring 缓存为 redis
+  # cache:
+  # type: redis
+  thymeleaf:
+    # 关闭 thymeleaf 缓存，开发时使用，否则没有实时画面
+    cache: false
+    # 检查模板是否存在，然后再呈现
+    check-template-location: true
+    # 启用 MVC Thymeleaf 视图分辨率
+    enabled: true
+    encoding: utf-8
+    # 指定模板编码
+    mode: HTML
+    # 在构建URL时预先查看名称的前缀
+    prefix: classpath:/templates/
+    servlet:
+      # Content-Type 值
+      content-type: text/html
+    # 构建URL时附加查看名称的后缀.
+    suffix: .html
+    # 配置子模块yml文件
+  profiles:
+    include: common,dao,service,redis,notify
+  # spirng 热部署
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+    freemarker:
+      cache: false    #页面不加载缓存，修改即时生效
+  # spirng 热部署
+  # 开启 spring aop
+  # aop:
+  # auto: true
+  # 指定 spring 缓存为 redis
+  # cache:
+  # type: redis
+  # 配置数据库
+debug: true
+log:
+  file: log
+
+
+threadPoolTaskExecutor:
+  corePoolSize: 10
+  maxPoolSize: 100
+  keepAliveTime: 10
+  queueCapacity: 200
+  threadNamePrefix: Async-Executor-
+
+
+
+spring:
+  datasource:
+    # mysql 数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://47.101.135.160:3306/apecome?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
+    username: root
+
+mybatis-plus:
+  # xml映射文件位置，衔接pom文件里面的resources配置扫描
+  mapper-locations: classpath*:/shiromapper/xml/*.xml,classpath*:/applymapper/xml/*.xml,classpath*:/quartzmapper/xml/*.xml
+  # 别名包扫描路径，通过该属性可以给包中的类注册别名
+  # type-aliases-package: com.jinhaoxun.accommon.pojo
+
+  # configuration:
+  # 开启 MybatisPlus 二级缓存，主要用来跟redis注解缓存使用
+  # cache-enabled: true
+  # 开启 MybatisPlus SQL日志打印
+  # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+
+
+spring:
+  # 开启 spring aop
+  # aop:
+  # auto: true
+  # 指定 spring 缓存为 redis
+  # cache:
+  # type: redis
+  # 配置数据库
+  redis:
+    # redis 数据库索引（默认为0）
+    database: 0
+    # redis 服务器地址
+    host: 127.0.0.1
+    # redis 服务器连接密码（默认为空）
+    password: root
+    # redis 服务器连接端口
+    port: 6379
+    # 连接超时时间（毫秒）
+    timeout: 0
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 100
+        # 连接池中的最大空闲连接
+        max-idle: 500
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        min-wait: -1ms
+
+
+
+
+rocketmq:
+  producer:
+    groupname: apecomeProducerGroup
+    maxmessagesize: 131072
+    sendmsgtimeout: 10000
+    # instanceName: 实例名
+  consumer:
+    groupname: apecomeConsumerGroup
+    topicname: apecome
+    consumethreadmin: 20
+    consumethreadmax: 64
+  namesrvaddr: 47.101.135.160:9876
+
+rabbitmq:
+  host: 47.101.135.160
+  port: 15672
+  username: admin
+  password: admin
+  publisher-confirms: true
+  publisher-returns: true
+  virtual-host: /
+
+stomprabbitmq:
+  relayhost: 47.101.135.160
+  port: 61613
+
+file:
+  upload:
+    path: /usr/local/file/
+  download:
+    path: /usr/local/file/

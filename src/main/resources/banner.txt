@@ -1,0 +1,21 @@
+${AnsiColor.BRIGHT_YELLOW}
+        *   ┏┓　　　┏┓
+        * ┏┛┻━━━┛┻┓
+        * ┃　　　　　　　┃
+        * ┃　　　━　　　┃
+        * ┃　┳┛　┗┳　┃
+        * ┃　　　　　　　┃
+        * ┃　　　┻　　　┃
+        * ┃　　　　　　　┃
+        * ┗━┓　　　┏━┛
+        * 　　┃　　　┃神兽保佑
+        * 　　┃　　　┃代码无BUG！
+        * 　　┃　　　┗━━━┓
+        * 　　┃　　　　　　　┣┓
+        * 　　┃　　　　　　　┏┛
+        * 　　┗┓┓┏━┳┓┏┛
+        * 　　　┃┫┫　┃┫┫
+        * 　　　┗┻┛　┗┻┛
+${AnsiColor.BRIGHT_BLUE}
+Project (version:${application.version})
+Spring-Boot ${spring-boot.version}

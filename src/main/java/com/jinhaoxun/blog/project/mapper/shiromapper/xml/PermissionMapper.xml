@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinhaoxun.blog.project.dao.shiromapper.PermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jinhaoxun.blog.project.tt.pojo.shiro.Permission">
+        <id column="PERMISSION_ID" property="permissionId" />
+        <result column="NAME" property="name" />
+        <result column="TYPE" property="type" />
+        <result column="CODE" property="code" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="CREATER_ID" property="createrId" />
+        <result column="UPDATE_TIME" property="updateTime" />
+        <result column="UPDATER_ID" property="updaterId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        PERMISSION_ID, NAME, TYPE, CODE, CREATE_TIME, CREATER_ID, UPDATE_TIME, UPDATER_ID
+    </sql>
+
+</mapper>
