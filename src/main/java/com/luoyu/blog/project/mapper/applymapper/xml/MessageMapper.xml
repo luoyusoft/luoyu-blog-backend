@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luoyu.blog.project.mapper.applymapper.MessageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.luoyu.blog.project.pojo.apply.Message">
+        <id column="MESSAGE_ID" property="messageId" />
+        <result column="CONTENT" property="content" />
+        <result column="USER_ID" property="userId" />
+        <result column="CREATE_TIME" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        MESSAGE_ID, CONTENT, USER_ID, CREATE_TIME
+    </sql>
+
+</mapper>

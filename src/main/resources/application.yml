@@ -1,8 +1,20 @@
+debug: true
+
+log:
+  file: log
+
 # http 服务端口
 custom:
   server:
     http:
-      port: 8080
+      port: 8085
+
+knife4j:
+  production: false
+  basic:
+    enable: true
+    username: root
+    password: root
 
 # 开启 https 支持
 server:
@@ -25,99 +37,32 @@ server:
 
 spring:
   # 开启 spring aop
-  # aop:
-  # auto: true
+  aop:
+    auto: true
+
   # 指定 spring 缓存为 redis
-  # cache:
-  # type: redis
-  thymeleaf:
-    # 关闭 thymeleaf 缓存，开发时使用，否则没有实时画面
-    cache: false
-    # 检查模板是否存在，然后再呈现
-    check-template-location: true
-    # 启用 MVC Thymeleaf 视图分辨率
-    enabled: true
-    encoding: utf-8
-    # 指定模板编码
-    mode: HTML
-    # 在构建URL时预先查看名称的前缀
-    prefix: classpath:/templates/
-    servlet:
-      # Content-Type 值
-      content-type: text/html
-    # 构建URL时附加查看名称的后缀.
-    suffix: .html
-    # 配置子模块yml文件
-  profiles:
-    include: common,dao,service,redis,notify
+  cache:
+    type: redis
+#  profiles:
+#    include: common,dao,service,redis,notify
+
   # spirng 热部署
   devtools:
     restart:
       enabled: true  #设置开启热部署
     freemarker:
       cache: false    #页面不加载缓存，修改即时生效
-  # spirng 热部署
-  # 开启 spring aop
-  # aop:
-  # auto: true
-  # 指定 spring 缓存为 redis
-  # cache:
-  # type: redis
-  # 配置数据库
-debug: true
-log:
-  file: log
 
-
-threadPoolTaskExecutor:
-  corePoolSize: 10
-  maxPoolSize: 100
-  keepAliveTime: 10
-  queueCapacity: 200
-  threadNamePrefix: Async-Executor-
-
-
-
-spring:
-  datasource:
-    # mysql 数据库驱动
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    password: root
-    url: jdbc:mysql://47.101.135.160:3306/apecome?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
-    username: root
-
-mybatis-plus:
-  # xml映射文件位置，衔接pom文件里面的resources配置扫描
-  mapper-locations: classpath*:/shiromapper/xml/*.xml,classpath*:/applymapper/xml/*.xml,classpath*:/quartzmapper/xml/*.xml
-  # 别名包扫描路径，通过该属性可以给包中的类注册别名
-  # type-aliases-package: com.jinhaoxun.accommon.pojo
-
-  # configuration:
-  # 开启 MybatisPlus 二级缓存，主要用来跟redis注解缓存使用
-  # cache-enabled: true
-  # 开启 MybatisPlus SQL日志打印
-  # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-
-
-
-spring:
-  # 开启 spring aop
-  # aop:
-  # auto: true
-  # 指定 spring 缓存为 redis
-  # cache:
-  # type: redis
   # 配置数据库
   redis:
     # redis 数据库索引（默认为0）
     database: 0
     # redis 服务器地址
-    host: 127.0.0.1
+    host: 47.101.135.160
     # redis 服务器连接密码（默认为空）
     password: root
     # redis 服务器连接端口
-    port: 6379
+    port: 6378
     # 连接超时时间（毫秒）
     timeout: 0
     jedis:
@@ -131,8 +76,46 @@ spring:
         # 连接池最大阻塞等待时间（使用负值表示没有限制）
         min-wait: -1ms
 
+  datasource:
+    # mysql 数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.101.135.160:3306/luoyu_blog?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
+    password: root
+    username: root
+    hikari:
+      connection-test-query: SELECT 1
+      ## 最小空闲连接数量
+      minimum-idle: 5
+      ## 连接池最大连接数，默认是10
+      maximum-pool-size: 15
+      ## 连接池名称
+      pool-name: MyHikariCPOfMaster
+      ## 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 1800000
+      ## 数据库连接超时时间,默认30秒，即30000
+      connection-timeout: 20000
+      ## 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      ## 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+      auto-commit: true
 
+threadPoolTaskExecutor:
+  corePoolSize: 10
+  maxPoolSize: 100
+  keepAliveTime: 10
+  queueCapacity: 200
+  threadNamePrefix: Async-Executor-
 
+mybatis-plus:
+  # xml映射文件位置，衔接pom文件里面的resources配置扫描
+  mapper-locations: classpath*:com/luoyu/blog/project/mapper/applymapper/xml/*.xml,classpath*:com/luoyu/blog/project/mapper/shiromapper/xml/*.xml,classpath*:com/luoyu/blog/project/mapper/quartzmapper/xml/*.xml
+  # 别名包扫描路径，通过该属性可以给包中的类注册别名
+  type-aliases-package: com.luoyu.blog.project.pojo.**
+  configuration:
+    # 开启 MybatisPlus 二级缓存，主要用来跟redis注解缓存使用
+    cache-enabled: true
+    # 开启 MybatisPlus SQL日志打印
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 rocketmq:
   producer:
