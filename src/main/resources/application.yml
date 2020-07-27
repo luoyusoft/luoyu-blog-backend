@@ -1,150 +1,63 @@
-debug: true
-
-log:
-  file: log
-
-# http 服务端口
-custom:
-  server:
-    http:
-      port: 8085
-
-knife4j:
-  production: false
-  basic:
-    enable: true
-    username: root
-    password: root
-
-# 开启 https 支持
+﻿# Tomcat
 server:
-  http2:
-    enabled: true
-  # https 服务端口
-  port: 8443
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  #端口配置
+  port: 8080
+  #连接超时时间
+  connection-timeout: 5000ms
   servlet:
-    # 接口统一前缀
-    context-path: /api
-  # 指定 ssl 证书
-  ssl:
-    key-store: classpath:javalsj.jks
-    key-store-password: 83e9j2By
-  # 配置 undertow 服务器
-  undertow:
-    buffer-size: 512
-    io-threads: 2
-    worker-threads: 20
+    #映射项目路径
+    context-path: /dbblog
+
 
 spring:
-  # 开启 spring aop
-  aop:
-    auto: true
+  profiles:
+    # 环境 开发dev，测试test，生产prod
+    active: dev
+  jackson:
+    serialization:
+      # jackson返回时间戳
+      write-dates-as-timestamps : true
+  servlet:
+    multipart:
+      #文件上传大小配置
+      max-file-size: 100MB
+      max-request-size: 100MB
+  mvc:
+    #restFul风格：当找不到页面时，正常抛出错误，不跳转页面
+    throw-exception-if-no-handler-found: true
+    #仅映射static资源文件
+    static-path-pattern: /static/**
+  resources:
+    #restFul风格: 不要为资源文件建立映射
+    add-mappings: false
+  rabbitmq:
+    listener:
+      simple:
+        acknowledge-mode: manual
 
-  # 指定 spring 缓存为 redis
-  cache:
-    type: redis
-#  profiles:
-#    include: common,dao,service,redis,notify
-
-  # spirng 热部署
-  devtools:
-    restart:
-      enabled: true  #设置开启热部署
-    freemarker:
-      cache: false    #页面不加载缓存，修改即时生效
-
-  # 配置数据库
-  redis:
-    # redis 数据库索引（默认为0）
-    database: 0
-    # redis 服务器地址
-    host: 47.101.135.160
-    # redis 服务器连接密码（默认为空）
-    password: root
-    # redis 服务器连接端口
-    port: 6378
-    # 连接超时时间（毫秒）
-    timeout: 0
-    jedis:
-      pool:
-        # 连接池最大连接数（使用负值表示没有限制）
-        max-active: 100
-        # 连接池中的最大空闲连接
-        max-idle: 500
-        # 连接池中的最小空闲连接
-        min-idle: 0
-        # 连接池最大阻塞等待时间（使用负值表示没有限制）
-        min-wait: -1ms
-
-  datasource:
-    # mysql 数据库驱动
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.101.135.160:3306/luoyu_blog?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
-    password: root
-    username: root
-    hikari:
-      connection-test-query: SELECT 1
-      ## 最小空闲连接数量
-      minimum-idle: 5
-      ## 连接池最大连接数，默认是10
-      maximum-pool-size: 15
-      ## 连接池名称
-      pool-name: MyHikariCPOfMaster
-      ## 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
-      max-lifetime: 1800000
-      ## 数据库连接超时时间,默认30秒，即30000
-      connection-timeout: 20000
-      ## 空闲连接存活最大时间，默认600000（10分钟）
-      idle-timeout: 180000
-      ## 此属性控制从池返回的连接的默认自动提交行为,默认值：true
-      auto-commit: true
-
-threadPoolTaskExecutor:
-  corePoolSize: 10
-  maxPoolSize: 100
-  keepAliveTime: 10
-  queueCapacity: 200
-  threadNamePrefix: Async-Executor-
-
+#mybatis
 mybatis-plus:
-  # xml映射文件位置，衔接pom文件里面的resources配置扫描
-  mapper-locations: classpath*:com/luoyu/blog/project/mapper/applymapper/xml/*.xml,classpath*:com/luoyu/blog/project/mapper/shiromapper/xml/*.xml,classpath*:com/luoyu/blog/project/mapper/quartzmapper/xml/*.xml
-  # 别名包扫描路径，通过该属性可以给包中的类注册别名
-  type-aliases-package: com.luoyu.blog.project.pojo.**
+  #mapper文件
+  mapper-locations: classpath:mapper/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: cn.dblearn.blog.entity.*
+  global-config:
+    # 数据库相关配置
+    db-config:
+      #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: auto
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: not_empty
+
+  #mybatis原生配置
   configuration:
-    # 开启 MybatisPlus 二级缓存，主要用来跟redis注解缓存使用
-    cache-enabled: true
-    # 开启 MybatisPlus SQL日志打印
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #驼峰下划线转换
+    map-underscore-to-camel-case: true
+    #不开启二级缓存
+    cache-enabled: false
 
-rocketmq:
-  producer:
-    groupname: apecomeProducerGroup
-    maxmessagesize: 131072
-    sendmsgtimeout: 10000
-    # instanceName: 实例名
-  consumer:
-    groupname: apecomeConsumerGroup
-    topicname: apecome
-    consumethreadmin: 20
-    consumethreadmax: 64
-  namesrvaddr: 47.101.135.160:9876
 
-rabbitmq:
-  host: 47.101.135.160
-  port: 15672
-  username: admin
-  password: admin
-  publisher-confirms: true
-  publisher-returns: true
-  virtual-host: /
-
-stomprabbitmq:
-  relayhost: 47.101.135.160
-  port: 61613
-
-file:
-  upload:
-    path: /usr/local/file/
-  download:
-    path: /usr/local/file/
