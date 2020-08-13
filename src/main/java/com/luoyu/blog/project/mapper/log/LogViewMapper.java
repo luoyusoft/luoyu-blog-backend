@@ -1,7 +1,7 @@
 package com.luoyu.blog.project.mapper.log;
 
-import cn.dblearn.blog.entity.log.LogView;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.luoyu.blog.common.entity.log.LogView;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

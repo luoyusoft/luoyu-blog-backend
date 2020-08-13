@@ -59,7 +59,7 @@ public class CodeGeneratorUtils {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("bobbi");;
+        gc.setAuthor("luoyu");;
         gc.setBaseResultMap(true);
         gc.setBaseColumnList(true);
         gc.setOpen(false);
@@ -70,15 +70,15 @@ public class CodeGeneratorUtils {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/dbblog?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false");
+        dsc.setUrl("jdbc:mysql://47.101.135.160:3306/luoyu_blog?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("123456");
+        dsc.setPassword("root");
         mpg.setDataSource(dsc);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("cn.dblearn.blog.manage");
+        pc.setParent("com.luoyu.blog.project");
         pc.setModuleName(moduleName);
         mpg.setPackageInfo(pc);
 
@@ -90,7 +90,7 @@ public class CodeGeneratorUtils {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("entityName", finalEntityName);
                 map.put("urlPrefix","/admin");
-                map.put("basePath","cn.dblearn.blog");
+                map.put("basePath","com.luoyu.blog");
                 this.setMap(map);
             }
         };
@@ -152,7 +152,7 @@ public class CodeGeneratorUtils {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         strategy.setInclude(tableName);
-        strategy.setSuperControllerClass("cn.dblearn.blog.manage.sys.controller.AbstractController");
+        strategy.setSuperControllerClass("com.luoyu.blog.common.base.AbstractController");
 
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());

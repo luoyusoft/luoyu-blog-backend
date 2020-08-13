@@ -9,5 +9,5 @@ package com.luoyu.blog.common.constants;
  * @description
  */
 public class RabbitMqConstants {
-    public static final String REFRESH_ES_INDEX_QUEUE ="dbblog-queue";
+    public static final String REFRESH_ES_INDEX_QUEUE ="luoyu-blog-queue";
 }

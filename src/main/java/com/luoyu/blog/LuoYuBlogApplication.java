@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Slf4j
-//@EnableAsync
+@EnableAsync
 //@MapperScan({"com.luoyu.blog.project.mapper.applymapper","com.luoyu.blog.project.mapper.shiromapper","com.luoyu.blog.project.mapper.quartzmapper"})
 //@EnableScheduling
 //@ServletComponentScan

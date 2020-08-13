@@ -1,6 +1,6 @@
 package com.luoyu.blog.common.entity.book;
 
-import cn.dblearn.blog.common.base.BaseEntity;
+import com.luoyu.blog.common.base.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

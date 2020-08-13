@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.dblearn.blog.manage.operation.mapper.RecommendMapper">
+<mapper namespace="com.luoyu.blog.project.mapper.operation.RecommendMapper">
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, link_id, type, order_num, title, top
     </sql>
 
-    <select id="listSelect" resultType="cn.dblearn.blog.entity.operation.vo.RecommendVO">
+    <select id="listSelect" resultType="com.luoyu.blog.common.entity.operation.vo.RecommendVO">
         select a.id as linkId, a.title, 0 as type
         from article a
         union all
@@ -15,11 +15,11 @@
         from book_note b
     </select>
 
-    <select id="listRecommendVo" resultType="cn.dblearn.blog.entity.operation.vo.RecommendVO">
+    <select id="listRecommendVo" resultType="com.luoyu.blog.common.entity.operation.vo.RecommendVO">
         select <include refid="Base_Column_List"/> from recommend order by top desc,id desc  limit 5
     </select>
 
-    <select id="listHotRead" resultType="cn.dblearn.blog.entity.operation.vo.RecommendVO">
+    <select id="listHotRead" resultType="com.luoyu.blog.common.entity.operation.vo.RecommendVO">
       select *  from (
                select a.id as linkId,a.title,0 as type,a.read_num from article a
                union all

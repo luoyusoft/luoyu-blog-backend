@@ -1,7 +1,7 @@
 package com.luoyu.blog.project.mapper.operation;
 
-import cn.dblearn.blog.entity.operation.Link;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.luoyu.blog.common.entity.operation.Link;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

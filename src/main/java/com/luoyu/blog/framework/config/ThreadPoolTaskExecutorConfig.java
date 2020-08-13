@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @version 1.0
- * @author jinhaoxun
+ * @author luoyu
  * @date 2019-08-09
  * @description 线程池配置
  */
@@ -49,7 +49,7 @@ public class ThreadPoolTaskExecutorConfig {
     private String threadNamePrefix;
 
     /**
-     * @author  jinhaoxun
+     * @author  luoyu
      * @description 线程池配置，bean的名称，默认为首字母小写的方法名taskExecutor
      * @return ThreadPoolTaskExecutor
      */

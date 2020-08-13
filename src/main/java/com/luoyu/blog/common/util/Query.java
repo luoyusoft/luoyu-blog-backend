@@ -1,7 +1,7 @@
 package com.luoyu.blog.common.util;
 
-import cn.dblearn.blog.common.xss.SQLFilter;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.luoyu.blog.common.xss.SQLFilter;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 

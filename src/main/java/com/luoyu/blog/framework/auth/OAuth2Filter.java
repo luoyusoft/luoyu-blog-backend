@@ -1,6 +1,6 @@
 package com.luoyu.blog.framework.auth;
 
-import com.luoyu.blog.common.Result;
+import com.luoyu.blog.common.base.Result;
 import com.luoyu.blog.common.exception.enums.ErrorEnum;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.JsonUtils;

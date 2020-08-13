@@ -1,7 +1,7 @@
 package com.luoyu.blog.common.exception;
 
-import cn.dblearn.blog.common.Result;
-import cn.dblearn.blog.common.exception.enums.ErrorEnum;
+import com.luoyu.blog.common.base.Result;
+import com.luoyu.blog.common.exception.enums.ErrorEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -27,34 +27,34 @@ public class MyExceptionHandler {
      * @return
      */
     @ExceptionHandler(MyException.class)
-    public cn.dblearn.blog.common.Result handleMyException(MyException e){
-        cn.dblearn.blog.common.Result result=new cn.dblearn.blog.common.Result();
+    public Result handleMyException(MyException e){
+        Result result=new Result();
         result.put("code",e.getCode());
         result.put("msg",e.getMsg());
         return result;
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public cn.dblearn.blog.common.Result handlerNoFoundException(Exception e){
+    public Result handlerNoFoundException(Exception e){
         log.error(e.getMessage(),e);
-        return cn.dblearn.blog.common.Result.exception(ErrorEnum.PATH_NOT_FOUND);
+        return Result.exception(ErrorEnum.PATH_NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    public cn.dblearn.blog.common.Result handleDuplicateKeyException(DuplicateKeyException e){
+    public Result handleDuplicateKeyException(DuplicateKeyException e){
         log.error(e.getMessage(),e);
-        return cn.dblearn.blog.common.Result.exception(ErrorEnum.DUPLICATE_KEY);
+        return Result.exception(ErrorEnum.DUPLICATE_KEY);
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public cn.dblearn.blog.common.Result handleAuthorizationException(AuthorizationException e){
+    public Result handleAuthorizationException(AuthorizationException e){
         log.error(e.getMessage(),e);
-        return cn.dblearn.blog.common.Result.exception(ErrorEnum.NO_AUTH);
+        return Result.exception(ErrorEnum.NO_AUTH);
     }
 
     @ExceptionHandler(Exception.class)
-    public cn.dblearn.blog.common.Result handleException(Exception e){
+    public Result handleException(Exception e){
         log.error(e.getMessage(),e);
-        return cn.dblearn.blog.common.Result.exception();
+        return Result.exception();
     }
 }

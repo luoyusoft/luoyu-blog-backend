@@ -5,12 +5,12 @@ server:
     max-threads: 1000
     min-spare-threads: 30
   #端口配置
-  port: 8080
+  port: 9999
   #连接超时时间
   connection-timeout: 5000ms
   servlet:
     #映射项目路径
-    context-path: /dbblog
+    context-path: /luoyublog
 
 
 spring:
@@ -44,7 +44,7 @@ mybatis-plus:
   #mapper文件
   mapper-locations: classpath:mapper/**/*.xml
   #实体扫描，多个package用逗号或者分号分隔
-  type-aliases-package: cn.dblearn.blog.entity.*
+  type-aliases-package: com.luoyu.blog.common.entity.*
   global-config:
     # 数据库相关配置
     db-config:

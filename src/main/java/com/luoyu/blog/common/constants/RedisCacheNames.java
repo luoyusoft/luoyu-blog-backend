@@ -10,7 +10,7 @@ package com.luoyu.blog.common.constants;
  */
 public class RedisCacheNames {
 
-    public final static String PROFIX = "DBBLOG:";
+    public final static String PROFIX = "LUOYUBLOG:";
 
     /**
      * 文章缓存空间名称

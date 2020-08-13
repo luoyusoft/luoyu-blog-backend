@@ -1,7 +1,7 @@
 package com.luoyu.blog.common.entity.article.dto;
 
-import cn.dblearn.blog.entity.article.Article;
-import cn.dblearn.blog.entity.operation.Tag;
+import com.luoyu.blog.common.entity.article.Article;
+import com.luoyu.blog.common.entity.operation.Tag;
 import lombok.Data;
 
 import java.util.List;

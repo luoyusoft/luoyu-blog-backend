@@ -3,7 +3,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
     druid:
-      url: jdbc:mysql://172.16.31.131:3306/luoyu_blog?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT
+      url: jdbc:mysql://47.101.135.160:3306/luoyu_blog?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT
       username: root
       password: root
       initial-size: 10
@@ -33,7 +33,7 @@ spring:
             multi-statement-allow: true
   # redis 配置
   redis:
-    host: 171.16.31.131
+    host: 47.101.135.160
     port: 6379
     timeout: 6s #连接池超时时长
     password: root
@@ -47,14 +47,14 @@ spring:
   # elasticsearch配置
   data:
     elasticsearch:
-      cluster-name: docker-cluster
-      cluster-nodes: 127.0.0.1:9300
+      cluster-name: elasticsearch-cluster
+      cluster-nodes: 47.101.135.160:9300
   # rabbitMQ配置
   rabbitmq:
-    host: 127.0.0.1
+    host: 47.94.19.49
     port: 5672
-    username: guest
-    password: guest
+    username: admin
+    password: admin
 #mybatis-plus
 mybatis-plus:
   global-config:
@@ -62,12 +62,20 @@ mybatis-plus:
     refresh: true
 oss:
   qiniu:
-    domain: http://oss.dblearn.cn
-    prefix: dbblog
-    accessKey: ENC(pVGOa/io1AnqiEKkDTVORO3W8nzn+vbOl53TeRBIGgCuWvqUEzOAdIBLmdpoYVmsDHESGVc2QzY=)
-    secretKey: ENC(UXM3TEuaIuLrPdKuDASHoZExQyOrgGl7PqV/iB0EbHOFhnUSF3bMol8D2qh+QlthccS5QD0fHbM=)
-    bucketName: test
+    domain: http://oss.luoyublog.com
+    prefix: luoyublog
+    accessKey: 5-AiUrfCk34TDPXZLWIlQzKj8bE8X5Z_jUuCcDRI
+    secretKey: tKeAffD383BZX1HPLEMWx9Vhi7B8HaK2Wj-5MRG4
+    bucketName: luoyublog
 
 jasypt:
   encryptor:
-    password: dbblog-jasypt
+    password: luoyu-blog-jasypt
+
+# 配置线程池
+threadPoolTaskExecutor:
+  corePoolSize: 10 # 核心线程数（默认线程数）
+  maxPoolSize: 100 # 最大线程数
+  keepAliveTime: 10 # 允许线程空闲时间（单位：默认为秒）
+  queueCapacity: 200 # 缓冲队列数
+  threadNamePrefix: Custom-Executor- # 线程名统一前缀

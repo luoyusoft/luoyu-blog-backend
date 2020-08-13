@@ -1,7 +1,7 @@
 package com.luoyu.blog.project.mapper.sys;
 
-import cn.dblearn.blog.entity.sys.SysParam;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.luoyu.blog.common.entity.sys.SysParam;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

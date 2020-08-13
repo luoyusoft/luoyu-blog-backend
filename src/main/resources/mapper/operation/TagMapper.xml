@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.dblearn.blog.mapper.operation.TagMapper">
+<mapper namespace="com.luoyu.blog.project.mapper.operation.TagMapper">
 
     <delete id="deleteTagLink">
         delete from tag_link atl
         where atl.link_id = #{linkId} and atl.type = #{type}
     </delete>
 
-    <select id="listByLinkId" resultType="cn.dblearn.blog.entity.operation.Tag">
+    <select id="listByLinkId" resultType="com.luoyu.blog.common.entity.operation.Tag">
         select bt.* from tag bt left join tag_link bat on bt.id=bat.tag_id
         <where>
             <if test="linkId!=null">
@@ -19,7 +19,7 @@
         </where>
     </select>
 
-    <select id="listTagVo" resultType="cn.dblearn.blog.entity.operation.vo.TagVO">
+    <select id="listTagVo" resultType="com.luoyu.blog.common.entity.operation.vo.TagVO">
         select t.name ,sum(t.num) as linkNum from (
           select distinct t.type, t.name, (select count(*) from tag_link tl2 where tl2.tag_id = t.id) as num
           from tag t

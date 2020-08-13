@@ -1,7 +1,7 @@
 package com.luoyu.blog.common.entity.book.dto;
 
-import cn.dblearn.blog.entity.book.Book;
-import cn.dblearn.blog.entity.operation.Tag;
+import com.luoyu.blog.common.entity.book.Book;
+import com.luoyu.blog.common.entity.operation.Tag;
 import lombok.Data;
 
 import java.util.List;

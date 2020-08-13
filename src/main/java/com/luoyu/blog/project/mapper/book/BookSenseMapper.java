@@ -1,7 +1,7 @@
 package com.luoyu.blog.project.mapper.book;
 
-import cn.dblearn.blog.entity.book.BookSense;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.luoyu.blog.common.entity.book.BookSense;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

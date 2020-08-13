@@ -1,7 +1,7 @@
 package com.luoyu.blog.project.mapper.oss;
 
-import cn.dblearn.blog.entity.oss.OssResource;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.luoyu.blog.common.entity.oss.OssResource;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

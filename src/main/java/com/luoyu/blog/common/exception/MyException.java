@@ -1,6 +1,6 @@
 package com.luoyu.blog.common.exception;
 
-import cn.dblearn.blog.common.exception.enums.ErrorEnum;
+import com.luoyu.blog.common.exception.enums.ErrorEnum;
 import lombok.Data;
 
 /**

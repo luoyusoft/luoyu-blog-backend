@@ -2,7 +2,7 @@ package com.luoyu.blog.framework.auth;
 
 import com.luoyu.blog.common.entity.sys.SysUser;
 import com.luoyu.blog.common.entity.sys.SysUserToken;
-import com.luoyu.blog.project.service.ShiroService;
+import com.luoyu.blog.project.service.manage.sys.ShiroService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -30,7 +30,7 @@ public class OAuth2Realm extends AuthorizingRealm {
 
     @Override
     public boolean supports(AuthenticationToken token) {
-        return token instanceof cn.dblearn.blog.auth.OAuth2Token;
+        return token instanceof com.luoyu.blog.framework.auth.OAuth2Token;
     }
 
     /**

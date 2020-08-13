@@ -1,7 +1,7 @@
 package com.luoyu.blog.common.xss;
 
-import cn.dblearn.blog.common.exception.MyException;
-import cn.dblearn.blog.common.exception.enums.ErrorEnum;
+import com.luoyu.blog.common.exception.MyException;
+import com.luoyu.blog.common.exception.enums.ErrorEnum;
 import org.springframework.util.StringUtils;
 
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.dblearn.blog.mapper.book.BookNoteMapper">
+<mapper namespace="com.luoyu.blog.project.mapper.book.BookNoteMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="cn.dblearn.blog.entity.book.BookNote">
+    <resultMap id="BaseResultMap" type="com.luoyu.blog.common.entity.book.BookNote">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="description" property="description" />
@@ -24,9 +24,9 @@
         <result column="top" property="top" />
     </resultMap>
 
-    <resultMap id="WithSubList" type="cn.dblearn.blog.entity.book.vo.BookNoteVO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id,type=type}" select="cn.dblearn.blog.mapper.operation.TagMapper.listByLinkId"/>
-        <association property="book" column="{id=book_id}" select="cn.dblearn.blog.mapper.book.BookMapper.selectById"/>
+    <resultMap id="WithSubList" type="com.luoyu.blog.common.entity.book.vo.BookNoteVO" extends="BaseResultMap">
+        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blog.project.mapper.operation.TagMapper.listByLinkId"/>
+        <association property="book" column="{id=book_id}" select="com.luoyu.blog.project.mapper.book.BookMapper.selectById"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -42,7 +42,7 @@
        id,title,description,author,read_num,like_num,cover,create_time,top,publish,recommend,category_id
     </sql>
 
-    <select id="listBookNoteVo" resultType="cn.dblearn.blog.entity.book.vo.BookNoteVO">
+    <select id="listBookNoteVo" resultType="com.luoyu.blog.common.entity.book.vo.BookNoteVO">
         select <include refid="manageBookNoteColumn"/> from book_note
         <where>
             <if test="params.title!=null and params.title !=''">
@@ -78,11 +78,11 @@
         update book_note set read_num = read_num + 1 where id = #{id}
     </update>
 
-    <select id="getSimpleBookNoteVo" resultType="cn.dblearn.blog.entity.book.vo.BookNoteVO">
+    <select id="getSimpleBookNoteVo" resultType="com.luoyu.blog.common.entity.book.vo.BookNoteVO">
         select <include refid="homeBookNoteColumn"/> from book_note where id = #{id}
     </select>
 
-    <select id="listSimpleBookNote" resultType="cn.dblearn.blog.entity.book.BookNote">
+    <select id="listSimpleBookNote" resultType="com.luoyu.blog.common.entity.book.BookNote">
         select <include refid="homeBookNoteColumn"/> from book_note where book_id = #{bookId}
     </select>
 

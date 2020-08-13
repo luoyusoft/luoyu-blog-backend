@@ -1,6 +1,6 @@
 package com.luoyu.blog.common.validator;
 
-import cn.dblearn.blog.common.exception.MyException;
+import com.luoyu.blog.common.exception.MyException;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.ConstraintViolation;

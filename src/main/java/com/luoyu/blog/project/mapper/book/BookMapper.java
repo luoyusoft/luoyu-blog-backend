@@ -1,9 +1,9 @@
 package com.luoyu.blog.project.mapper.book;
 
-import cn.dblearn.blog.entity.book.Book;
-import cn.dblearn.blog.entity.book.vo.BookVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.luoyu.blog.common.entity.book.Book;
+import com.luoyu.blog.common.entity.book.vo.BookVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

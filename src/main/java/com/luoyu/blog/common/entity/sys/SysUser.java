@@ -1,10 +1,10 @@
 package com.luoyu.blog.common.entity.sys;
 
-import cn.dblearn.blog.common.validator.group.AddGroup;
-import cn.dblearn.blog.common.validator.group.UpdateGroup;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.luoyu.blog.common.validator.group.AddGroup;
+import com.luoyu.blog.common.validator.group.UpdateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

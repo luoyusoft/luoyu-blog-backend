@@ -1,6 +1,6 @@
 package com.luoyu.blog.common.entity.operation.vo;
 
-import cn.dblearn.blog.entity.operation.Tag;
+import com.luoyu.blog.common.entity.operation.Tag;
 import lombok.Data;
 
 /**

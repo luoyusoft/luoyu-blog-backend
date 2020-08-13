@@ -1,8 +1,8 @@
 package com.luoyu.blog.project.mapper.operation;
 
-import cn.dblearn.blog.entity.operation.Tag;
-import cn.dblearn.blog.entity.operation.vo.TagVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.luoyu.blog.common.entity.operation.Tag;
+import com.luoyu.blog.common.entity.operation.vo.TagVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
