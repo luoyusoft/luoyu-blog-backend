@@ -79,3 +79,16 @@ threadPoolTaskExecutor:
   keepAliveTime: 10 # 允许线程空闲时间（单位：默认为秒）
   queueCapacity: 200 # 缓冲队列数
   threadNamePrefix: Custom-Executor- # 线程名统一前缀
+
+# 安全停机配置
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /monitor
+  server:
+    port: 9998
