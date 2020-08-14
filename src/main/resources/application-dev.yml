@@ -51,7 +51,7 @@ spring:
       cluster-nodes: 47.101.135.160:9300
   # rabbitMQ配置
   rabbitmq:
-    host: 47.94.19.49
+    host: 121.36.44.234
     port: 5672
     username: admin
     password: admin
