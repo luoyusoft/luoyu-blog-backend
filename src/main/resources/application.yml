@@ -1,16 +1,16 @@
 ﻿# Tomcat
-server:
-  tomcat:
-    uri-encoding: UTF-8
-    max-threads: 1000
-    min-spare-threads: 30
-  #端口配置
-  port: 9999
-  #连接超时时间
-  connection-timeout: 5000ms
-  servlet:
-    #映射项目路径
-    context-path: /luoyublog
+#server:
+#  tomcat:
+#    uri-encoding: UTF-8
+#    max-threads: 1000
+#    min-spare-threads: 30
+#  #端口配置
+#  port: 9999
+#  #连接超时时间
+#  connection-timeout: 5000ms
+#  servlet:
+#    #映射项目路径
+#    context-path: /luoyublog
 
 
 spring:
