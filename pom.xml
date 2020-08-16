@@ -14,7 +14,7 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>luoyu-blog</name>
+    <name>luoyublog-backend</name>
     <description>LuoYu Blog</description>
 
     <properties>

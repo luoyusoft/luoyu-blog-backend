@@ -65,7 +65,7 @@ mybatis-plus:
     refresh: true
 oss:
   qiniu:
-    domain: http://oss.luoyublog.com
+    domain: https://oss.luoyublog.com
     prefix: luoyublog
     accessKey: 5-AiUrfCk34TDPXZLWIlQzKj8bE8X5Z_jUuCcDRI
     secretKey: tKeAffD383BZX1HPLEMWx9Vhi7B8HaK2Wj-5MRG4
