@@ -15,7 +15,7 @@ import java.util.Optional;
  * 读后感 服务实现类
  * </p>
  *
- * @author bobbi
+ * @author luoyu
  * @since 2019-02-13
  */
 @Service
@@ -31,8 +31,8 @@ public class BookSenseServiceImpl extends ServiceImpl<BookSenseMapper, BookSense
      */
     @Override
     public BookSense getBookSense(Integer bookId) {
-         BookSense readSense = this.baseMapper.selectOne(new QueryWrapper<BookSense>().lambda()
-                .eq(bookId!=null, BookSense::getBookId,bookId));
+        BookSense readSense = this.baseMapper.selectOne(new QueryWrapper<BookSense>().lambda()
+                .eq(bookId != null, BookSense::getBookId, bookId));
         return Optional.ofNullable(readSense)
                 .orElse(null);
     }

@@ -3,13 +3,18 @@ package com.luoyu.blog.project.service.manage.article.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.luoyu.blog.common.constants.GitalkConstants;
+import com.luoyu.blog.common.constants.RabbitMqConstants;
 import com.luoyu.blog.common.entity.article.Article;
 import com.luoyu.blog.common.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.common.entity.article.vo.ArticleVO;
+import com.luoyu.blog.common.entity.gitalk.InitGitalkRequest;
 import com.luoyu.blog.common.entity.operation.Category;
 import com.luoyu.blog.common.enums.ModuleEnum;
+import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
+import com.luoyu.blog.common.util.RabbitMqUtils;
 import com.luoyu.blog.project.service.manage.article.ArticleService;
 import com.luoyu.blog.project.service.manage.operation.CategoryService;
 import com.luoyu.blog.project.service.manage.operation.TagService;
@@ -19,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +46,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private CategoryService categoryService;
+
+    @Resource
+    private RabbitMqUtils rabbitMqUtils;
 
     /**
      * 分页查询博文列表
@@ -77,6 +86,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public void saveArticle(ArticleDTO article) {
         baseMapper.insert(article);
         tagService.saveTagAndNew(article.getTagList(),article.getId(),ModuleEnum.ARTICLE.getValue());
+        InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
+        initGitalkRequest.setId(article.getId());
+        initGitalkRequest.setTitle(article.getTitle());
+        initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
+        rabbitMqUtils.send(RabbitMqConstants.INIT_LUOYUBLOG_GITALK_QUEUE,JsonUtils.toJson(initGitalkRequest));
     }
 
     /**

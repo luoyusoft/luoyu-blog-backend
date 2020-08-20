@@ -21,7 +21,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value="BlogArticle对象", description="文章")
-@Document(indexName = "dbblog",type = "article")
+@Document(indexName = "luoyublog",type = "article")
 public class Article extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

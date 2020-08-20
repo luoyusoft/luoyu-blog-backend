@@ -25,9 +25,8 @@ import java.util.Set;
 /**
  * ArticleAdminController
  *
- * @author bobbi
+ * @author luoyu
  * @date 2018/11/20 20:25
- * @email 571002217@qq.com
  * @description
  */
 @RestController
@@ -61,7 +60,7 @@ public class ArticleController {
     @PostMapping("/save")
     @RequiresPermissions("article:save")
     @CacheEvict(allEntries = true)
-    @RefreshEsMqSender(sender = "dbblog-manage-saveArticle")
+    @RefreshEsMqSender(sender = "luoyublog-manage-saveArticle")
     public Result saveArticle(@RequestBody ArticleDTO article){
         ValidatorUtils.validateEntity(article);
         articleService.saveArticle(article);
@@ -71,7 +70,7 @@ public class ArticleController {
     @PutMapping("/update")
     @RequiresPermissions("article:update")
     @CacheEvict(allEntries = true)
-    @RefreshEsMqSender(sender = "dbblog-manage-updateArticle")
+    @RefreshEsMqSender(sender = "luoyublog-manage-updateArticle")
     public Result updateArticle(@RequestBody ArticleDTO article){
         ValidatorUtils.validateEntity(article);
         articleService.updateArticle(article);
@@ -81,7 +80,7 @@ public class ArticleController {
     @PutMapping("/update/status")
     @RequiresPermissions("article:update")
     @CacheEvict(allEntries = true)
-    @RefreshEsMqSender(sender = "dbblog-manage-updateStatus")
+    @RefreshEsMqSender(sender = "luoyublog-manage-updateStatus")
     public Result updateStatus(@RequestBody Article article) {
         articleService.updateById(article);
         return Result.ok();
@@ -92,7 +91,7 @@ public class ArticleController {
     @RequiresPermissions("article:delete")
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(allEntries = true)
-    @RefreshEsMqSender(sender = "dbblog-manage-deleteArticle")
+    @RefreshEsMqSender(sender = "luoyublog-manage-deleteArticle")
     public Result deleteBatch(@RequestBody Integer[] articleIds) {
         recommendService.deleteBatchByLinkId(articleIds, ModuleEnum.ARTICLE.getValue());
         articleService.deleteBatch(articleIds);

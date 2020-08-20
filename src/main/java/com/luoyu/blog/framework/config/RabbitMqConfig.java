@@ -18,7 +18,12 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
     @Bean
-    public Queue queue() {
+    public Queue esQueue() {
         return new Queue(RabbitMqConstants.REFRESH_ES_INDEX_QUEUE);
+    }
+
+    @Bean
+    public Queue gitalkQueue() {
+        return new Queue(RabbitMqConstants.INIT_LUOYUBLOG_GITALK_QUEUE);
     }
 }

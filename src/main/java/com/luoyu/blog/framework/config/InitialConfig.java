@@ -29,7 +29,7 @@ public class InitialConfig {
      */
     @PostConstruct
     public void initEsIndex(){
-        rabbitMqUtils.send(RabbitMqConstants.REFRESH_ES_INDEX_QUEUE,"luoyu-blog-search init index");
+        rabbitMqUtils.send(RabbitMqConstants.REFRESH_ES_INDEX_QUEUE,"luoyublog-search init index");
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setAutomaticRecoveryEnabled(false);
     }
