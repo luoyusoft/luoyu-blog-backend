@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: luoyublog-backend-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -31,7 +33,7 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-  # redis 配置
+  # redis配置
   redis:
     host: 47.101.135.160
     port: 6379
@@ -43,26 +45,34 @@ spring:
         max-wait: -1ms #连接池最大阻塞等待时间
         max-idle: 10 #连接池最大空闲连接
         min-idle: 5 #连接池最小空闲连接
-
-  # elasticsearch配置
-  data:
-    elasticsearch:
-      cluster-name: elasticsearch-cluster
-      cluster-nodes: 47.101.135.160:9300
-  elasticsearch:
-    rest:
-      uris: ["http://47.101.135.160:9200"]
   # rabbitMQ配置
   rabbitmq:
     host: 121.36.44.234
     port: 5672
     username: admin
     password: admin
+    template:
+      retry:
+        # 开启失败重试
+        enabled: true
+        # 第一次重试的间隔时长
+        initial-interval: 10000ms
+        # 最长重试间隔，超过这个间隔将不再重试
+        max-interval: 300000ms
+        # 下次重试间隔的倍数，此处是2即下次重试间隔是上次的2倍
+        multiplier: 2
+      # 缺省的交换机名称，此处配置后，发送消息如果不指定交换机就会使用这个
+      exchange: topic.exchange
+    # 生产者确认机制，确保消息会正确发送，如果发送失败会有错误回执，从而触发重试
+    publisher-confirm-type: correlated
+
 #mybatis-plus
 mybatis-plus:
   global-config:
     #刷新Mapper，只在开发环境打开
     refresh: true
+
+# 七牛云配置
 oss:
   qiniu:
     domain: https://oss.luoyublog.com
@@ -75,7 +85,7 @@ jasypt:
   encryptor:
     password: luoyu-blog-jasypt
 
-# 配置线程池
+# 线程池配置
 threadPoolTaskExecutor:
   corePoolSize: 10 # 核心线程数（默认线程数）
   maxPoolSize: 100 # 最大线程数
@@ -83,15 +93,18 @@ threadPoolTaskExecutor:
   queueCapacity: 200 # 缓冲队列数
   threadNamePrefix: Custom-Executor- # 线程名统一前缀
 
-# 安全停机配置
-management:
-  endpoint:
-    shutdown:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-      base-path: /monitor
-  server:
-    port: 9998
+# xxl-job admin address list, such as "http://address" or "http://address01,http://address02"
+xxl:
+  job:
+    admin:
+      addresses: http://121.36.44.234:8080/xxl-job-admin
+# xxl-job executor address
+    executor:
+      appname: luoyublog-app
+      ip:
+      port: 9999
+      # xxl-job log path
+      logpath: /root/xxl-job/log/jobhandler
+      # xxl-job log retention days
+      logretentiondays: 30
+    accessToken:

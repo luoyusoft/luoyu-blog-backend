@@ -9,6 +9,7 @@ import lombok.Data;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**
@@ -27,7 +28,7 @@ public class Article extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "文章标题")
-    @NotBlank(message="博文标题不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @NotEmpty(message="博文标题不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String title;
 
     @ApiModelProperty(value = "文章描述")

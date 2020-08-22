@@ -10,7 +10,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
+import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +54,14 @@ public class InitGitalk {
         log.info(response.getEntity().toString());
     }
 
-    @RabbitListener(queues= RabbitMqConstants.INIT_LUOYUBLOG_GITALK_QUEUE)
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = RabbitMqConstants.INIT_LUOYUBLOG_GITALK_QUEUE, durable = "true"),
+            exchange = @Exchange(
+                    value = RabbitMqConstants.EXCHANGE_NAME,
+                    ignoreDeclarationExceptions = "true",
+                    type = ExchangeTypes.TOPIC
+            ),
+            key = {RabbitMqConstants.INIT_LUOYUBLOG_GITALK_ROUTINGKEY}))
     public void initGitalkConsumer(Message message){
         try {
             InitGitalkRequest initGitalkRequest = JsonUtils.toObj(new String(message.getBody()), InitGitalkRequest.class);

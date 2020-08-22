@@ -1,7 +1,7 @@
 create table article(
   id int auto_increment comment '主键'
     primary key,
-  title varchar(50) not null comment '文章标题',
+  title varchar(100) not null comment '文章标题',
   description text null comment '文章描述',
   author varchar(50) null comment '文章作者',
   content longtext null comment '文章内容',
@@ -46,7 +46,7 @@ create table book(
 create table book_note(
   id int auto_increment comment '主键'
     primary key,
-  title varchar(50) not null comment '笔记标题',
+  title varchar(100) not null comment '笔记标题',
   description text null comment '笔记描述',
   author varchar(50) null comment '笔记作者',
   content longtext null comment '笔记内容',

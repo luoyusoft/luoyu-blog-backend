@@ -26,4 +26,13 @@ public class RabbitMqUtils {
     public void send(String queueName, Object obj){
         this.rabbitTemplate.convertAndSend(queueName, obj);
     }
+
+    /**
+     * 1、交换机名称
+     * 2、routingKey
+     * 3、消息内容
+     */
+    public void sendByRoutingKey(String exChange, String routingKey, Object obj){
+        this.rabbitTemplate.convertAndSend(exChange, routingKey, obj);
+    }
 }

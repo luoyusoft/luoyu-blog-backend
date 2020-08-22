@@ -2,16 +2,17 @@
 server:
   tomcat:
     uri-encoding: UTF-8
-    max-threads: 1000
-    min-spare-threads: 30
+    max-connections: 5000
+    threads:
+      #最大线程数
+      max: 1000
+      #连接超时时间
+      min-spare: 30
   #端口配置
   port: 9999
-  #连接超时时间
-  connection-timeout: 5000ms
   servlet:
     #映射项目路径
     context-path: /api/luoyublog
-
 
 spring:
   profiles:
@@ -37,7 +38,7 @@ spring:
   rabbitmq:
     listener:
       simple:
-        acknowledge-mode: manual
+        acknowledge-mode: auto
 
 #mybatis
 mybatis-plus:
@@ -52,12 +53,9 @@ mybatis-plus:
       id-type: auto
       #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
       field-strategy: not_empty
-
   #mybatis原生配置
   configuration:
     #驼峰下划线转换
     map-underscore-to-camel-case: true
     #不开启二级缓存
     cache-enabled: false
-
-

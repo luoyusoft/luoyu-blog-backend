@@ -1,28 +1,25 @@
 package com.luoyu.blog;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Slf4j
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LuoYuBlogApplicationTests {
+@SpringBootTest
+class LuoYuBlogApplicationTests {
 
     @Test
-    public void testEnumUtil() {
+    void testEnumUtil() {
         log.info("测试中!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
         log.info("测试中!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!{}");
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("ss mm HH dd MM ? yyyy");
@@ -31,7 +28,7 @@ public class LuoYuBlogApplicationTests {
     }
 
     @Test
-    public void test1() {
+    void test1() {
         // 10位的秒级别的时间戳
         long time1 = 1527767665;
         String result1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(time1 * 1000));
@@ -43,13 +40,13 @@ public class LuoYuBlogApplicationTests {
         System.out.println(result2);
     }
 
-    @Before
-    public void testBefore(){
+    @BeforeEach
+    void testBefore(){
         log.info("测试开始!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
-    @After
-    public void testAfter(){
+    @AfterEach
+    void testAfter(){
         log.info("测试结束!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
