@@ -51,7 +51,7 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
     private BookService bookService;
 
     @Resource
-    private RabbitMqUtils rabbitMqUtils;
+    private RabbitMqUtils rabbitmqUtils;
 
     /**
      * 分页查询笔记列表
@@ -94,7 +94,7 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
         initGitalkRequest.setId(bookNote.getId());
         initGitalkRequest.setTitle(bookNote.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_BOOKNOTE);
-        rabbitMqUtils.send(RabbitMqConstants.INIT_LUOYUBLOG_GITALK_QUEUE, JsonUtils.toJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT, JsonUtils.objectToJson(initGitalkRequest));
     }
 
     /**
@@ -154,6 +154,5 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
         });
         this.baseMapper.deleteBatchIds(Arrays.asList(bookNoteIds));
     }
-
 
 }

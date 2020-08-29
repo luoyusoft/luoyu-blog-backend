@@ -1,13 +1,13 @@
-package com.luoyu.blog.common.portal.aspect;
+package com.luoyu.blog.framework.aop.portal.aspect;
 
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
-import com.luoyu.blog.common.portal.annotation.LogView;
+import com.luoyu.blog.framework.aop.portal.annotation.LogLike;
 import com.luoyu.blog.project.mapper.article.ArticleMapper;
 import com.luoyu.blog.project.mapper.book.BookMapper;
 import com.luoyu.blog.project.mapper.book.BookNoteMapper;
-import com.luoyu.blog.project.mapper.log.LogViewMapper;
+import com.luoyu.blog.project.mapper.log.LogLikeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,18 +25,17 @@ import java.time.LocalDateTime;
 /**
  * ViewLogAspect
  *
- * @author bobbi
+ * @author luoyu
  * @date 2019/02/15 14:56
- * @email 571002217@qq.com
  * @description
  */
 @Aspect
 @Component
 @Slf4j
-public class LogViewAspect {
+public class LogLikeAspect {
 
     @Autowired
-    private LogViewMapper logViewMapper;
+    private LogLikeMapper logLikeMapper;
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -47,7 +46,7 @@ public class LogViewAspect {
     @Autowired
     private BookNoteMapper bookNoteMapper;
 
-    @Pointcut("@annotation(com.luoyu.blog.common.portal.annotation.LogView)")
+    @Pointcut("@annotation(com.luoyu.blog.framework.aop.portal.annotation.LogLike)")
     public void logPointCut() {
 
     }
@@ -62,48 +61,44 @@ public class LogViewAspect {
         long time = System.currentTimeMillis() - beginTime;
 
         //保存日志
-        saveViewLog(point, time);
+        saveLogLike(point, time);
 
         return result;
     }
 
-    private void saveViewLog(ProceedingJoinPoint joinPoint, long time) {
+    private void saveLogLike(ProceedingJoinPoint joinPoint, long time) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        com.luoyu.blog.common.entity.log.LogView viewLogEntity = new com.luoyu.blog.common.entity.log.LogView();
-        LogView viewLog = method.getAnnotation(LogView.class);
+        com.luoyu.blog.common.entity.log.LogLike logLikeEntity = new com.luoyu.blog.common.entity.log.LogLike();
+        LogLike viewLog = method.getAnnotation(LogLike.class);
         //注解上的类型
         String type = viewLog.type();
-        viewLogEntity.setType(type);
+        logLikeEntity.setType(type);
         //请求的参数
         Object[] args = joinPoint.getArgs();
-        String id = JsonUtils.toJson(args[0]);
+        String id = JsonUtils.objectToJson(args[0]);
         // 根据注解类型增加数量
         switch (type) {
             case "article":
-                articleMapper.updateReadNum(Integer.parseInt(id));
+                articleMapper.updateLikeNum(Integer.parseInt(id));
                 break;
             case "book":
-                bookMapper.updateReadNum(Integer.parseInt(id));
+                bookMapper.updateLikeNum(Integer.parseInt(id));
                 break;
             case "bookNote":
-                bookNoteMapper.updateReadNum(Integer.parseInt(id));
+                bookNoteMapper.updateLikeNum(Integer.parseInt(id));
                 break;
             default:
                 break;
         }
-        viewLogEntity.setParams(id);
-        // 请求的方法名
-        String className = joinPoint.getTarget().getClass().getName();
-        String methodName = signature.getName();
-        viewLogEntity.setMethod(className + "." + methodName + "()");
+        logLikeEntity.setParams(id);
         //获取request
         HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
         //设置IP地址
-        viewLogEntity.setIp(IPUtils.getIpAddr(request));
-        viewLogEntity.setTime(time);
-        viewLogEntity.setCreateDate(LocalDateTime.now());
-        logViewMapper.insert(viewLogEntity);
+        logLikeEntity.setIp(IPUtils.getIpAddr(request));
+        logLikeEntity.setTime(time);
+        logLikeEntity.setCreateDate(LocalDateTime.now());
+        logLikeMapper.insert(logLikeEntity);
 
     }
 }

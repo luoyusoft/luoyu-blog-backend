@@ -2,12 +2,11 @@ package com.luoyu.blog.project.controller.manage.article;
 
 import com.luoyu.blog.common.base.Result;
 import com.luoyu.blog.common.constants.RedisCacheNames;
-import com.luoyu.blog.common.enums.ModuleEnum;
-import com.luoyu.blog.framework.mq.annotation.RefreshEsMqSender;
-import com.luoyu.blog.common.util.PageUtils;
-import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.entity.article.Article;
 import com.luoyu.blog.common.entity.article.dto.ArticleDTO;
+import com.luoyu.blog.common.enums.ModuleEnum;
+import com.luoyu.blog.common.util.PageUtils;
+import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.project.service.manage.article.ArticleService;
 import com.luoyu.blog.project.service.manage.operation.RecommendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -60,7 +59,6 @@ public class ArticleController {
     @PostMapping("/save")
     @RequiresPermissions("article:save")
     @CacheEvict(allEntries = true)
-    @RefreshEsMqSender(sender = "luoyublog-manage-saveArticle")
     public Result saveArticle(@RequestBody ArticleDTO article){
         ValidatorUtils.validateEntity(article);
         articleService.saveArticle(article);
@@ -70,7 +68,6 @@ public class ArticleController {
     @PutMapping("/update")
     @RequiresPermissions("article:update")
     @CacheEvict(allEntries = true)
-    @RefreshEsMqSender(sender = "luoyublog-manage-updateArticle")
     public Result updateArticle(@RequestBody ArticleDTO article){
         ValidatorUtils.validateEntity(article);
         articleService.updateArticle(article);
@@ -80,7 +77,6 @@ public class ArticleController {
     @PutMapping("/update/status")
     @RequiresPermissions("article:update")
     @CacheEvict(allEntries = true)
-    @RefreshEsMqSender(sender = "luoyublog-manage-updateStatus")
     public Result updateStatus(@RequestBody Article article) {
         articleService.updateById(article);
         return Result.ok();
@@ -91,7 +87,6 @@ public class ArticleController {
     @RequiresPermissions("article:delete")
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(allEntries = true)
-    @RefreshEsMqSender(sender = "luoyublog-manage-deleteArticle")
     public Result deleteBatch(@RequestBody Integer[] articleIds) {
         recommendService.deleteBatchByLinkId(articleIds, ModuleEnum.ARTICLE.getValue());
         articleService.deleteBatch(articleIds);
@@ -101,7 +96,7 @@ public class ArticleController {
     @DeleteMapping("/cache/refresh")
     @RequiresPermissions("article:cache:refresh")
     public Result flush() {
-        Set<String> keys = redisTemplate.keys(RedisCacheNames.PROFIX+"*");
+        Set<String> keys = redisTemplate.keys(RedisCacheNames.PROFIX + "*");
         redisTemplate.delete(keys);
         return Result.ok();
     }

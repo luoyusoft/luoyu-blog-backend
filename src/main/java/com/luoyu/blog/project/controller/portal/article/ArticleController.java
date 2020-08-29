@@ -4,8 +4,8 @@ import com.luoyu.blog.common.base.Result;
 import com.luoyu.blog.common.entity.article.vo.ArticleVO;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.project.service.portal.article.ArticleService;
-import com.luoyu.blog.common.portal.annotation.LogLike;
-import com.luoyu.blog.common.portal.annotation.LogView;
+import com.luoyu.blog.framework.aop.portal.annotation.LogLike;
+import com.luoyu.blog.framework.aop.portal.annotation.LogView;
 import com.luoyu.blog.common.constants.RedisCacheNames;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -48,6 +48,5 @@ public class ArticleController {
         PageUtils page = articleService.queryPageCondition(params);
         return Result.ok().put("page",page);
     }
-
 
 }

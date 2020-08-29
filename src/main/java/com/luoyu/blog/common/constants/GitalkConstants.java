@@ -5,15 +5,14 @@ package com.luoyu.blog.common.constants;
  *
  * @author luoyu
  * @date 2019/03/16 22:12
- * @email 571002217@qq.com
  * @description
  */
 public class GitalkConstants {
 
-    public static final String GITALK_TYPE_ARTICLE ="article";
+    public static final String GITALK_TYPE_ARTICLE = "article";
 
-    public static final String GITALK_TYPE_BOOK ="book";
+    public static final String GITALK_TYPE_BOOK = "book";
 
-    public static final String GITALK_TYPE_BOOKNOTE ="bookNote";
+    public static final String GITALK_TYPE_BOOKNOTE = "bookNote";
 
 }

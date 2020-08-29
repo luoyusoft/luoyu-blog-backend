@@ -5,8 +5,8 @@ import com.luoyu.blog.common.constants.RedisCacheNames;
 import com.luoyu.blog.common.entity.book.vo.BookVO;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.project.service.portal.book.BookService;
-import com.luoyu.blog.common.portal.annotation.LogLike;
-import com.luoyu.blog.common.portal.annotation.LogView;
+import com.luoyu.blog.framework.aop.portal.annotation.LogLike;
+import com.luoyu.blog.framework.aop.portal.annotation.LogView;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +48,5 @@ public class BookController {
     public Result likeBook(@PathVariable Integer id) {
         return Result.ok();
     }
-
 
 }

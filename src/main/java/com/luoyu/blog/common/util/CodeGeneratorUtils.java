@@ -1,6 +1,5 @@
 package com.luoyu.blog.common.util;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -11,16 +10,17 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 /**
- * CodeGenerator
- *
- * @author bobbi
- * @date 2018/10/08 20:24
- * @email 571002217@qq.com
- * @description mybatis-plus提供的代码生成器
+ * @Description: 代码生成器
+ * @Author: luoyu
+ * @Date: 2020/2/13 上午10:06
+ * @Version: 1.0.0
  */
+// 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGeneratorUtils {
 
     /**
@@ -46,116 +46,96 @@ public class CodeGeneratorUtils {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
-        String moduleName = scanner("请输入模块名");
-        String tableName = scanner("请输入表名");
-        String entityName = "";
-        if(tableName.indexOf("_")>0){
-            entityName = tableName.split("_")[1];
-        }else {
-            entityName = tableName;
-        }
-
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("luoyu");;
-        gc.setBaseResultMap(true);
-        gc.setBaseColumnList(true);
+        gc.setOutputDir(projectPath + "/mybatisplus-demo/src/main/java");
+        gc.setAuthor("luoyu");
         gc.setOpen(false);
-        gc.setSwagger2(true);
-        gc.setServiceName("%sService");
-        gc.setIdType(IdType.ID_WORKER_STR);
+        // gc.setSwagger2(true); 实体属性 Swagger2 注解
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://47.101.135.160:3306/luoyu_blog?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false");
-        dsc.setDriverName("com.mysql.jdbc.Driver");
+        dsc.setUrl("jdbc:mysql://47.101.135.160:3306/luoyu_blog?useUnicode=true&useSSL=false&characterEncoding=utf8");
+        // dsc.setSchemaName("public");
+        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("root");
         mpg.setDataSource(dsc);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.luoyu.blog.project");
-        pc.setModuleName(moduleName);
+        pc.setModuleName(scanner("模块名"));
+        pc.setParent("com.luoyu.blog");
         mpg.setPackageInfo(pc);
 
-        // 注入自定义配置，可以在 VM 中使用 cfg.entityName 【可无】
-        String finalEntityName = entityName;
+        // 自定义配置
         InjectionConfig cfg = new InjectionConfig() {
             @Override
             public void initMap() {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("entityName", finalEntityName);
-                map.put("urlPrefix","/admin");
-                map.put("basePath","com.luoyu.blog");
-                this.setMap(map);
+                // to do nothing
             }
         };
 
+        // 如果模板引擎是 freemarker
+        String templatePath = "/templates/mapper.xml.ftl";
+        // 如果模板引擎是 velocity
+        // String templatePath = "/templates/mapper.xml.vm";
+
+        // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
-        //配置xml
-        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+        // 自定义配置会被优先输出
+        focList.add(new FileOutConfig(templatePath) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                // 自定义输入文件名称
+                // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
                 return projectPath + "/src/main/resources/mapper/" + pc.getModuleName()
                         + "/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
-        //配置前端addOrUpdate页面
-        focList.add(new FileOutConfig("/templates/add-or-update.vue.ftl") {
+        /*
+        cfg.setFileCreate(new IFileCreate() {
             @Override
-            public String outputFile(TableInfo tableInfo) {
-                // 自定义输入文件名称
-                return projectPath + "/src/main/resources/views/" + pc.getModuleName()
-                        + "/" + finalEntityName + "-add-or-update.vue";
+            public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
+                // 判断自定义文件夹是否需要创建
+                checkDir("调用默认方法创建的目录");
+                return false;
             }
         });
-        //配置前端list页面
-        focList.add(new FileOutConfig("/templates/index.vue.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                // 自定义输入文件名称
-                return projectPath + "/src/main/resources/views/" + pc.getModuleName()
-                        + "/" + finalEntityName + ".vue";
-            }
-        });
-        //配置菜单SQL
-        focList.add(new FileOutConfig("/templates/menu.sql.ftl") {
-            @Override
-            public String outputFile(TableInfo tableInfo) {
-                // 自定义输入文件名称
-                return projectPath + "/src/main/resources/sql/" + pc.getModuleName()
-                        + "/" + finalEntityName + ".sql";
-            }
-        });
-
-        TemplateConfig tc = new TemplateConfig();
-        tc.setEntity("/templates/entity.java");
-        tc.setXml(null);
-        tc.setMapper("/templates/mapper.java");
-        tc.setService("/templates/service.java");
-        tc.setServiceImpl("/templates/serviceImpl.java");
-        tc.setController("/templates/controller.java");
-
+        */
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
-        mpg.setTemplate(tc);
+
+        // 配置模板
+        TemplateConfig templateConfig = new TemplateConfig();
+
+        // 配置自定义输出模板
+        //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
+        // templateConfig.setEntity("templates/entity2.java");
+        // templateConfig.setService();
+        // templateConfig.setController();
+
+        // templateConfig.setXml(null);
+        mpg.setTemplate(templateConfig);
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+        // strategy.setSuperEntityClass("你自己的父类实体,没有就不用设置!");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
-        strategy.setInclude(tableName);
-        strategy.setSuperControllerClass("com.luoyu.blog.common.base.AbstractController");
-
+        // 公共父类
+        // strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
+        // 写于父类中的公共字段
+        // strategy.setSuperEntityColumns("id");
+        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
+        strategy.setControllerMappingHyphenStyle(true);
+        strategy.setTablePrefix(pc.getModuleName() + "_");
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
     }
+
 }

@@ -49,7 +49,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     private CategoryService categoryService;
 
     @Resource
-    private RabbitMqUtils rabbitMqUtils;
+    private RabbitMqUtils rabbitmqUtils;
 
     /**
      * 分页查询
@@ -88,7 +88,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
         initGitalkRequest.setId(book.getId());
         initGitalkRequest.setTitle(book.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_BOOK);
-        rabbitMqUtils.send(RabbitMqConstants.INIT_LUOYUBLOG_GITALK_QUEUE, JsonUtils.toJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT, JsonUtils.objectToJson(initGitalkRequest));
     }
 
     /**

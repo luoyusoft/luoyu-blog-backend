@@ -1,4 +1,4 @@
-package com.luoyu.blog.framework.mq.annotation;
+package com.luoyu.blog.framework.aop.search.annotation;
 
 import java.lang.annotation.*;
 
@@ -14,8 +14,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface RefreshEsMqSender {
 
-    String sender();
+    String id();
 
-    String msg() default "send refresh msg to ElasticSearch";
+    String content();
+
+    String operation();
 
 }

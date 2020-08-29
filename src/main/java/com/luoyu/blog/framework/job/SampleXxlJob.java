@@ -1,4 +1,4 @@
-package com.luoyu.blog.framework.xxl;
+package com.luoyu.blog.framework.job;
 
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -6,8 +6,6 @@ import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
@@ -31,8 +29,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class SampleXxlJob {
 
-    private static Logger logger = LoggerFactory.getLogger(SampleXxlJob.class);
-
     /**
      * 1、简单任务示例（Bean模式）
      */
@@ -46,7 +42,6 @@ public class SampleXxlJob {
         }
         return ReturnT.SUCCESS;
     }
-
 
     /**
      * 2、分片广播任务
@@ -69,7 +64,6 @@ public class SampleXxlJob {
 
         return ReturnT.SUCCESS;
     }
-
 
     /**
      * 3、命令行任务
@@ -109,7 +103,6 @@ public class SampleXxlJob {
             return new ReturnT<String>(IJobHandler.FAIL.getCode(), "command exit value("+exitValue+") is failed");
         }
     }
-
 
     /**
      * 4、跨平台Http任务
@@ -184,12 +177,13 @@ public class SampleXxlJob {
         XxlJobLogger.log("XXL-JOB, Hello World.");
         return ReturnT.SUCCESS;
     }
+
     public void init(){
-        logger.info("init");
-    }
-    public void destroy(){
-        logger.info("destory");
+        log.info("init");
     }
 
+    public void destroy(){
+        log.info("destory");
+    }
 
 }

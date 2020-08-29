@@ -1,11 +1,17 @@
 package com.luoyu.blog.common.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * JsonUtils
@@ -18,44 +24,82 @@ import java.io.IOException;
 @Slf4j
 public class JsonUtils {
 
-    private final static ObjectMapper objMapper = new ObjectMapper();
+    private  static ObjectMapper objectMapper = null;
+
+    static {
+        objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+    }
 
     /**
-     * Json字符串转化成对象
-     * @param jsonString
+     * 对象转换成json
+     * @param obj
+     * @param <T>
+     * @return
+     */
+    public static <T>String objectToJson(T obj){
+        if(obj == null){
+            return null;
+        }
+        try {
+            return obj instanceof String ? (String) obj : objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            log.error("Parse Object to Json error",e);
+            return null;
+        }
+    }
+
+    /**
+     * 将json转换成对象Class
+     * @param src
      * @param clazz
      * @param <T>
      * @return
-     * @throws Exception
      */
-    public static <T> T toObj(String jsonString, Class<T> clazz) {
-        objMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-        try {
-            return objMapper.readValue(jsonString, clazz);
-        } catch (IOException e) {
-            log.error("Json字符串转化成对象出错",e);
+    public static <T>T jsonToObject(String src,Class<T> clazz){
+        if(StringUtils.isEmpty(src) || clazz == null){
+            return null;
         }
-        return null;
+        try {
+            return clazz.equals(String.class) ? (T) src : objectMapper.readValue(src,clazz);
+        } catch (Exception e) {
+            log.warn("Parse Json to Object error",e);
+            return null;
+        }
     }
 
     /**
-     * javaBean 转化成json字符串
-     * @param obj
+     * 字符串转换为 Map<String, Object>
+     *
+     * @param src
      * @return
      * @throws Exception
      */
-    public static String toJson(Object obj) {
-        if(obj instanceof Integer || obj instanceof Long || obj instanceof Float ||
-                obj instanceof Double || obj instanceof Boolean || obj instanceof String){
-            return String.valueOf(obj);
+    public static <T> Map<String, Object> jsonToMap(String src) {
+        if(StringUtils.isEmpty(src)){
+            return null;
         }
         try {
-            return objMapper.writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            log.error("转化成json字符串",e);
+            return objectMapper.readValue(src, Map.class);
+        } catch (Exception e) {
+            log.warn("Parse Json to Map error",e);
+            return null;
         }
-        return null;
+
     }
 
+    public static <T> List<T> jsonToList(String jsonArrayStr, Class<T> clazz) {
+        try{
+            JavaType  javaType = objectMapper.getTypeFactory().constructParametricType(ArrayList.class, clazz);
+            return (List<T>) objectMapper.readValue(jsonArrayStr, javaType);
+        }catch (Exception e) {
+            log.warn("Parse Json to Map error",e);
+            return null;
+        }
+
+    }
 
 }

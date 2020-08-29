@@ -1,7 +1,7 @@
-package com.luoyu.blog.framework.mq.aspect;
+package com.luoyu.blog.framework.aop.search.aspect;
 
 import com.luoyu.blog.common.constants.RabbitMqConstants;
-import com.luoyu.blog.framework.mq.annotation.RefreshEsMqSender;
+import com.luoyu.blog.framework.aop.search.annotation.RefreshEsMqSender;
 import com.luoyu.blog.common.util.RabbitMqUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,9 +25,9 @@ import java.lang.reflect.Method;
 public class RefreshEsMqAspect {
 
     @Resource
-    private RabbitMqUtils rabbitMqUtils;
+    private RabbitMqUtils rabbitmqUtils;
 
-    @Pointcut("@annotation(com.luoyu.blog.framework.mq.annotation.RefreshEsMqSender)")
+    @Pointcut("@annotation(com.luoyu.blog.framework.aop.search.annotation.RefreshEsMqSender)")
     public void pointCut() {
 
     }
@@ -40,7 +40,9 @@ public class RefreshEsMqAspect {
         Method method = signature.getMethod();
         RefreshEsMqSender senderAnnotation = method.getAnnotation(RefreshEsMqSender.class);
         // 发送刷新信息
-        rabbitMqUtils.send(RabbitMqConstants.REFRESH_ES_INDEX_QUEUE,senderAnnotation.sender()+" "+senderAnnotation.msg());
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE,
+                RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT,
+                senderAnnotation.id() + "," + senderAnnotation.content() + "," + senderAnnotation.operation());
         return result;
     }
 }

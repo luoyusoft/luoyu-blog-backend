@@ -55,7 +55,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setHeader("Access-Control-Allow-Origin", HttpContextUtils.getOrigin());
-            String json = JsonUtils.toJson(Result.error(ErrorEnum.INVALID_TOKEN));
+            String json = JsonUtils.objectToJson(Result.error(ErrorEnum.INVALID_TOKEN));
             httpResponse.getWriter().print(json);
 
             return false;
@@ -74,7 +74,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
             //处理登录失败的异常
             Throwable throwable = e.getCause() == null ? e : e.getCause();
             Result r = Result.error(ErrorEnum.NO_AUTH.getCode(),throwable.getMessage());
-            String json = JsonUtils.toJson(r);
+            String json = JsonUtils.objectToJson(r);
             httpResponse.getWriter().print(json);
         } catch (Exception e1) {
 

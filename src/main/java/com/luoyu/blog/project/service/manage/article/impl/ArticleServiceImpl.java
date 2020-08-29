@@ -48,7 +48,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private CategoryService categoryService;
 
     @Resource
-    private RabbitMqUtils rabbitMqUtils;
+    private RabbitMqUtils rabbitmqUtils;
 
     /**
      * 分页查询博文列表
@@ -88,7 +88,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         initGitalkRequest.setId(article.getId());
         initGitalkRequest.setTitle(article.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
-        rabbitMqUtils.send(RabbitMqConstants.INIT_LUOYUBLOG_GITALK_QUEUE,JsonUtils.toJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD, JsonUtils.objectToJson(article));
     }
 
     /**
@@ -105,6 +106,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         tagService.saveTagAndNew(article.getTagList(),article.getId(), ModuleEnum.ARTICLE.getValue());
         // 更新博文
         baseMapper.updateById(article);
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_UPDATE, JsonUtils.objectToJson(article));
     }
 
     /**
@@ -141,7 +143,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             tagService.deleteTagLink(articleId,ModuleEnum.ARTICLE.getValue());
         });
         this.baseMapper.deleteBatchIds(Arrays.asList(articleIds));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_DELETE, JsonUtils.objectToJson(articleIds));
     }
-
 
 }

@@ -3,9 +3,8 @@ package com.luoyu.blog.common.constants;
 /**
  * RedisCacheNames
  *
- * @author bobbi
+ * @author luoyu
  * @date 2019/07/20 18:09
- * @email 571002217@qq.com
  * @description
  */
 public class RedisCacheNames {

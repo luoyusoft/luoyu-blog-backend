@@ -22,15 +22,15 @@ import javax.annotation.Resource;
 public class InitialConfig {
 
     @Resource
-    private RabbitMqUtils rabbitMqUtils;
+    private RabbitMqUtils rabbitmqUtils;
 
     /**
      * 项目启动时重新导入索引
      */
     @PostConstruct
     public void initEsIndex(){
-        rabbitMqUtils.send(RabbitMqConstants.REFRESH_ES_INDEX_QUEUE,"luoyublog-search init index");
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setAutomaticRecoveryEnabled(false);
+//        rabbitmqUtils.send(RabbitMqConstants.LUOYUBLOG_INIT_ES_QUEUE,"luoyublog-search init index");
+//        ConnectionFactory connectionFactory = new ConnectionFactory();
+//        connectionFactory.setAutomaticRecoveryEnabled(false);
     }
 }
