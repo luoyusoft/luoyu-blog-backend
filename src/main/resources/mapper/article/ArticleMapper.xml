@@ -84,6 +84,6 @@
     </select>
 
     <select id="selectArticleList" resultType="com.luoyu.blog.common.entity.article.vo.ArticleVO">
-        select <include refid="homeArticleColumn"/> from article
+        select <include refid="homeArticleColumn"/> from article where publish = true
     </select>
 </mapper>
