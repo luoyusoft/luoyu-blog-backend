@@ -206,7 +206,7 @@ public class ElasticSearchUtils {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         // 配置高亮
         HighlightBuilder highlightBuilder = new HighlightBuilder();
-        highlightBuilder.field("title").field("content");
+        highlightBuilder.field("title").field("description");
         highlightBuilder.preTags("<span style='color:red'>");
         highlightBuilder.postTags("</span>");
         searchSourceBuilder.highlighter(highlightBuilder);
@@ -214,7 +214,7 @@ public class ElasticSearchUtils {
 //        QueryBuilders.termQuery();
         // 匹配所有
 //        QueryBuilders.matchAllQuery();
-        searchSourceBuilder.query(QueryBuilders.multiMatchQuery(keyword,"title", "content"));
+        searchSourceBuilder.query(QueryBuilders.multiMatchQuery(keyword,"title", "description"));
 //        searchSourceBuilder.query(QueryBuilders.matchQuery("content", keyWord));
         searchSourceBuilder.timeout(TimeValue.timeValueSeconds(ElasticSearchConstants.ELASTIC_SEARCH_TIMEOUT));
 
@@ -226,29 +226,28 @@ public class ElasticSearchUtils {
         for (SearchHit searchHit : searchResponse.getHits().getHits()){
             Map<String, HighlightField> highlightFieldMap = searchHit.getHighlightFields();
             HighlightField title = highlightFieldMap.get("title");
-            HighlightField content = highlightFieldMap.get("content");
+            HighlightField description = highlightFieldMap.get("description");
             // 原来的结果
             Map<String, Object> sourceMap = searchHit.getSourceAsMap();
             // 解析高亮字段，替换掉原来的字段
             if (title != null){
                 Text[] fragments = title.getFragments();
-                String n_title = "";
+                StringBuilder n_title = new StringBuilder();
                 for (Text text : fragments){
-                    n_title += text;
+                    n_title.append(text);
                 }
-                sourceMap.put("title", n_title);
+                sourceMap.put("title", n_title.toString());
             }
-            if (content != null){
-                Text[] fragments = content.getFragments();
-                String n_content = "";
+            if (description != null){
+                Text[] fragments = description.getFragments();
+                StringBuilder n_description = new StringBuilder();
                 for (Text text : fragments){
-                    n_content += text;
+                    n_description.append(text);
                 }
-                sourceMap.put("content", n_content);
+                sourceMap.put("description", n_description.toString());
             }
             results.add(sourceMap);
         }
         return results;
     }
-
 }

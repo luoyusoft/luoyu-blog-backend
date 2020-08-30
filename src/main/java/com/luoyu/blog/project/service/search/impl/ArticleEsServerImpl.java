@@ -5,12 +5,12 @@ import com.luoyu.blog.common.constants.RabbitMqConstants;
 import com.luoyu.blog.common.entity.article.Article;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
+import com.luoyu.blog.common.util.MapUtils;
 import com.luoyu.blog.project.service.search.ArticleEsServer;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +30,10 @@ public class ArticleEsServerImpl implements ArticleEsServer {
         List<Map<String, Object>> searchRequests = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, keyword);
         List<Article> articles = new ArrayList<>();
         searchRequests.forEach(x -> {
-            Article article = new Article();
-            BeanUtils.copyProperties(x, article);
-            articles.add(article);
+            Article article = (Article) MapUtils.mapToObject(x, Article.class);
+            if (article != null){
+                articles.add(article);
+            }
         });
         return articles;
     }
