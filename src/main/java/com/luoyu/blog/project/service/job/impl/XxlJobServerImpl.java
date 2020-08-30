@@ -1,6 +1,7 @@
 package com.luoyu.blog.project.service.job.impl;
 
 import com.luoyu.blog.project.service.job.XxlJobServer;
+import com.luoyu.blog.project.service.manage.gitalk.GitalkServer;
 import com.luoyu.blog.project.service.search.ArticleEsServer;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -35,13 +36,25 @@ public class XxlJobServerImpl implements XxlJobServer {
     @Autowired
     private ArticleEsServer articleEsServer;
 
+    @Autowired
+    private GitalkServer gitalkServer;
+
     /**
-     * 1、初始化es文章数据job
+     * 初始化es文章数据job
      */
     @XxlJob("initESArticleJobHandler")
     @Override
     public ReturnT<String> initESArticleJobHandler(String param) throws Exception {
         return articleEsServer.initArticle() ? ReturnT.SUCCESS: ReturnT.FAIL;
+    }
+
+    /**
+     * 初始化gitalk文章数据job
+     */
+    @XxlJob("initGitalkArticleJobHandler")
+    @Override
+    public ReturnT<String> initGitalkArticleJobHandler(String param) throws Exception {
+        return gitalkServer.initArticleList() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
     /**

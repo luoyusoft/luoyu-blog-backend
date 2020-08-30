@@ -15,9 +15,14 @@ import com.xxl.job.core.biz.model.ReturnT;
 public interface XxlJobServer {
 
     /**
-     * 1、简单任务示例（Bean模式）
+     * 初始化es文章数据job
      */
     ReturnT<String> initESArticleJobHandler(String param) throws Exception;
+
+    /**
+     * 初始化gitalk文章数据job
+     */
+    ReturnT<String> initGitalkArticleJobHandler(String param) throws Exception;
 
     /**
      * 2、分片广播任务

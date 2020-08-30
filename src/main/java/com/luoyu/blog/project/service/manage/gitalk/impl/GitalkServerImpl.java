@@ -1,8 +1,12 @@
 package com.luoyu.blog.project.service.manage.gitalk.impl;
 
+import com.luoyu.blog.common.constants.GitalkConstants;
 import com.luoyu.blog.common.constants.RabbitMqConstants;
+import com.luoyu.blog.common.entity.article.vo.ArticleVO;
 import com.luoyu.blog.common.entity.gitalk.InitGitalkRequest;
 import com.luoyu.blog.common.util.JsonUtils;
+import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.project.mapper.article.ArticleMapper;
 import com.luoyu.blog.project.service.manage.gitalk.GitalkServer;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +25,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,12 +47,17 @@ public class GitalkServerImpl implements GitalkServer {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Resource
+    private RabbitMqUtils rabbitmqUtils;
+
+    @Autowired
+    private ArticleMapper articleMapper;
+
     /**
      * @param initGitalkRequest
      * @return
-     * @throws Exception
      */
-    public boolean init(InitGitalkRequest initGitalkRequest){
+    public boolean initArticle(InitGitalkRequest initGitalkRequest){
         String url = GITHUB_REPOS_URL + USER_NAME + "/" + REPO + "/issues";
 
 //        String param = String.format("{\"title\":\"%s\",\"labels\":[\"%s\", \"%s\"],\"body\":\"%s%s\\n\\n\"}"
@@ -93,6 +103,23 @@ public class GitalkServerImpl implements GitalkServer {
         return true;
     }
 
+    /**
+     * @return
+     */
+    public boolean initArticleList(){
+        List<ArticleVO> articleVOList = articleMapper.selectArticleList();
+        if (articleVOList != null && articleVOList.size() > 0){
+            articleVOList.forEach(x -> {
+                InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
+                initGitalkRequest.setId(x.getId());
+                initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
+                initGitalkRequest.setTitle(x.getTitle());
+                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT, JsonUtils.objectToJson(initGitalkRequest));
+            });
+        }
+        return true;
+    }
+
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = RabbitMqConstants.LUOYUBLOG_INIT_GITALK_QUEUE, durable = "true"),
             exchange = @Exchange(
@@ -105,7 +132,7 @@ public class GitalkServerImpl implements GitalkServer {
         try {
             InitGitalkRequest initGitalkRequest = JsonUtils.jsonToObject(new String(message.getBody()), InitGitalkRequest.class);
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-            if (this.init(initGitalkRequest)){
+            if (this.initArticle(initGitalkRequest)){
                 //手动确认消息已经被消费
                 log.info("新增文章，进行Gitalk初始化：" + message.toString() + "成功！");
             }else {
