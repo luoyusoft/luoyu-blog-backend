@@ -1,11 +1,14 @@
-package com.luoyu.blog.framework.job;
+package com.luoyu.blog.project.service.job.impl;
 
+import com.luoyu.blog.project.service.job.XxlJobServer;
+import com.luoyu.blog.project.service.search.ArticleEsServer;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
@@ -27,26 +30,25 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class SampleXxlJob {
+public class XxlJobServerImpl implements XxlJobServer {
+
+    @Autowired
+    private ArticleEsServer articleEsServer;
 
     /**
-     * 1、简单任务示例（Bean模式）
+     * 1、初始化es文章数据job
      */
-    @XxlJob("demoJobHandler")
-    public ReturnT<String> demoJobHandler(String param) throws Exception {
-        XxlJobLogger.log("XXL-JOB, Hello World.");
-
-        for (int i = 0; i < 5; i++) {
-            XxlJobLogger.log("beat at:" + i);
-            TimeUnit.SECONDS.sleep(2);
-        }
-        return ReturnT.SUCCESS;
+    @XxlJob("initESArticleJobHandler")
+    @Override
+    public ReturnT<String> initESArticleJobHandler(String param) throws Exception {
+        return articleEsServer.initArticle() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
     /**
      * 2、分片广播任务
      */
     @XxlJob("shardingJobHandler")
+    @Override
     public ReturnT<String> shardingJobHandler(String param) throws Exception {
 
         // 分片参数
@@ -69,6 +71,7 @@ public class SampleXxlJob {
      * 3、命令行任务
      */
     @XxlJob("commandJobHandler")
+    @Override
     public ReturnT<String> commandJobHandler(String param) throws Exception {
         String command = param;
         int exitValue = -1;
@@ -108,6 +111,7 @@ public class SampleXxlJob {
      * 4、跨平台Http任务
      */
     @XxlJob("httpJobHandler")
+    @Override
     public ReturnT<String> httpJobHandler(String param) throws Exception {
 
         // request
@@ -173,15 +177,18 @@ public class SampleXxlJob {
      * 5、生命周期任务示例：任务初始化与销毁时，支持自定义相关逻辑；
      */
     @XxlJob(value = "demoJobHandler2", init = "init", destroy = "destroy")
+    @Override
     public ReturnT<String> demoJobHandler2(String param) throws Exception {
         XxlJobLogger.log("XXL-JOB, Hello World.");
         return ReturnT.SUCCESS;
     }
 
+    @Override
     public void init(){
         log.info("init");
     }
 
+    @Override
     public void destroy(){
         log.info("destory");
     }

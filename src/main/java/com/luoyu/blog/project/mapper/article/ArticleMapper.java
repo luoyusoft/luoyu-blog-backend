@@ -15,7 +15,7 @@ import java.util.Map;
  * 文章 Mapper 接口
  * </p>
  *
- * @author bobbi
+ * @author luoyu
  * @since 2018-11-07
  */
 @Mapper
@@ -64,5 +64,11 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @return
      */
     int checkByCategory(Integer categoryId);
+
+    /**
+     * 查询所有文章列表
+     * @return
+     */
+    List<ArticleVO> selectArticleList();
 
 }

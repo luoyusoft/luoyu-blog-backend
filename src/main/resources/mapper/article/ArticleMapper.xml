@@ -82,4 +82,8 @@
     <select id="checkByCategory" resultType="Integer">
         select count(*) from article where category_id = #{categoryId}
     </select>
+
+    <select id="selectArticleList" resultType="com.luoyu.blog.common.entity.article.vo.ArticleVO">
+        select <include refid="homeArticleColumn"/> from article
+    </select>
 </mapper>

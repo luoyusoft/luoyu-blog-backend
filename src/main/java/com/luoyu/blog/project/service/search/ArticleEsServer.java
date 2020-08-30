@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ArticleEsServer {
 
-    List<Article> search(String keyword) throws Exception;
+    List<Article> searchArticle(String keyword) throws Exception;
+
+    boolean initArticle() throws Exception;
 
 }

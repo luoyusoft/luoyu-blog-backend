@@ -31,8 +31,8 @@ public class ArticleEsController {
      * @return
      */
     @GetMapping("articles/search")
-    public Result search(@RequestParam("keyword") String keyword) throws Exception {
-        List<Article> articleList= articleEsServer.search(keyword);
+    public Result searchArticle(@RequestParam("keyword") String keyword) throws Exception {
+        List<Article> articleList= articleEsServer.searchArticle(keyword);
         return Result.ok().put("articleList", articleList);
     }
 

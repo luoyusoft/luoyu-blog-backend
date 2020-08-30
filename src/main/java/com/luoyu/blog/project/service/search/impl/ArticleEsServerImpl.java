@@ -3,17 +3,23 @@ package com.luoyu.blog.project.service.search.impl;
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.constants.RabbitMqConstants;
 import com.luoyu.blog.common.entity.article.Article;
+import com.luoyu.blog.common.entity.article.dto.ArticleDTO;
+import com.luoyu.blog.common.entity.article.vo.ArticleVO;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.MapUtils;
+import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.project.mapper.article.ArticleMapper;
 import com.luoyu.blog.project.service.search.ArticleEsServer;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +31,14 @@ public class ArticleEsServerImpl implements ArticleEsServer {
     @Autowired
     private ElasticSearchUtils elasticSearchUtils;
 
+    @Resource
+    private RabbitMqUtils rabbitmqUtils;
+
+    @Autowired
+    private ArticleMapper articleMapper;
+
     @Override
-    public List<Article> search(String keyword) throws Exception {
+    public List<Article> searchArticle(String keyword) throws Exception {
         List<Map<String, Object>> searchRequests = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, keyword);
         List<Article> articles = new ArrayList<>();
         searchRequests.forEach(x -> {
@@ -36,6 +48,24 @@ public class ArticleEsServerImpl implements ArticleEsServer {
             }
         });
         return articles;
+    }
+
+    @Override
+    public boolean initArticle() throws Exception {
+        if(elasticSearchUtils.deleteIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)){
+            if(elasticSearchUtils.createIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)){
+                List<ArticleVO> articleVOList = articleMapper.selectArticleList();
+                if(articleVOList != null && articleVOList.size() > 0){
+                    articleVOList.forEach(x -> {
+                        ArticleDTO articleDTO = new ArticleDTO();
+                        BeanUtils.copyProperties(x, articleDTO);
+                        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD, JsonUtils.objectToJson(articleDTO));
+                    });
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

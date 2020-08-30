@@ -15,10 +15,10 @@ import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.project.mapper.article.ArticleMapper;
 import com.luoyu.blog.project.service.manage.article.ArticleService;
 import com.luoyu.blog.project.service.manage.operation.CategoryService;
 import com.luoyu.blog.project.service.manage.operation.TagService;
-import com.luoyu.blog.project.mapper.article.ArticleMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +33,8 @@ import java.util.Optional;
 /**
  * articleAdminServiceImpl
  *
- * @author bobbi
+ * @author luoyu
  * @date 2018/11/21 12:48
- * @email 571002217@qq.com
  * @description
  */
 @Service

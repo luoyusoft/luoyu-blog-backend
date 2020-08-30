@@ -3,6 +3,7 @@ package com.luoyu.blog;
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.entity.article.Article;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
+import com.luoyu.blog.project.service.search.ArticleEsServer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,9 @@ class LuoYuBlogApplicationTests {
 
     @Autowired
     private ElasticSearchUtils elasticSearchUtils;
+
+    @Autowired
+    private ArticleEsServer articleEsServer;
 
     @Test
     void testEnumUtil() {
@@ -64,9 +68,14 @@ class LuoYuBlogApplicationTests {
     }
 
     @Test
+    void testESSearchAllRequest() throws Exception {
+        elasticSearchUtils.searchAllRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX).forEach(x -> log.info(x.toString()));
+    }
+
+    @Test
     void testESBulkRequest() throws Exception {
         List<Article> libs = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             Article article = new Article();
             article.setId(i);
             article.setTitle("测试落雨文章标题" + i);
@@ -79,6 +88,11 @@ class LuoYuBlogApplicationTests {
     @Test
     void testESDeleteIndex() throws Exception {
         log.info(String.valueOf(elasticSearchUtils.deleteIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)));
+    }
+
+    @Test
+    void testESInitArticle() throws Exception {
+        articleEsServer.initArticle();
     }
 
     @BeforeEach

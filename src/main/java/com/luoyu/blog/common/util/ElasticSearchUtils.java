@@ -204,6 +204,10 @@ public class ElasticSearchUtils {
         }
         // 条件构造
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        // 第几页
+        searchSourceBuilder.from(0);
+        // 每页多少条数据
+        searchSourceBuilder.size(1000);
         // 配置高亮
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         highlightBuilder.field("title").field("description");
@@ -247,6 +251,39 @@ public class ElasticSearchUtils {
                 sourceMap.put("description", n_description.toString());
             }
             results.add(sourceMap);
+        }
+        return results;
+    }
+
+    /**
+     * 搜索所有文章id
+     * @param index
+     */
+    public List<Integer> searchAllRequest(String index) throws Exception {
+        // 搜索请求
+        SearchRequest searchRequest;
+        if(StringUtils.isEmpty(index)){
+            searchRequest = new SearchRequest();
+        }else {
+            searchRequest = new SearchRequest(index);
+        }
+        // 条件构造
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        // 第几页
+        searchSourceBuilder.from(0);
+        // 每页多少条数据
+        searchSourceBuilder.size(1000);
+        // 匹配所有
+        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+        searchSourceBuilder.timeout(TimeValue.timeValueSeconds(ElasticSearchConstants.ELASTIC_SEARCH_TIMEOUT));
+
+        searchRequest.source(searchSourceBuilder);
+
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+
+        List<Integer> results = new ArrayList<>();
+        for (SearchHit searchHit : searchResponse.getHits().getHits()){
+            results.add(Integer.valueOf(searchHit.getId()));
         }
         return results;
     }
