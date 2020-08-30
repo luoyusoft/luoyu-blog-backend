@@ -7,7 +7,6 @@ import com.luoyu.blog.common.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.common.entity.article.vo.ArticleVO;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
-import com.luoyu.blog.common.util.MapUtils;
 import com.luoyu.blog.common.util.RabbitMqUtils;
 import com.luoyu.blog.project.mapper.article.ArticleMapper;
 import com.luoyu.blog.project.service.search.ArticleEsServer;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,16 +38,24 @@ public class ArticleEsServerImpl implements ArticleEsServer {
     private ArticleMapper articleMapper;
 
     @Override
-    public List<Article> searchArticle(String keyword) throws Exception {
+    public List<ArticleDTO> searchArticleList(String keyword) throws Exception {
         List<Map<String, Object>> searchRequests = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, keyword);
-        List<Article> articles = new ArrayList<>();
-        searchRequests.forEach(x -> {
-            Article article = (Article) MapUtils.mapToObject(x, Article.class);
-            if (article != null){
-                articles.add(article);
-            }
-        });
-        return articles;
+        List<ArticleDTO> articleDTOList = new ArrayList<>();
+        for(Map<String, Object> x : searchRequests){
+            ArticleDTO articleDTO = new ArticleDTO();
+            articleDTO.setId(Integer.valueOf(x.get("id").toString()));
+            articleDTO.setCover(x.get("cover").toString());
+            articleDTO.setCoverType(Integer.valueOf(x.get("coverType").toString()));
+            articleDTO.setTop(Boolean.valueOf(x.get("top").toString()));
+            articleDTO.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(x.get("createTime").toString()));
+            articleDTO.setReadNum(Long.valueOf(x.get("readNum").toString()));
+            articleDTO.setTitle(x.get("title").toString());
+            articleDTO.setAuthor(x.get("author").toString());
+            articleDTO.setDescription(x.get("description").toString());
+            articleDTO.setLikeNum(Long.valueOf(x.get("likeNum").toString()));
+            articleDTOList.add(articleDTO);
+        }
+        return articleDTOList;
     }
 
     @Override

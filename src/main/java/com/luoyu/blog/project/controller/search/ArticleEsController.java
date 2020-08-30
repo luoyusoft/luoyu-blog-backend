@@ -1,7 +1,7 @@
 package com.luoyu.blog.project.controller.search;
 
 import com.luoyu.blog.common.base.Result;
-import com.luoyu.blog.common.entity.article.Article;
+import com.luoyu.blog.common.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.project.service.search.ArticleEsServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +31,9 @@ public class ArticleEsController {
      * @return
      */
     @GetMapping("articles/search")
-    public Result searchArticle(@RequestParam("keyword") String keyword) throws Exception {
-        List<Article> articleList= articleEsServer.searchArticle(keyword);
-        return Result.ok().put("articleList", articleList);
+    public Result searchArticleList(@RequestParam("keyword") String keyword) throws Exception {
+        List<ArticleDTO> articleDTOList= articleEsServer.searchArticleList(keyword);
+        return Result.ok().put("articleList", articleDTOList);
     }
 
 }
