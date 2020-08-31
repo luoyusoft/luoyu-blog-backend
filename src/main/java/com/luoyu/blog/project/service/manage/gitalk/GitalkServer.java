@@ -9,7 +9,7 @@ public interface GitalkServer {
      * @return
      * @throws Exception
      */
-    boolean initArticle(InitGitalkRequest initGitalkRequest);
+    boolean initArticle(InitGitalkRequest initGitalkRequest) throws Exception ;
 
     /**
      * @return
