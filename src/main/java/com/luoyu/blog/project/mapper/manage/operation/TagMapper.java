@@ -1,4 +1,4 @@
-package com.luoyu.blog.project.mapper.operation;
+package com.luoyu.blog.project.mapper.manage.operation;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blog.common.entity.operation.Tag;

@@ -8,7 +8,7 @@ import com.luoyu.blog.common.util.MapUtils;
 import com.luoyu.blog.project.service.manage.sys.SysMenuService;
 import com.luoyu.blog.project.service.manage.sys.SysRoleMenuService;
 import com.luoyu.blog.project.service.manage.sys.SysUserService;
-import com.luoyu.blog.project.mapper.sys.SysMenuMapper;
+import com.luoyu.blog.project.mapper.manage.sys.SysMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

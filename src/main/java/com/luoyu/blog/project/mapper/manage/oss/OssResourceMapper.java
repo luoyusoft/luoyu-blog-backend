@@ -1,4 +1,4 @@
-package com.luoyu.blog.project.mapper.oss;
+package com.luoyu.blog.project.mapper.manage.oss;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blog.common.entity.oss.OssResource;

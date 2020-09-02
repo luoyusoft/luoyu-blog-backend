@@ -1,4 +1,4 @@
-package com.luoyu.blog.project.mapper.timeline;
+package com.luoyu.blog.project.mapper.manage.timeline;
 
 import com.luoyu.blog.common.entity.timeline.Timeline;
 import com.luoyu.blog.common.entity.timeline.TimelinePost;

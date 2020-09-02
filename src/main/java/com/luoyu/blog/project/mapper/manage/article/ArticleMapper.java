@@ -1,4 +1,4 @@
-package com.luoyu.blog.project.mapper.article;
+package com.luoyu.blog.project.mapper.manage.article;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

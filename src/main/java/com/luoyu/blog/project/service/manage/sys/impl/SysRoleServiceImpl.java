@@ -12,7 +12,7 @@ import com.luoyu.blog.project.service.manage.sys.SysRoleMenuService;
 import com.luoyu.blog.project.service.manage.sys.SysRoleService;
 import com.luoyu.blog.project.service.manage.sys.SysUserRoleService;
 import com.luoyu.blog.project.service.manage.sys.SysUserService;
-import com.luoyu.blog.project.mapper.sys.SysRoleMapper;
+import com.luoyu.blog.project.mapper.manage.sys.SysRoleMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

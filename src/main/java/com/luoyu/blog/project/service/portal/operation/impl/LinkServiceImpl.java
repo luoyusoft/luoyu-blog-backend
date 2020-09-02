@@ -3,7 +3,7 @@ package com.luoyu.blog.project.service.portal.operation.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.entity.operation.Link;
 import com.luoyu.blog.project.service.portal.operation.LinkService;
-import com.luoyu.blog.project.mapper.operation.LinkMapper;
+import com.luoyu.blog.project.mapper.manage.operation.LinkMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

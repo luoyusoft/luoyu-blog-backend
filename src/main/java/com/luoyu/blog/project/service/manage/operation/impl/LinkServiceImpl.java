@@ -7,7 +7,7 @@ import com.luoyu.blog.common.entity.operation.Link;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.project.service.manage.operation.LinkService;
-import com.luoyu.blog.project.mapper.operation.LinkMapper;
+import com.luoyu.blog.project.mapper.manage.operation.LinkMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;

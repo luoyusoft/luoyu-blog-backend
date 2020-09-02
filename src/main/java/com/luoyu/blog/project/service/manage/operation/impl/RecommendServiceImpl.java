@@ -7,7 +7,7 @@ import com.luoyu.blog.common.entity.operation.Recommend;
 import com.luoyu.blog.common.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
-import com.luoyu.blog.project.mapper.operation.RecommendMapper;
+import com.luoyu.blog.project.mapper.manage.operation.RecommendMapper;
 import com.luoyu.blog.project.service.manage.operation.RecommendService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;

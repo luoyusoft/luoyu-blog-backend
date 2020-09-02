@@ -3,7 +3,7 @@ package com.luoyu.blog.project.service.manage.oss.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.entity.oss.OssResource;
 import com.luoyu.blog.project.service.manage.oss.OssResourceService;
-import com.luoyu.blog.project.mapper.oss.OssResourceMapper;
+import com.luoyu.blog.project.mapper.manage.oss.OssResourceMapper;
 import org.springframework.stereotype.Service;
 
 /**

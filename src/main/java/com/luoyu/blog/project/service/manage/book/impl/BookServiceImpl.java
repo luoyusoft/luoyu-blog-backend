@@ -15,7 +15,7 @@ import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.common.util.RabbitMqUtils;
-import com.luoyu.blog.project.mapper.book.BookMapper;
+import com.luoyu.blog.project.mapper.manage.book.BookMapper;
 import com.luoyu.blog.project.service.manage.book.BookService;
 import com.luoyu.blog.project.service.manage.operation.CategoryService;
 import com.luoyu.blog.project.service.manage.operation.TagService;

@@ -1,4 +1,4 @@
-package com.luoyu.blog.project.mapper.sys;
+package com.luoyu.blog.project.mapper.manage.sys;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blog.common.entity.sys.SysRoleMenu;

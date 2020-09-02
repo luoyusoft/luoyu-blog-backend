@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.entity.operation.Category;
 import com.luoyu.blog.project.service.portal.operation.CategoryService;
-import com.luoyu.blog.project.mapper.operation.CategoryMapper;
+import com.luoyu.blog.project.mapper.manage.operation.CategoryMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 

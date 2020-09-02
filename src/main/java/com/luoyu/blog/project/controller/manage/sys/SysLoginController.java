@@ -6,7 +6,7 @@ import com.luoyu.blog.common.base.AbstractController;
 import com.luoyu.blog.common.entity.sys.SysUser;
 import com.luoyu.blog.common.entity.sys.form.SysLoginForm;
 import com.luoyu.blog.common.exception.enums.ErrorEnum;
-import com.luoyu.blog.project.mapper.sys.SysUserMapper;
+import com.luoyu.blog.project.mapper.manage.sys.SysUserMapper;
 import com.luoyu.blog.project.service.manage.sys.SysCaptchaService;
 import com.luoyu.blog.project.service.manage.sys.SysUserTokenService;
 import org.apache.shiro.crypto.hash.Sha256Hash;

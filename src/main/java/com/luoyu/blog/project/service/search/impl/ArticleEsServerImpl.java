@@ -8,7 +8,7 @@ import com.luoyu.blog.common.entity.article.vo.ArticleVO;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMqUtils;
-import com.luoyu.blog.project.mapper.article.ArticleMapper;
+import com.luoyu.blog.project.mapper.manage.article.ArticleMapper;
 import com.luoyu.blog.project.service.search.ArticleEsServer;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;

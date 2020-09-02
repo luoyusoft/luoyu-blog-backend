@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.project.mapper.article.ArticleMapper">
+<mapper namespace="com.luoyu.blog.project.mapper.manage.article.ArticleMapper">
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.luoyu.blog.common.entity.article.Article">
@@ -23,7 +23,7 @@
     </resultMap>
 
     <resultMap id="WithTagList" type="com.luoyu.blog.common.entity.article.dto.ArticleDTO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id, type=type}" select="com.luoyu.blog.project.mapper.operation.TagMapper.listByLinkId"/>
+        <association property="tagList" column="{linkId=id, type=type}" select="com.luoyu.blog.project.mapper.manage.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <sql id="homeArticleColumn">

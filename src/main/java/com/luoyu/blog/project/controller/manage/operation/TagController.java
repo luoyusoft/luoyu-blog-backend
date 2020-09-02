@@ -10,7 +10,7 @@ import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.project.service.manage.operation.TagService;
-import com.luoyu.blog.project.mapper.operation.TagLinkMapper;
+import com.luoyu.blog.project.mapper.manage.operation.TagLinkMapper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;

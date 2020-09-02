@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.entity.operation.Tag;
 import com.luoyu.blog.common.entity.operation.vo.TagVO;
 import com.luoyu.blog.project.service.portal.operation.TagService;
-import com.luoyu.blog.project.mapper.operation.TagMapper;
+import com.luoyu.blog.project.mapper.manage.operation.TagMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

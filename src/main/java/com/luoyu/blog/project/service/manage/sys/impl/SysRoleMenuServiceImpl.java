@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.entity.sys.SysRoleMenu;
 import com.luoyu.blog.project.service.manage.sys.SysRoleMenuService;
-import com.luoyu.blog.project.mapper.sys.SysRoleMenuMapper;
+import com.luoyu.blog.project.mapper.manage.sys.SysRoleMenuMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

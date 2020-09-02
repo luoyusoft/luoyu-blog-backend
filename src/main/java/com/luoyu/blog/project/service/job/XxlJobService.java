@@ -12,7 +12,7 @@ import com.xxl.job.core.biz.model.ReturnT;
  *
  * @author luoyu 2019-12-11 21:52:51
  */
-public interface XxlJobServer {
+public interface XxlJobService {
 
     /**
      * 初始化es文章数据job

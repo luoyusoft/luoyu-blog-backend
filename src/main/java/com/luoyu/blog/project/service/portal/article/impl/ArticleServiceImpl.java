@@ -9,7 +9,7 @@ import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.project.service.manage.operation.TagService;
 import com.luoyu.blog.project.service.portal.article.ArticleService;
-import com.luoyu.blog.project.mapper.article.ArticleMapper;
+import com.luoyu.blog.project.mapper.manage.article.ArticleMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

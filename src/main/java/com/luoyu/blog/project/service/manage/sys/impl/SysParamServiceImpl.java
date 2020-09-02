@@ -7,7 +7,7 @@ import com.luoyu.blog.common.entity.sys.SysParam;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.project.service.manage.sys.SysParamService;
-import com.luoyu.blog.project.mapper.sys.SysParamMapper;
+import com.luoyu.blog.project.mapper.manage.sys.SysParamMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.project.mapper.book.BookNoteMapper">
+<mapper namespace="com.luoyu.blog.project.mapper.manage.book.BookNoteMapper">
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.luoyu.blog.common.entity.book.BookNote">
@@ -25,8 +25,8 @@
     </resultMap>
 
     <resultMap id="WithSubList" type="com.luoyu.blog.common.entity.book.vo.BookNoteVO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blog.project.mapper.operation.TagMapper.listByLinkId"/>
-        <association property="book" column="{id=book_id}" select="com.luoyu.blog.project.mapper.book.BookMapper.selectById"/>
+        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blog.project.mapper.manage.operation.TagMapper.listByLinkId"/>
+        <association property="book" column="{id=book_id}" select="com.luoyu.blog.project.mapper.manage.book.BookMapper.selectById"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

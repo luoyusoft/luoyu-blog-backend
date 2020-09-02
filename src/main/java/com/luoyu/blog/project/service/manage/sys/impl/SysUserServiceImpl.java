@@ -12,7 +12,7 @@ import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.project.service.manage.sys.SysRoleService;
 import com.luoyu.blog.project.service.manage.sys.SysUserRoleService;
 import com.luoyu.blog.project.service.manage.sys.SysUserService;
-import com.luoyu.blog.project.mapper.sys.SysUserMapper;
+import com.luoyu.blog.project.mapper.manage.sys.SysUserMapper;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;

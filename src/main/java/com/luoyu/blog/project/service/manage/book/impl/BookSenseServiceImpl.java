@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.entity.book.BookSense;
 import com.luoyu.blog.project.service.manage.book.BookSenseService;
-import com.luoyu.blog.project.mapper.book.BookSenseMapper;
+import com.luoyu.blog.project.mapper.manage.book.BookSenseMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

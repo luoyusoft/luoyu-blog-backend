@@ -1,7 +1,7 @@
 package com.luoyu.blog.project.service.job.impl;
 
-import com.luoyu.blog.project.service.job.XxlJobServer;
-import com.luoyu.blog.project.service.manage.gitalk.GitalkServer;
+import com.luoyu.blog.project.service.job.XxlJobService;
+import com.luoyu.blog.project.service.manage.gitalk.GitalkService;
 import com.luoyu.blog.project.service.search.ArticleEsServer;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 /**
  * XxlJob开发示例（Bean模式）
@@ -31,13 +30,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class XxlJobServerImpl implements XxlJobServer {
+public class XxlJobServiceImpl implements XxlJobService {
 
     @Autowired
     private ArticleEsServer articleEsServer;
 
     @Autowired
-    private GitalkServer gitalkServer;
+    private GitalkService gitalkService;
 
     /**
      * 初始化es文章数据job
@@ -54,7 +53,7 @@ public class XxlJobServerImpl implements XxlJobServer {
     @XxlJob("initGitalkArticleJobHandler")
     @Override
     public ReturnT<String> initGitalkArticleJobHandler(String param) throws Exception {
-        return gitalkServer.initArticleList() ? ReturnT.SUCCESS: ReturnT.FAIL;
+        return gitalkService.initArticleList() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
     /**

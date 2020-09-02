@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.project.mapper.book.BookMapper">
+<mapper namespace="com.luoyu.blog.project.mapper.manage.book.BookMapper">
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.luoyu.blog.common.entity.book.Book">
@@ -26,12 +26,12 @@
     </resultMap>
 
     <resultMap id="WithSubList" extends="BaseResultMap" type="com.luoyu.blog.common.entity.book.vo.BookVO">
-        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blog.project.mapper.operation.TagMapper.listByLinkId"/>
-        <association property="bookNoteList" column="id" select="com.luoyu.blog.project.mapper.book.BookNoteMapper.listSimpleBookNote"/>
-        <association property="bookSense" column="{bookId=id}" select="com.luoyu.blog.project.mapper.book.BookSenseMapper.selectOne"/>
+        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blog.project.mapper.manage.operation.TagMapper.listByLinkId"/>
+        <association property="bookNoteList" column="id" select="com.luoyu.blog.project.mapper.manage.book.BookNoteMapper.listSimpleBookNote"/>
+        <association property="bookSense" column="{bookId=id}" select="com.luoyu.blog.project.mapper.manage.book.BookSenseMapper.selectOne"/>
     </resultMap>
     <resultMap id="WithTagList" extends="BaseResultMap" type="com.luoyu.blog.common.entity.book.vo.BookVO">
-        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blog.project.mapper.operation.TagMapper.listByLinkId"/>
+        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blog.project.mapper.manage.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

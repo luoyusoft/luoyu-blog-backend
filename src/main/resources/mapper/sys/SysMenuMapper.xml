@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.project.mapper.sys.SysMenuMapper">
+<mapper namespace="com.luoyu.blog.project.mapper.manage.sys.SysMenuMapper">
     <select id="queryListParentId" resultType="com.luoyu.blog.common.entity.sys.SysMenu">
 		select * from sys_menu where parent_id = #{parentId} order by order_num asc
 	</select>

@@ -1,4 +1,4 @@
-package com.luoyu.blog.project.mapper.log;
+package com.luoyu.blog.project.mapper.manage.log;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blog.common.entity.log.LogView;

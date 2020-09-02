@@ -8,7 +8,7 @@ import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.project.service.portal.book.BookNoteService;
 import com.luoyu.blog.project.service.portal.book.BookService;
-import com.luoyu.blog.project.mapper.book.BookNoteMapper;
+import com.luoyu.blog.project.mapper.manage.book.BookNoteMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

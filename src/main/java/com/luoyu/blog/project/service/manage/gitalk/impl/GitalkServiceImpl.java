@@ -6,8 +6,8 @@ import com.luoyu.blog.common.entity.article.vo.ArticleVO;
 import com.luoyu.blog.common.entity.gitalk.InitGitalkRequest;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMqUtils;
-import com.luoyu.blog.project.mapper.article.ArticleMapper;
-import com.luoyu.blog.project.service.manage.gitalk.GitalkServer;
+import com.luoyu.blog.project.mapper.manage.article.ArticleMapper;
+import com.luoyu.blog.project.service.manage.gitalk.GitalkService;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
@@ -23,22 +23,15 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
-public class GitalkServerImpl implements GitalkServer {
+public class GitalkServiceImpl implements GitalkService {
 
     // 请求地址前缀
     private static final String GITHUB_REPOS_URL = "https://api.github.com/repos/";

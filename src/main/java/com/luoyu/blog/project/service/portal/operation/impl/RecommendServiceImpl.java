@@ -6,7 +6,7 @@ import com.luoyu.blog.common.entity.book.vo.BookNoteVO;
 import com.luoyu.blog.common.entity.operation.Recommend;
 import com.luoyu.blog.common.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.common.enums.ModuleEnum;
-import com.luoyu.blog.project.mapper.operation.RecommendMapper;
+import com.luoyu.blog.project.mapper.manage.operation.RecommendMapper;
 import com.luoyu.blog.project.service.portal.article.ArticleService;
 import com.luoyu.blog.project.service.portal.book.BookNoteService;
 import com.luoyu.blog.project.service.portal.operation.RecommendService;

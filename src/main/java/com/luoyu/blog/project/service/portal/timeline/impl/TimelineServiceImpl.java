@@ -4,7 +4,7 @@ import com.luoyu.blog.common.entity.timeline.Timeline;
 import com.luoyu.blog.common.entity.timeline.TimelineMonth;
 import com.luoyu.blog.common.entity.timeline.TimelinePost;
 import com.luoyu.blog.project.service.portal.timeline.TimelineService;
-import com.luoyu.blog.project.mapper.timeline.TimelineMapper;
+import com.luoyu.blog.project.mapper.manage.timeline.TimelineMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
