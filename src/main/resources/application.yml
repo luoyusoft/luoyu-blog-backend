@@ -9,10 +9,10 @@ server:
       #连接超时时间
       min-spare: 30
   #端口配置
-  port: 9999
+  port: 9998
   servlet:
     #映射项目路径
-    context-path: /api/luoyublog
+    context-path: /api/luoyublog/manage
 
 spring:
   profiles:

@@ -10,17 +10,18 @@
     </parent>
 
     <groupId>com.luoyu</groupId>
-    <artifactId>luoyublog-backend</artifactId>
+    <artifactId>luoyublog-manage-backend</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>luoyublog-backend</name>
-    <description>LuoYu Blog Backend</description>
+    <name>luoyublog-manage-backend</name>
+    <description>LuoYu Blog Manage Backend</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+
         <mybatisplus.version>3.3.1</mybatisplus.version>
         <shiro.version>1.4.0</shiro.version>
         <kaptcha.version>0.0.9</kaptcha.version>
@@ -32,6 +33,11 @@
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <lombok.version>1.18.4</lombok.version>
         <elasticsearch.version>7.7.0</elasticsearch.version>
+        <mybatis.plus.generator.version>3.3.1.tmp</mybatis.plus.generator.version>
+        <velocity.engine.core.version>2.2</velocity.engine.core.version>
+        <freemarker.version>2.3.29</freemarker.version>
+        <knife4j.spring.boot.starter.version>2.0.4</knife4j.spring.boot.starter.version>
+        <xxl.job.core.version>2.2.0</xxl.job.core.version>
     </properties>
 
     <dependencies>
@@ -62,31 +68,40 @@
             <artifactId>jasypt-spring-boot-starter</artifactId>
             <version>${jasypt.version}</version>
         </dependency>
+
         <!-- aop -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-        <!-- web相关包 -->
+
+        <!-- web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!-- shiro -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
             <version>${shiro.version}</version>
         </dependency>
+
+        <!-- kaptcha -->
         <dependency>
             <groupId>com.github.axet</groupId>
             <artifactId>kaptcha</artifactId>
             <version>${kaptcha.version}</version>
         </dependency>
+
+        <!-- 七牛云 -->
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
             <version>${qiniu.version}</version>
         </dependency>
+
         <!-- 单元测试包 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -99,44 +114,48 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- 数据库相关包 -->
+
+        <!-- mybatis-Plus -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatisplus.version}</version>
         </dependency>
-        <!-- 一个基于springboot的快速集成多数据源的启动器 -->
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>-->
-<!--            <version>3.1.0</version>-->
-<!--        </dependency>-->
-        <!-- mybatisPlus 代码生成器 -->
+
+        <!-- mybatis-Plus 代码生成器 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.3.1.tmp</version>
+            <version>${mybatis.plus.generator.version}</version>
         </dependency>
-        <!-- mybatisPlus Velocity 模版引擎 -->
+
+        <!-- mybatis-Plus Velocity 模版引擎 -->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
-            <version>2.2</version>
+            <version>${velocity.engine.core.version}</version>
         </dependency>
-        <!-- mybatisPlus Freemarker 模版引擎 -->
+
+        <!-- mybatis-Plus Freemarker 模版引擎 -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.29</version>
+            <version>${freemarker.version}</version>
         </dependency>
+
+        <!-- mysql驱动 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+
+        <!-- 缓存 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
+
+        <!-- redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -146,33 +165,39 @@
             <artifactId>commons-pool2</artifactId>
             <version>${redis.pool.version}</version>
         </dependency>
+
         <!-- elasticsearch -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
+
         <!-- rabbitmq -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
+
         <!-- knife4j -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
-            <version>2.0.4</version>
+            <version>${knife4j.spring.boot.starter.version}</version>
         </dependency>
+
         <!-- 校验相关注解 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
         <!-- 任务调度xxl-job -->
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
-            <version>2.2.0</version>
+            <version>${xxl.job.core.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>
