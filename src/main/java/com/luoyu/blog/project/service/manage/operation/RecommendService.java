@@ -49,5 +49,5 @@ public interface RecommendService extends IService<Recommend> {
      * @param articleId
      * @param value
      */
-    void insertRecommend(Integer articleId, int value, String title, boolean top);
+    void insertRecommend(Integer articleId, int value);
 }

@@ -3,14 +3,17 @@ package com.luoyu.blog.project.service.manage.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.luoyu.blog.common.entity.article.Article;
 import com.luoyu.blog.common.entity.operation.Recommend;
 import com.luoyu.blog.common.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
+import com.luoyu.blog.project.mapper.manage.article.ArticleMapper;
 import com.luoyu.blog.project.mapper.manage.operation.RecommendMapper;
 import com.luoyu.blog.project.service.manage.operation.RecommendService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +30,9 @@ import java.util.Map;
 @Service
 @Slf4j
 public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend> implements RecommendService {
+
+    @Autowired
+    private ArticleMapper articleMapper;
 
     /**
      * 分页查询
@@ -94,15 +100,18 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
      * @param type
      */
     @Override
-    public void insertRecommend(Integer linkId, int type, String title, boolean top) {
-        int i = baseMapper.selectCount();
-        Recommend recommend = new Recommend();
-        recommend.setLinkId(linkId);
-        recommend.setType(type);
-        recommend.setOrderNum(i + 1);
-        recommend.setTop(top);
-        recommend.setTitle(title);
-        baseMapper.insert(recommend);
+    public void insertRecommend(Integer linkId, int type) {
+        Article article = articleMapper.selectById(linkId);
+        if(article != null){
+            int i = baseMapper.selectCount();
+            Recommend recommend = new Recommend();
+            recommend.setLinkId(linkId);
+            recommend.setType(type);
+            recommend.setOrderNum(i + 1);
+            recommend.setTop(article.getTop());
+            recommend.setTitle(article.getTitle());
+            baseMapper.insert(recommend);
+        }
     }
 
 }
