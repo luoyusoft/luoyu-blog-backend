@@ -87,4 +87,22 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
         }
     }
 
+    /**
+     * 新增
+     *
+     * @param linkId
+     * @param type
+     */
+    @Override
+    public void insertRecommend(Integer linkId, int type, String title, boolean top) {
+        int i = baseMapper.selectCount();
+        Recommend recommend = new Recommend();
+        recommend.setLinkId(linkId);
+        recommend.setType(type);
+        recommend.setOrderNum(i + 1);
+        recommend.setTop(top);
+        recommend.setTitle(title);
+        baseMapper.insert(recommend);
+    }
+
 }

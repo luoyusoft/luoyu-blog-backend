@@ -26,4 +26,8 @@
                select bn.id as linkId ,bn.title,2 as type,bn.read_num from book_note bn  ) t order by t.read_num desc limit 5
     </select>
 
+    <select id="selectCount" resultType="java.lang.Integer">
+      select count(*) from recommend
+    </select>
+
 </mapper>

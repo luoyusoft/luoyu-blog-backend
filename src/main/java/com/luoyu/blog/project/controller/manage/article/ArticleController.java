@@ -79,6 +79,12 @@ public class ArticleController {
     @CacheEvict(allEntries = true)
     public Result updateStatus(@RequestBody Article article) {
         articleService.updateById(article);
+        if(article.getRecommend()){
+            recommendService.insertRecommend(article.getId(), ModuleEnum.ARTICLE.getValue(), article.getTitle(), article.getTop());
+        }else {
+            Integer[] articleIds = {article.getId()};
+            recommendService.deleteBatchByLinkId(articleIds, ModuleEnum.ARTICLE.getValue());
+        }
         return Result.ok();
     }
 

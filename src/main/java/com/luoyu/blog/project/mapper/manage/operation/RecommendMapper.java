@@ -35,4 +35,10 @@ public interface RecommendMapper extends BaseMapper<Recommend> {
      * @return
      */
     List<RecommendVO> listHotRead();
+
+    /**
+     * 获取总数量
+     * @return
+     */
+    int selectCount();
 }
