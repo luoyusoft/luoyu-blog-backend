@@ -42,7 +42,7 @@ public class GitalkServiceImpl implements GitalkService {
     // blogUrl 博客首页地址
     private static final String BLOG_URL = "https://luoyublog.com";
     // 获取到的Token
-    private static final String TOKEN = "5ef6ae6387d3ebabb035eeaaec0e1ca92b3e8f6b";
+    private static final String TOKEN = "2c7850d3d307679ea0cdd79de41221e9fff64a91";
 
     @Autowired
     private RestTemplate restTemplate;
