@@ -15,6 +15,11 @@ import com.xxl.job.core.biz.model.ReturnT;
 public interface XxlJobService {
 
     /**
+     * 测试job
+     */
+    ReturnT<String> testJobHandler(String param) throws Exception;
+
+    /**
      * 初始化es文章数据job
      */
     ReturnT<String> initESArticleJobHandler(String param) throws Exception;

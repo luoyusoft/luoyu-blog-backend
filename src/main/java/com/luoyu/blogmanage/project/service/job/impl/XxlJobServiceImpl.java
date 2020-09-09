@@ -8,6 +8,7 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.core.util.ShardingUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * XxlJob开发示例（Bean模式）
@@ -37,6 +41,16 @@ public class XxlJobServiceImpl implements XxlJobService {
 
     @Autowired
     private GitalkService gitalkService;
+
+    /**
+     * 测试job
+     */
+    @XxlJob("initESArticleJobHandler")
+    @Override
+    public ReturnT<String> testJobHandler(String param) throws Exception {
+        log.info("time：" + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()) + "，param：" + param);
+        return ReturnT.SUCCESS;
+    }
 
     /**
      * 初始化es文章数据job
