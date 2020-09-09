@@ -45,7 +45,7 @@ public class XxlJobServiceImpl implements XxlJobService {
     /**
      * 测试job
      */
-    @XxlJob("initESArticleJobHandler")
+    @XxlJob("testJobHandler")
     @Override
     public ReturnT<String> testJobHandler(String param) throws Exception {
         log.info("time：" + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()) + "，param：" + param);
