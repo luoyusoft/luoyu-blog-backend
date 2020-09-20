@@ -35,3 +35,8 @@ spring:
   resources:
     #restFul风格: 不要为资源文件建立映射
     add-mappings: false
+  cloud:
+    nacos:
+      config:
+        server-addr: 121.36.44.234:8848
+        file-extension: yaml
