@@ -26,14 +26,14 @@ import java.util.List;
 /**
  * PageUtils
  *
- * @author bobbi
+ * @author luoyu
  * @date 2018/10/19 21:51
- * @email 571002217@qq.com
  * @description 分页工具类
  */
 @Data
 @NoArgsConstructor
 public class PageUtils implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	//总记录数
 	private long totalCount;
@@ -71,7 +71,5 @@ public class PageUtils implements Serializable {
 		this.currPage = page.getCurrent();
 		this.totalPage = (int)page.getPages();
 	}
-
-
 	
 }

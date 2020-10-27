@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 /**
  * ValidatorUtils
  *
- * @author Zoey
+ * @author luoyu
  * @date 2018/10/25 22:45
- * @email 571002217@qq.com
  * @description
  */
 public class ValidatorUtils {
+
     private static Validator validator;
 
     static {
@@ -40,4 +40,5 @@ public class ValidatorUtils {
             throw new MyException(msg);
         }
     }
+
 }

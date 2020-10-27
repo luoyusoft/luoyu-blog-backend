@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blogmanage.project.mapper.article.ArticleMapper">
+<mapper namespace="com.luoyu.blogmanage.mapper.article.ArticleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.luoyu.blogmanage.common.entity.article.Article">
+    <resultMap id="BaseResultMap" type="com.luoyu.blogmanage.entity.article.Article">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="description" property="description" />
@@ -22,8 +22,8 @@
         <result column="top" property="top" />
     </resultMap>
 
-    <resultMap id="WithTagList" type="com.luoyu.blogmanage.common.entity.article.dto.ArticleDTO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id, type=type}" select="com.luoyu.blogmanage.project.mapper.operation.TagMapper.listByLinkId"/>
+    <resultMap id="WithTagList" type="com.luoyu.blogmanage.entity.article.dto.ArticleDTO" extends="BaseResultMap">
+        <association property="tagList" column="{linkId=id, type=type}" select="com.luoyu.blogmanage.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <sql id="homeArticleColumn">
@@ -34,7 +34,7 @@
        id,title,description,author,read_num,like_num,cover,cover_type,create_time,top,publish,recommend,category_id
     </sql>
 
-    <select id="listArticleVo" resultType="com.luoyu.blogmanage.common.entity.article.vo.ArticleVO">
+    <select id="listArticleVo" resultType="com.luoyu.blogmanage.entity.article.vo.ArticleVO">
         select <include refid="manageArticleColumn"/> from article
         <where>
             <if test="params.title!=null and params.title !=''">
@@ -71,7 +71,7 @@
         update article set read_num = read_num + 1 where id = #{id}
     </update>
 
-    <select id="getSimpleArticleVo" resultType="com.luoyu.blogmanage.common.entity.article.vo.ArticleVO">
+    <select id="getSimpleArticleVo" resultType="com.luoyu.blogmanage.entity.article.vo.ArticleVO">
         select <include refid="homeArticleColumn"/> from article where id = #{id}
     </select>
 
@@ -83,7 +83,7 @@
         select count(*) from article where category_id = #{categoryId}
     </select>
 
-    <select id="selectArticleList" resultType="com.luoyu.blogmanage.common.entity.article.vo.ArticleVO">
+    <select id="selectArticleList" resultType="com.luoyu.blogmanage.entity.article.vo.ArticleVO">
         select <include refid="homeArticleColumn"/> from article where publish = true
     </select>
 </mapper>

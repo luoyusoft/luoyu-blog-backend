@@ -1,34 +1,34 @@
 package com.luoyu.blogmanage.common.exception;
 
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnum;
+import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
 import lombok.Data;
 
 /**
  * MyException
  *
- * @author bobbi
+ * @author luoyu
  * @date 2018/10/07 13:54
- * @email 571002217@qq.com
  * @description 自定义异常
  */
 @Data
 public class MyException extends RuntimeException {
+
     private String msg;
     private int code = 500;
 
     public MyException(){
-        super(ErrorEnum.UNKNOWN.getMsg());
-        this.msg=ErrorEnum.UNKNOWN.getMsg();
+        super(ErrorEnums.UNKNOWN.getMsg());
+        this.msg= ErrorEnums.UNKNOWN.getMsg();
     }
 
 
-    public MyException(ErrorEnum eEnum, Throwable e){
+    public MyException(ErrorEnums eEnum, Throwable e){
         super(eEnum.getMsg(),e);
         this.msg=eEnum.getMsg();
         this.code=eEnum.getCode();
     }
 
-    public MyException(ErrorEnum eEnum){
+    public MyException(ErrorEnums eEnum){
         this.msg=eEnum.getMsg();
         this.code=eEnum.getCode();
     }

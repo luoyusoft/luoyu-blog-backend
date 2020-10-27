@@ -1,6 +1,8 @@
 spring:
   application:
     name: luoyublog-manage-backend-server
+  lifecycle:
+    timeout-per-shutdown-phase: 20s # 默认时间为30S, 意味着最大等待30S，超时候无论线程任务是否执行完毕都会停机处理，一定要合理合理设置。
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://47.101.135.160:3306/luoyu_blog?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT
@@ -73,13 +75,27 @@ spring:
           initial-interval: 1000ms
           max-interval: 10000ms
         default-requeue-rejected: true
+  mail:
+    host: smtp.126.com # 不同的邮箱不一致，请自行百度查询
+    port: 25 # 126邮箱默认25
+    username: luoyusoft@126.com # 发送邮箱
+    password: xxx # 授权码
+    protocol: smtp
+    default-encoding: utf-8
+  #    properties: # 此处可以添加ssl端口
+  #      mail.smtp.auth: true
+  #      mail.smtp.starttls.enable: true
+  #      mail.smtp.starttls.required: true
+  #      mail.smtp.socketFactory.port: 465
+  #      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+  #      mail.smtp.socketFactory.fallback: false
 
 # mybatis-plus
 mybatis-plus:
   #mapper文件
   mapper-locations: classpath:mapper/**/*.xml
   #实体扫描，多个package用逗号或者分号分隔
-  type-aliases-package: com.luoyu.blogmanage.common.entity.*
+  type-aliases-package: com.luoyu.blogmanage.entity
   # 以下配置均有默认值,可以不设置
   global-config:
     # 数据库相关配置
@@ -129,12 +145,12 @@ xxl:
   job:
     admin:
       # 调度中心部署跟地址 [选填]：如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
-      addresses: http://121.36.44.234:8092/xxl-job-admin
+      addresses: http://xxl-job.luoyublog.com/xxl-job-admin
     executor:
       # 执行器注册 [选填]：优先使用该配置作为注册地址，为空时使用内嵌服务 ”IP:PORT“ 作为注册地址。从而更灵活的支持容器类型执行器动态IP和动态映射端口问题。
       address:
       # 执行器AppName [选填]：执行器心跳注册分组依据；为空则关闭自动注册
-      appname: manage-prod
+      appname: luoyublog-manage-prod
       # 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP，该IP不会绑定Host仅作为通讯实用；地址信息用于 "执行器注册" 和 "调度中心请求并触发任务"；
       ip:
       # 执行器端口号 [选填]：小于等于0则自动获取；默认端口为9999，单机部署多个执行器时，注意要配置不同执行器端口；
@@ -144,4 +160,19 @@ xxl:
       # 执行器日志文件保存天数 [选填] ： 过期日志自动清理, 限制值大于等于3时生效; 否则, 如-1, 关闭自动清理功能；
       logretentiondays: 15
     # 执行器通讯TOKEN [选填]：非空时启用；
-    accessToken:
+    accessToken: token123
+
+management:
+  #  server:
+  #    # 设置监控服务端口,如果没写默认就是服务器的端口
+  #    port: 8081
+  endpoint:
+    health:
+      show-details: always # 显示健康详情
+    shutdown:
+      enabled: true # 开启shutdown端点访问
+  endpoints:
+    web:
+      base-path: /actuator # 访问根路径
+      exposure:
+        include: "*" # 开启除了shutdown以外的所有端点访问

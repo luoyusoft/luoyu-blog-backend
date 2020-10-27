@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Slf4j
-@MapperScan({"com.luoyu.blogmanage.project.mapper"})
+@MapperScan({"com.luoyu.blogmanage.mapper"})
 @SpringBootApplication
 public class LuoYuBlogManageApplication {
     public static void main(String[] args) {

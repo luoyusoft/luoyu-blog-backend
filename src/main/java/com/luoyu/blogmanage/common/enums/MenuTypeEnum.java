@@ -5,13 +5,13 @@ import lombok.Getter;
 /**
  * MenuTypeEnum
  *
- * @author bobbi
+ * @author luoyu
  * @date 2019/01/08 20:24
- * @email 571002217@qq.com
  * @description 菜单类型
  */
 @Getter
 public enum MenuTypeEnum {
+
     /**
      * 目录
      */
@@ -34,4 +34,5 @@ public enum MenuTypeEnum {
     public int getValue() {
         return value;
     }
+
 }

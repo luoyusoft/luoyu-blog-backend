@@ -16,9 +16,8 @@ import java.util.Map;
 /**
  * JsonUtils
  *
- * @author bobbi
+ * @author luoyu
  * @date 2018/10/08 19:13
- * @email 571002217@qq.com
  * @description Json工具类，依赖 jackson
  */
 @Slf4j
@@ -99,7 +98,6 @@ public class JsonUtils {
             log.warn("Parse Json to Map error",e);
             return null;
         }
-
     }
 
 }

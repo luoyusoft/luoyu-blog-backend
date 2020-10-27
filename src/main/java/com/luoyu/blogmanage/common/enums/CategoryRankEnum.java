@@ -5,9 +5,8 @@ import lombok.Getter;
 /**
  * CategoryRankEnum
  *
- * @author bobbi
+ * @author luoyu
  * @date 2019/01/08 20:25
- * @email 571002217@qq.com
  * @description 分类级别枚举
  */
 @Getter
@@ -39,4 +38,5 @@ public enum CategoryRankEnum {
     public int getValue() {
         return value;
     }
+
 }

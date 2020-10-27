@@ -1,9 +1,9 @@
 package com.luoyu.blogmanage;
 
 import com.luoyu.blogmanage.common.constants.ElasticSearchConstants;
-import com.luoyu.blogmanage.common.entity.article.Article;
 import com.luoyu.blogmanage.common.util.ElasticSearchUtils;
-import com.luoyu.blogmanage.project.service.search.ArticleEsServer;
+import com.luoyu.blogmanage.entity.article.Article;
+import com.luoyu.blogmanage.service.search.ArticleEsServer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

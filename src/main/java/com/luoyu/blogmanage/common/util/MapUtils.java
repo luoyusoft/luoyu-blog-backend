@@ -7,9 +7,8 @@ import java.util.*;
 /**
  * MapUtils
  *
- * @author bobbi
+ * @author luoyu
  * @date 2018/10/22 19:38
- * @email 571002217@qq.com
  * @description Map工具类
  */
 public class MapUtils extends HashMap<String, Object> {
@@ -72,6 +71,5 @@ public class MapUtils extends HashMap<String, Object> {
         }
         return obj;
     }
-
 
 }

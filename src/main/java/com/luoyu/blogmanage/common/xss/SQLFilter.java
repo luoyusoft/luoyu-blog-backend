@@ -1,9 +1,8 @@
 package com.luoyu.blogmanage.common.xss;
 
 import com.luoyu.blogmanage.common.exception.MyException;
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnum;
+import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
 import org.springframework.util.StringUtils;
-
 
 /**
  * 防止SQL注入
@@ -33,10 +32,11 @@ public class SQLFilter {
         //判断是否包含非法字符
         for(String keyword : keywords){
             if(str.indexOf(keyword) != -1){
-                throw new MyException(ErrorEnum.SQL_ILLEGAL);
+                throw new MyException(ErrorEnums.SQL_ILLEGAL);
             }
         }
 
         return str;
     }
+
 }

@@ -1,5 +1,6 @@
 package com.luoyu.blogmanage.common.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,13 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * DateUtils
  *
- * @author bobbi
+ * @author luoyu
  * @date 2018/10/20 13:26
- * @email 571002217@qq.com
  * @description IP工具类
  */
+@Slf4j
 public class IPUtils {
-	private static Logger logger = LoggerFactory.getLogger(IPUtils.class);
 
 	/**
 	 * 获取IP地址
@@ -43,7 +43,7 @@ public class IPUtils {
                 ip = request.getRemoteAddr();
             }
         } catch (Exception e) {
-        	logger.error("IPUtils ERROR ", e);
+        	log.error("IPUtils ERROR ", e);
         }
 
 //        //使用代理，则获取第一个IP地址
@@ -52,7 +52,6 @@ public class IPUtils {
 //				ip = ip.substring(0, ip.indexOf(","));
 //			}
 //		}
-        
         return ip;
     }
 	

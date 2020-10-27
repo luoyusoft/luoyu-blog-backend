@@ -1,7 +1,7 @@
 package com.luoyu.blogmanage.common.util;
 
 import com.luoyu.blogmanage.common.constants.ElasticSearchConstants;
-import com.luoyu.blogmanage.common.entity.article.Article;
+import com.luoyu.blogmanage.entity.article.Article;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -287,4 +287,5 @@ public class ElasticSearchUtils {
         }
         return results;
     }
+
 }

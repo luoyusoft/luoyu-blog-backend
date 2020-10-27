@@ -8,6 +8,7 @@ server:
       max: 1000
       #连接超时时间
       min-spare: 30
+  shutdown: graceful # 在web容器关闭时，web服务器将不再接收新请求，并将等待活动请求完成的缓冲期。
   #端口配置
   port: 9998
   servlet:

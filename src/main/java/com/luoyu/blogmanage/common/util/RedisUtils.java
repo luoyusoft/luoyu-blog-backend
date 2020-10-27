@@ -127,6 +127,4 @@ public class RedisUtils {
         redisTemplate.expire(key,DEFAULT_EXPIRE, TimeUnit.SECONDS);
     }
 
-
-
 }

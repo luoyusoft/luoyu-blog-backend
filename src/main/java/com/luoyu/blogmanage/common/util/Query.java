@@ -11,13 +11,13 @@ import java.util.Map;
 /**
  * Query
  *
- * @author bobbi
+ * @author luoyu
  * @date 2018/10/25 11:48
- * @email 571002217@qq.com
  * @description 查询参数
  */
 @Data
 public class Query<T> extends LinkedHashMap<String, Object> {
+
     /**
      * mybatis-plus分页参数
      */
@@ -26,7 +26,6 @@ public class Query<T> extends LinkedHashMap<String, Object> {
      * 当前页码
      */
     private long currPage=1;
-
     /**
      * 每页条数
      */
@@ -65,7 +64,6 @@ public class Query<T> extends LinkedHashMap<String, Object> {
             }
 
         }
-
     }
 
 }

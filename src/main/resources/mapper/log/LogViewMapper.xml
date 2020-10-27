@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blogmanage.project.mapper.log.LogViewMapper">
+<mapper namespace="com.luoyu.blogmanage.mapper.log.LogViewMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.luoyu.blogmanage.common.entity.log.LogView">
+    <resultMap id="BaseResultMap" type="com.luoyu.blogmanage.entity.log.LogView">
         <id column="id" property="id" />
         <result column="type" property="type" />
         <result column="method" property="method" />

@@ -5,13 +5,13 @@ import lombok.Getter;
 /**
  * TypeEnum
  *
- * @author bobbi
+ * @author luoyu
  * @date 2019/01/08 20:21
- * @email 571002217@qq.com
  * @description 模块枚举
  */
 @Getter
 public enum ModuleEnum {
+
     /**
      * 文章模块
      */
@@ -30,4 +30,5 @@ public enum ModuleEnum {
     ModuleEnum(int value) {
         this.value = value;
     }
+
 }

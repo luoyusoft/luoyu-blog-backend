@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blogmanage.project.mapper.book.BookMapper">
+<mapper namespace="com.luoyu.blogmanage.mapper.book.BookMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.luoyu.blogmanage.common.entity.book.Book">
+    <resultMap id="BaseResultMap" type="com.luoyu.blogmanage.entity.book.Book">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="cover" property="cover" />
@@ -25,13 +25,13 @@
         <result column="reading" property="reading" />
     </resultMap>
 
-    <resultMap id="WithSubList" extends="BaseResultMap" type="com.luoyu.blogmanage.common.entity.book.vo.BookVO">
-        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blogmanage.project.mapper.operation.TagMapper.listByLinkId"/>
-        <association property="bookNoteList" column="id" select="com.luoyu.blogmanage.project.mapper.book.BookNoteMapper.listSimpleBookNote"/>
-        <association property="bookSense" column="{bookId=id}" select="com.luoyu.blogmanage.project.mapper.book.BookSenseMapper.selectOne"/>
+    <resultMap id="WithSubList" extends="BaseResultMap" type="com.luoyu.blogmanage.entity.book.vo.BookVO">
+        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blogmanage.mapper.operation.TagMapper.listByLinkId"/>
+        <association property="bookNoteList" column="id" select="com.luoyu.blogmanage.mapper.book.BookNoteMapper.listSimpleBookNote"/>
+        <association property="bookSense" column="{bookId=id}" select="com.luoyu.blogmanage.mapper.book.BookSenseMapper.selectOne"/>
     </resultMap>
-    <resultMap id="WithTagList" extends="BaseResultMap" type="com.luoyu.blogmanage.common.entity.book.vo.BookVO">
-        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blogmanage.project.mapper.operation.TagMapper.listByLinkId"/>
+    <resultMap id="WithTagList" extends="BaseResultMap" type="com.luoyu.blogmanage.entity.book.vo.BookVO">
+        <association property="tagList" column="{linkId=id,type=type}" select="com.luoyu.blogmanage.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -43,7 +43,7 @@
         id,title,description,author,read_num,like_num,cover,create_time,reading,progress
     </sql>
 
-    <select id="listBookVo" resultType="com.luoyu.blogmanage.common.entity.book.vo.BookVO">
+    <select id="listBookVo" resultType="com.luoyu.blogmanage.entity.book.vo.BookVO">
         select <include refid="Base_Column_List"/> from book
         <where>
             <if test="params.title!=null and params.title!=''">

@@ -67,4 +67,5 @@ public class RabbitMqUtils implements RabbitTemplate.ConfirmCallback, RabbitTemp
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
         this.rabbitTemplate.convertAndSend(exChange, routingKey, obj, correlationId);
     }
+
 }
