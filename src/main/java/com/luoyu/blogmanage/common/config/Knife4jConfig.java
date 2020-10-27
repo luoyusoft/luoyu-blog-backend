@@ -65,8 +65,8 @@ public class Knife4jConfig implements WebMvcConfigurer {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Knife4j 接口文档")
-                .description("Knife4j 接口文档")
+                .title("LuoYu Blog Manage Knife4j 接口文档")
+                .description("LuoYu Blog Manage Knife4j 接口文档")
                 .version("1.0.0")
                 .termsOfServiceUrl("http://localhost:9998/doc.html")
                 .build();
