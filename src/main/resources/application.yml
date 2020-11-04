@@ -10,7 +10,7 @@ server:
       min-spare: 30
   shutdown: graceful # 在web容器关闭时，web服务器将不再接收新请求，并将等待活动请求完成的缓冲期。
   #端口配置
-  port: 9998
+  port: 8800
   servlet:
     #映射项目路径
     context-path: /api/luoyublog/manage
@@ -36,8 +36,6 @@ spring:
   resources:
     #restFul风格: 不要为资源文件建立映射
     add-mappings: false
-  cloud:
-    nacos:
-      config:
-        server-addr: 121.36.44.234:8848
-        file-extension: yaml
+
+logging:
+  config: classpath:logback-spring.xml
