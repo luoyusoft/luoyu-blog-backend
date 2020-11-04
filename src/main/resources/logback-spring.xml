@@ -154,7 +154,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
             <!--日志文档保留天数-->
             <maxHistory>15</maxHistory>
         </rollingPolicy>
-        <!-- 此日志文档只记录ERROR级别的 -->
+        <!-- 此日志文档记录所有级别的 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <level>INFO</level>
