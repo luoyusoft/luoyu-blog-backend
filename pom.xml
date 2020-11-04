@@ -252,7 +252,7 @@
                         <auth>
                             <!--在docker-hub或者阿里云上的账号和密码-->
                             <username>luoyusoft</username>
-                            <password>Ajinhaoxun668797</password>
+                            <password>token123456</password>
                         </auth>
                     </to>
                     <container>
