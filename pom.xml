@@ -237,7 +237,7 @@
                 <configuration>
                     <!-- 拉取所需的基础镜像 - 这里的jdk8，是用于运行springboot项目 -->
                     <from>
-                        <image>openjdk:8-jdk-alpine</image>
+                        <image>java:8</image>
                     </from>
                     <!-- 最后生成的镜像配置 -->
                     <to>
