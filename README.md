@@ -14,7 +14,7 @@
 ## 后端技术栈
 ```
 SpringBoot 2.x
-Mybatis-Plus
+MyBatis-Plus
 Apache Shiro
 Xxl-Job
 Elasticsearch
@@ -26,6 +26,7 @@ knife4j
 Lombox
 Kaptcha
 Docker
+...
 ```
 
 ## 后端部署
