@@ -3,15 +3,14 @@ package com.luoyu.blogmanage.service.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blogmanage.entity.operation.Category;
-import com.luoyu.blogmanage.service.operation.CategoryService;
 import com.luoyu.blogmanage.mapper.operation.CategoryMapper;
+import com.luoyu.blogmanage.service.operation.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -28,12 +27,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     /**
      * 查询所有菜单
      *
-     * @param params
+     * @param name
+     * @param type
      * @return
      */
     @Override
-    public List<Category> queryWithParentName(Map<String, Object> params) {
-        return baseMapper.queryAll(params);
+    public List<Category> queryWithParentName(String name, Integer type) {
+        return baseMapper.queryAll(name, type);
     }
 
     /**

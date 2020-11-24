@@ -2,11 +2,10 @@ package com.luoyu.blogmanage.service.operation;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.luoyu.blogmanage.entity.operation.Tag;
 import com.luoyu.blogmanage.common.util.PageUtils;
+import com.luoyu.blogmanage.entity.operation.Tag;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -21,10 +20,12 @@ public interface TagService extends IService<Tag> {
     /**
      * 分页查询
      *
-     * @param params
+     * @param page
+     * @param limit
+     * @param key
      * @return
      */
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Integer page, Integer limit, String key);
 
     /**
      * 根据关联Id获取列表

@@ -1,14 +1,14 @@
 package com.luoyu.blogmanage.controller.operation;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.luoyu.blogmanage.entity.base.Result;
-import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.common.constants.RedisCacheNames;
-import com.luoyu.blogmanage.entity.operation.Tag;
-import com.luoyu.blogmanage.entity.operation.TagLink;
 import com.luoyu.blogmanage.common.enums.ModuleEnum;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
+import com.luoyu.blogmanage.entity.base.AbstractController;
+import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.operation.Tag;
+import com.luoyu.blogmanage.entity.operation.TagLink;
 import com.luoyu.blogmanage.mapper.operation.TagLinkMapper;
 import com.luoyu.blogmanage.service.operation.TagService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -46,10 +45,9 @@ public class TagController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("operation:tag:list")
-    public Result list(@RequestParam Map<String, Object> params){
-        PageUtils page = tagService.queryPage(params);
-
-        return Result.ok().put("page", page);
+    public Result list(@RequestParam("t") Long t, @RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("key") String key){
+        PageUtils tagPage = tagService.queryPage(page, limit, key);
+        return Result.ok().put("page", tagPage);
     }
 
     @GetMapping("/select")

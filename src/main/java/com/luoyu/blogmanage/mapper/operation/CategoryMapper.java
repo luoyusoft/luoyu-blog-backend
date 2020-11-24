@@ -2,9 +2,9 @@ package com.luoyu.blogmanage.mapper.operation;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blogmanage.entity.operation.Category;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -18,9 +18,10 @@ public interface CategoryMapper extends BaseMapper<Category> {
 
     /**
      * 查询所有类别
-     * @param params
+     * @param name
+     * @param type
      * @return
      */
-    List<Category> queryAll(Map<String, Object> params);
+    List<Category> queryAll(@Param("name") String name, @Param("type") Integer type);
 
 }

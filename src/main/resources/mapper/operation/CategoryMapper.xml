@@ -15,14 +15,14 @@
         id, name, type, rank, parent_id
     </sql>
 
-    <select id="queryAll" parameterType="Map" resultType="com.luoyu.blogmanage.entity.operation.Category">
+    <select id="queryAll" resultType="com.luoyu.blogmanage.entity.operation.Category">
         select t.*,s.name as parentName from category t left join category s on t.parent_id = s.id
         <where>
             <if test="name != null and name != ''">
-                t.name like concat('%',#{name},'%')
+                and t.name like concat('%',#{name},'%')
             </if>
-            <if test="type !=null and type !=''">
-                t.type = #{type}
+            <if test="type != null">
+                and t.type = #{type}
             </if>
         </where>
     </select>

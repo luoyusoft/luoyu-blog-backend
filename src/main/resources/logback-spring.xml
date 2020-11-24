@@ -160,7 +160,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
 
     <!-- 3. 开发环境，打印控制台-->
     <springProfile name="dev">
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>

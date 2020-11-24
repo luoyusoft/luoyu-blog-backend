@@ -3,17 +3,19 @@ package com.luoyu.blogmanage.service.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luoyu.blogmanage.entity.operation.Tag;
-import com.luoyu.blogmanage.entity.operation.TagLink;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.util.Query;
-import com.luoyu.blogmanage.service.operation.TagService;
+import com.luoyu.blogmanage.entity.operation.Tag;
+import com.luoyu.blogmanage.entity.operation.TagLink;
 import com.luoyu.blogmanage.mapper.operation.TagLinkMapper;
 import com.luoyu.blogmanage.mapper.operation.TagMapper;
+import com.luoyu.blogmanage.service.operation.TagService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,14 +38,21 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     /**
      * 分页查询
      *
-     * @param params
+     * @param page
+     * @param limit
+     * @param key
      * @return
      */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        IPage<Tag> page = baseMapper.selectPage(new Query<Tag>(params).getPage(),
-                new QueryWrapper<Tag>().lambda());
-        return new PageUtils(page);
+    public PageUtils queryPage(Integer page, Integer limit, String key) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("limit", String.valueOf(limit));
+        params.put("page", String.valueOf(page));
+        params.put("key", key);
+
+        IPage<Tag> tagPage = baseMapper.selectPage(new Query<Tag>(params).getPage(),
+                new QueryWrapper<Tag>().lambda().like(StringUtils.isNotEmpty(key), Tag::getName, key));
+        return new PageUtils(tagPage);
     }
 
     /**

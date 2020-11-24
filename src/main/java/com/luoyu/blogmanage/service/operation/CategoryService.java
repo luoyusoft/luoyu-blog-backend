@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blogmanage.entity.operation.Category;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -18,10 +17,11 @@ public interface CategoryService extends IService<Category> {
 
     /**
      * 查询所有菜单
-     * @param params
+     * @param name
+     * @param type
      * @return
      */
-    List<Category> queryWithParentName(Map<String, Object> params);
+    List<Category> queryWithParentName(String name, Integer type);
 
     /**
      * 根据父级别查询子级别

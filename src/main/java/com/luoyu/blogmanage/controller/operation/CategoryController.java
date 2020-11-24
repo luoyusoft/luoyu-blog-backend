@@ -1,13 +1,13 @@
 package com.luoyu.blogmanage.controller.operation;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.luoyu.blogmanage.entity.base.Result;
-import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.common.constants.RedisCacheNames;
-import com.luoyu.blogmanage.entity.operation.Category;
 import com.luoyu.blogmanage.common.enums.CategoryRankEnum;
 import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
+import com.luoyu.blogmanage.entity.base.AbstractController;
+import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.operation.Category;
 import com.luoyu.blogmanage.service.article.ArticleService;
 import com.luoyu.blogmanage.service.book.BookNoteService;
 import com.luoyu.blogmanage.service.book.BookService;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -51,8 +50,8 @@ public class CategoryController extends AbstractController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("operation:category:list")
-    public Result list(@RequestParam Map<String, Object> params){
-        List<Category> categoryList = categoryService.queryWithParentName(params);
+    public Result list(@RequestParam("t") Long t, @RequestParam("name") String name, @RequestParam("type") Integer type){
+        List<Category> categoryList = categoryService.queryWithParentName(name, type);
         return Result.ok().put("categoryList",categoryList);
     }
 
