@@ -1,10 +1,8 @@
 package com.luoyu.blogmanage.service.sys;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.luoyu.blogmanage.entity.sys.SysParam;
 import com.luoyu.blogmanage.common.util.PageUtils;
-
-import java.util.Map;
+import com.luoyu.blogmanage.entity.sys.SysParam;
 
 /**
  * <p>
@@ -18,9 +16,12 @@ public interface SysParamService extends IService<SysParam> {
 
     /**
      * 分页查询
-     * @param params
+     * @param page
+     * @param limit
+     * @param menuUrl
+     * @param type
      * @return
      */
-     PageUtils queryPage(Map<String, Object> params);
+     PageUtils queryPage(Integer page, Integer limit, String menuUrl, Integer type);
 
 }

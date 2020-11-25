@@ -1,11 +1,10 @@
 package com.luoyu.blogmanage.service.sys;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.luoyu.blogmanage.entity.sys.SysRole;
 import com.luoyu.blogmanage.common.util.PageUtils;
+import com.luoyu.blogmanage.entity.sys.SysRole;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * SysRoleService
@@ -18,10 +17,13 @@ public interface SysRoleService extends IService<SysRole> {
 
     /**
      * 分页查询角色
-     * @param params
+     * @param page
+     * @param limit
+     * @param roleName
+     * @param createUserId
      * @return
      */
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Integer page, Integer limit, String roleName, Integer createUserId);
 
     /**
      * 批量删除

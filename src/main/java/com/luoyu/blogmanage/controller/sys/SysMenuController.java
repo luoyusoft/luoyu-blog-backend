@@ -34,6 +34,9 @@ public class SysMenuController extends AbstractController {
     @Autowired
     private ShiroService shiroService;
 
+    /**
+     * 信息
+     */
     @GetMapping("/nav")
     public Result nav(){
         List<SysMenu> menuList=sysMenuService.listUserMenu(getUserId());
@@ -84,7 +87,7 @@ public class SysMenuController extends AbstractController {
      */
     @GetMapping("/info/{menuId}")
     @RequiresPermissions("sys:menu:info")
-    public Result update(@PathVariable Integer menuId){
+    public Result update(@PathVariable("menuId") Integer menuId){
         SysMenu menu = sysMenuService.getById(menuId);
         return Result.ok().put("menu",menu);
     }
@@ -126,7 +129,7 @@ public class SysMenuController extends AbstractController {
      */
     @DeleteMapping("/delete/{menuId}")
     @RequiresPermissions("sys:menu:delete")
-    public Result delete(@PathVariable Integer menuId){
+    public Result delete(@PathVariable("menuId") Integer menuId){
         if(menuId <= 29){
             return Result.error("系统菜单，不能删除");
         }
@@ -139,6 +142,7 @@ public class SysMenuController extends AbstractController {
         sysMenuService.delete(menuId);
         return Result.ok();
     }
+
     /**
      * 验证参数是否正确
      */

@@ -36,20 +36,20 @@ public class SysRoleController extends AbstractController {
 
     /**
      * 分页查询角色列表
-     * @param params
      * @return
      */
     @GetMapping("/list")
     @RequiresPermissions("sys:role:list")
-    public Result list(@RequestParam Map<String, Object> params){
+    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("roleName") String roleName){
         //如果不是超级管理员，则只查询自己创建的角色列表
+        Integer createUserId = null;
         if(!SysConstants.SUPER_ADMIN.equals(getUserId())){
-            params.put("createUserId", getUserId());
+            createUserId = getUserId();
         }
 
-        PageUtils page = sysRoleService.queryPage(params);
+        PageUtils rolePage = sysRoleService.queryPage(page, limit, roleName, createUserId);
 
-        return Result.ok().put("page", page);
+        return Result.ok().put("page", rolePage);
     }
 
     /**
@@ -77,7 +77,6 @@ public class SysRoleController extends AbstractController {
     @RequiresPermissions("sys:role:save")
     public Result save(@RequestBody SysRole role){
         ValidatorUtils.validateEntity(role);
-
         role.setCreateUserId(getUserId());
         sysRoleService.save(role);
 
@@ -94,7 +93,6 @@ public class SysRoleController extends AbstractController {
     public Result update(@RequestBody SysRole role){
         ValidatorUtils.validateEntity(role);
         role.setCreateUserId(getUserId());
-
         sysRoleService.updateById(role);
 
         return Result.ok();
@@ -107,10 +105,11 @@ public class SysRoleController extends AbstractController {
      */
     @GetMapping("/info/{roleId}")
     @RequiresPermissions("sys:role:info")
-    public Result info(@PathVariable Integer roleId){
+    public Result info(@PathVariable("roleId") Integer roleId){
         SysRole role = sysRoleService.getById(roleId);
         List<Integer> menuIdList=sysRoleMenuService.queryMenuIdList(roleId);
         role.setMenuIdList(menuIdList);
+
         return Result.ok().put("role",role);
     }
 
@@ -123,7 +122,6 @@ public class SysRoleController extends AbstractController {
     @RequiresPermissions("sys:role:delete")
     public Result delete(@RequestBody Integer[] roleIds){
         sysRoleService.deleteBatch(roleIds);
-
         return Result.ok();
     }
 

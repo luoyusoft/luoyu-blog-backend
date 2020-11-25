@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * articleAdminServiceImpl
@@ -52,13 +49,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     /**
      * 分页查询博文列表
      *
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        Page<ArticleVO> page = new Query<ArticleVO>(params).getPage();
-        List<ArticleVO> articleList = baseMapper.listArticleVo(page, params);
+    public PageUtils queryPage(Integer page, Integer limit, String title) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+        params.put("title", title);
+
+        Page<ArticleVO> articlePage = new Query<ArticleVO>(params).getPage();
+        List<ArticleVO> articleList = baseMapper.listArticleVo(articlePage, params);
         // 查询所有分类
         List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType,ModuleEnum.ARTICLE.getValue()));
         // 封装ArticleVo
@@ -69,8 +73,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 // 设置标签列表
                 articleVo.setTagList(tagService.listByLinkId(articleVo.getId(), ModuleEnum.ARTICLE.getValue()));
             })));
-        page.setRecords(articleList);
-        return new PageUtils(page);
+        articlePage.setRecords(articleList);
+        return new PageUtils(articlePage);
     }
 
     /**

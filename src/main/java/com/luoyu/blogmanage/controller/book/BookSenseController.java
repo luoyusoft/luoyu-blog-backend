@@ -29,12 +29,16 @@ public class BookSenseController extends AbstractController {
     @Resource
     private BookSenseService bookSenseService;
 
+    /**
+     * 信息
+     */
     @GetMapping("/{bookId}")
     @RequiresPermissions("book:info")
-    public Result getReadSense(@PathVariable Integer bookId) {
+    public Result getReadSense(@PathVariable("bookId") Integer bookId) {
         BookSense bookSense = bookSenseService.getBookSense(bookId);
         return Result.ok().put("bookSense",bookSense);
     }
+
     /**
      * 保存
      */

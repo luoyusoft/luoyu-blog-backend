@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,13 +55,20 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     /**
      * 分页查询
      *
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        Page<BookVO> page = new Query<BookVO>(params).getPage();
-        List<BookVO> bookList = this.baseMapper.listBookVo(page, params);
+    public PageUtils queryPage(Integer page, Integer limit, String title) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+        params.put("title", title);
+
+        Page<BookVO> bookPage = new Query<BookVO>(params).getPage();
+        List<BookVO> bookList = this.baseMapper.listBookVo(bookPage, params);
         // 查询所有分类
         List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType, ModuleEnum.BOOK.getValue()));
         // 封装BookVo
@@ -70,8 +78,8 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
             // 设置标签列表
             bookVo.setTagList(tagService.listByLinkId(bookVo.getId(), ModuleEnum.BOOK.getValue()));
         });
-        page.setRecords(bookList);
-        return new PageUtils(page);
+        bookPage.setRecords(bookList);
+        return new PageUtils(bookPage);
     }
 
     /**

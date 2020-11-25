@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,15 +29,20 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
 
     /**
      * 分页查询
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        String title = (String) params.get("title");
-        IPage<Link> page=baseMapper.selectPage(new Query<Link>(params).getPage(),
+    public PageUtils queryPage(Integer page, Integer limit, String title) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+        params.put("title", title);
+        IPage<Link> linkPage = baseMapper.selectPage(new Query<Link>(params).getPage(),
                 new QueryWrapper<Link>().lambda().like(StringUtils.isNotEmpty(title),Link::getTitle,title));
-        return new PageUtils(page);
+        return new PageUtils(linkPage);
     }
 
 }

@@ -41,6 +41,9 @@ public class SysLoginController extends AbstractController {
     @Autowired
     private SysUserTokenService sysUserTokenService;
 
+    /**
+     * 获取图片验证码
+     */
     @GetMapping("captcha.jpg")
     public void captcha(HttpServletResponse response, String uuid) throws IOException {
         response.setHeader("Cache-Control", "no-store, no-cache");
@@ -54,6 +57,9 @@ public class SysLoginController extends AbstractController {
         IOUtils.closeQuietly(out);
     }
 
+    /**
+     * 登录
+     */
     @PostMapping("/admin/sys/login")
     public Result login(@RequestBody SysLoginForm form) {
         boolean captcha=sysCaptchaService.validate(form.getUuid(),form.getCaptcha());

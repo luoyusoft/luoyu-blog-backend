@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * SysRoleServiceImpl
@@ -42,16 +39,28 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Autowired
     private SysUserRoleService sysUserRoleService;
 
+    /**
+     * 分页查询角色
+     * @param page
+     * @param limit
+     * @param roleName
+     * @param createUserId
+     * @return
+     */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        String roleName = (String)params.get("roleName");
-        Long createUserId = (Long)params.get("createUserId");
-        IPage<SysRole> page=baseMapper.selectPage(new Query<SysRole>(params).getPage(),
+    public PageUtils queryPage(Integer page, Integer limit, String roleName, Integer createUserId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+        params.put("roleName", roleName);
+        params.put("createUserId", String.valueOf(createUserId));
+
+        IPage<SysRole> rolePage = baseMapper.selectPage(new Query<SysRole>(params).getPage(),
                 new QueryWrapper<SysRole>().lambda()
                 .like(StringUtils.isNotBlank(roleName), SysRole::getRoleName,roleName)
                 .eq(createUserId!=null, SysRole::getCreateUserId,createUserId)
         );
-        return new PageUtils(page);
+        return new PageUtils(rolePage);
     }
 
     @Override

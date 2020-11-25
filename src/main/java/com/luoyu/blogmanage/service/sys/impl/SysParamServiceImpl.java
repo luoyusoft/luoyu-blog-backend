@@ -3,15 +3,16 @@ package com.luoyu.blogmanage.service.sys.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luoyu.blogmanage.entity.sys.SysParam;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.util.Query;
+import com.luoyu.blogmanage.entity.sys.SysParam;
 import com.luoyu.blogmanage.mapper.sys.SysParamMapper;
 import com.luoyu.blogmanage.service.sys.SysParamService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,14 +31,18 @@ public class SysParamServiceImpl extends ServiceImpl<SysParamMapper, SysParam> i
      * 分页查询
      */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        String menuUrl = (String) params.get("menuUrl");
-        String type = (String) params.get("type");
-        IPage<SysParam> page=baseMapper.selectPage(new Query<SysParam>(params).getPage(),
+    public PageUtils queryPage(Integer page, Integer limit, String menuUrl, Integer type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+        params.put("menuUrl", menuUrl);
+        params.put("type", String.valueOf(type));
+
+        IPage<SysParam> paramPage = baseMapper.selectPage(new Query<SysParam>(params).getPage(),
                 new QueryWrapper<SysParam>().lambda()
                         .eq(StringUtils.isNotBlank(menuUrl), SysParam::getMenuUrl,menuUrl)
-                        .like(StringUtils.isNotBlank(type), SysParam::getType,type));
-        return new PageUtils(page);
+                        .like(StringUtils.isNotBlank(String.valueOf(type)), SysParam::getType,type));
+        return new PageUtils(paramPage);
     }
 
 }

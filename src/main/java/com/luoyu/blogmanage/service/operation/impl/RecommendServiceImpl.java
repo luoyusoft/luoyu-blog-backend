@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,16 +37,21 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
 
     /**
      * 分页查询
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        String title = (String) params.get("title");
-        IPage<Recommend> page=baseMapper.selectPage(new Query<Recommend>(params).getPage(),
+    public PageUtils queryPage(Integer page, Integer limit, String title) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+        params.put("title", title);
+        IPage<Recommend> recommendPage = baseMapper.selectPage(new Query<Recommend>(params).getPage(),
                 new QueryWrapper<Recommend>().lambda()
                         .like(StringUtils.isNotEmpty(title),Recommend::getTitle,title));
-        return new PageUtils(page);
+        return new PageUtils(recommendPage);
     }
 
     /**

@@ -1,14 +1,14 @@
 package com.luoyu.blogmanage.controller.sys;
 
-import com.luoyu.blogmanage.entity.base.Result;
-import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.common.constants.SysConstants;
-import com.luoyu.blogmanage.entity.sys.SysUser;
-import com.luoyu.blogmanage.entity.sys.form.PasswordForm;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.common.validator.group.AddGroup;
 import com.luoyu.blogmanage.common.validator.group.UpdateGroup;
+import com.luoyu.blogmanage.entity.base.AbstractController;
+import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.sys.SysUser;
+import com.luoyu.blogmanage.entity.sys.form.PasswordForm;
 import com.luoyu.blogmanage.service.sys.SysUserRoleService;
 import com.luoyu.blogmanage.service.sys.SysUserService;
 import org.apache.commons.lang.ArrayUtils;
@@ -102,7 +102,7 @@ public class SysUserController extends AbstractController {
     /**
      * 修改用户
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     @RequiresPermissions("sys:user:update")
     public Result update(@RequestBody SysUser user){
         ValidatorUtils.validateEntity(user, UpdateGroup.class);

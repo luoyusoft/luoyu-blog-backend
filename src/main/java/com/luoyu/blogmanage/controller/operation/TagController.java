@@ -45,18 +45,20 @@ public class TagController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("operation:tag:list")
-    public Result list(@RequestParam("t") Long t, @RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("key") String key){
+    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("key") String key){
         PageUtils tagPage = tagService.queryPage(page, limit, key);
         return Result.ok().put("page", tagPage);
     }
 
+    /**
+     * 列表
+     */
     @GetMapping("/select")
     @RequiresPermissions("operation:tag:list")
     public Result select(@RequestParam("type") Integer type){
         List<Tag> tagList = tagService.list(new QueryWrapper<Tag>().lambda().eq(type != null,Tag::getType,type));
         return Result.ok().put("tagList",tagList);
     }
-
 
     /**
      * 信息
@@ -65,7 +67,6 @@ public class TagController extends AbstractController {
     @RequiresPermissions("operation:tag:info")
     public Result info(@PathVariable("id") String id){
        Tag tag = tagService.getById(id);
-
         return Result.ok().put("tag", tag);
     }
 
@@ -91,6 +92,7 @@ public class TagController extends AbstractController {
     public Result update(@RequestBody Tag tag){
         ValidatorUtils.validateEntity(tag);
         tagService.updateById(tag);
+
         return Result.ok();
     }
 

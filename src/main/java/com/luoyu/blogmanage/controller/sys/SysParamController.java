@@ -1,10 +1,10 @@
 package com.luoyu.blogmanage.controller.sys;
 
-import com.luoyu.blogmanage.entity.base.Result;
-import com.luoyu.blogmanage.entity.base.AbstractController;
-import com.luoyu.blogmanage.entity.sys.SysParam;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
+import com.luoyu.blogmanage.entity.base.AbstractController;
+import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.sys.SysParam;
 import com.luoyu.blogmanage.service.sys.SysParamService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -36,10 +35,9 @@ public class SysParamController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("sys:param:list")
-    public Result list(@RequestParam Map<String, Object> params){
-        PageUtils page = paramService.queryPage(params);
-
-        return Result.ok().put("page", page);
+    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("menuUrl") String menuUrl, @RequestParam("type") Integer type){
+        PageUtils paramPage = paramService.queryPage(page, limit, menuUrl, type);
+        return Result.ok().put("page", paramPage);
     }
 
     /**
@@ -50,7 +48,6 @@ public class SysParamController extends AbstractController {
         List<SysParam> sysParamList = paramService.list(null);
         return Result.ok().put("sysParamList",sysParamList);
     }
-
 
     /**
      * 信息

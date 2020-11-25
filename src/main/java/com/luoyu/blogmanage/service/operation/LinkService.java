@@ -1,10 +1,8 @@
 package com.luoyu.blogmanage.service.operation;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.luoyu.blogmanage.entity.operation.Link;
 import com.luoyu.blogmanage.common.util.PageUtils;
-
-import java.util.Map;
+import com.luoyu.blogmanage.entity.operation.Link;
 
 /**
  * <p>
@@ -18,9 +16,11 @@ public interface LinkService extends IService<Link> {
 
     /**
      * 分页查询
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
-     PageUtils queryPage(Map<String, Object> params);
+     PageUtils queryPage(Integer page, Integer limit, String title);
 
 }

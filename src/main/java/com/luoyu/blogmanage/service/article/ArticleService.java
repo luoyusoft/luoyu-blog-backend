@@ -18,10 +18,12 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 分页查询博文列表
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Integer page, Integer limit, String title);
 
     /**
      * 保存博文文章

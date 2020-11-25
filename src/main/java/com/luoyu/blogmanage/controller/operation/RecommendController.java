@@ -1,12 +1,12 @@
 package com.luoyu.blogmanage.controller.operation;
 
-import com.luoyu.blogmanage.entity.base.Result;
-import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.common.constants.RedisCacheNames;
-import com.luoyu.blogmanage.entity.operation.Recommend;
-import com.luoyu.blogmanage.entity.operation.vo.RecommendVO;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
+import com.luoyu.blogmanage.entity.base.AbstractController;
+import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.operation.Recommend;
+import com.luoyu.blogmanage.entity.operation.vo.RecommendVO;
 import com.luoyu.blogmanage.service.operation.RecommendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -39,10 +38,9 @@ public class RecommendController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("operation:recommend:list")
-    public Result list(@RequestParam Map<String, Object> params){
-        PageUtils page = recommendService.queryPage(params);
-
-        return Result.ok().put("page", page);
+    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title){
+        PageUtils recommendPage = recommendService.queryPage(page, limit, title);
+        return Result.ok().put("page", recommendPage);
     }
 
     @GetMapping("/select")
@@ -59,7 +57,6 @@ public class RecommendController extends AbstractController {
     @RequiresPermissions("operation:recommend:info")
     public Result info(@PathVariable("id") String id){
        Recommend recommend = recommendService.getById(id);
-
         return Result.ok().put("recommend", recommend);
     }
 
@@ -85,13 +82,14 @@ public class RecommendController extends AbstractController {
     public Result update(@RequestBody Recommend recommend){
         ValidatorUtils.validateEntity(recommend);
         recommendService.updateById(recommend);
+
         return Result.ok();
     }
 
     @PutMapping("/top/{id}")
     @RequiresPermissions("operation:recommend:update")
     @CacheEvict(allEntries = true)
-    public Result updateTop (@PathVariable Integer id) {
+    public Result updateTop (@PathVariable("id") Integer id) {
         recommendService.updateTop(id);
         return Result.ok();
     }
@@ -104,7 +102,6 @@ public class RecommendController extends AbstractController {
     @CacheEvict(allEntries = true)
     public Result delete(@RequestBody String[] ids){
         recommendService.removeByIds(Arrays.asList(ids));
-
         return Result.ok();
     }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blogmanage.entity.operation.Recommend;
 import com.luoyu.blogmanage.entity.operation.vo.RecommendVO;
 import com.luoyu.blogmanage.common.util.PageUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -20,10 +21,12 @@ public interface RecommendService extends IService<Recommend> {
 
     /**
      * 分页查询
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
-     PageUtils queryPage(Map<String, Object> params);
+     PageUtils queryPage(Integer page, Integer limit, String title);
 
     /**
      * 获取推荐列表

@@ -1,12 +1,12 @@
 package com.luoyu.blogmanage.controller.book;
 
-import com.luoyu.blogmanage.entity.base.Result;
-import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.common.constants.RedisCacheNames;
-import com.luoyu.blogmanage.entity.book.Book;
-import com.luoyu.blogmanage.entity.book.dto.BookDTO;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
+import com.luoyu.blogmanage.entity.base.AbstractController;
+import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.book.Book;
+import com.luoyu.blogmanage.entity.book.dto.BookDTO;
 import com.luoyu.blogmanage.service.book.BookService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -38,10 +37,9 @@ public class BookController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("book:list")
-    public Result list(@RequestParam Map<String, Object> params) {
-        PageUtils page = bookService.queryPage(params);
-
-        return Result.ok().put("page", page);
+    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title) {
+        PageUtils bookPage = bookService.queryPage(page, limit, title);
+        return Result.ok().put("page", bookPage);
     }
 
     /**
@@ -53,7 +51,6 @@ public class BookController extends AbstractController {
         List<Book> bookList = bookService.list(null);
         return Result.ok().put("bookList", bookList);
     }
-
 
     /**
      * 信息
@@ -87,6 +84,7 @@ public class BookController extends AbstractController {
     public Result update(@RequestBody BookDTO book) {
         ValidatorUtils.validateEntity(book);
         bookService.updateBook(book);
+
         return Result.ok();
     }
 
@@ -112,7 +110,6 @@ public class BookController extends AbstractController {
     @RequiresPermissions("book:delete")
     public Result delete(@RequestBody Integer[] ids) {
         bookService.deleteBatch(ids);
-
         return Result.ok();
     }
 

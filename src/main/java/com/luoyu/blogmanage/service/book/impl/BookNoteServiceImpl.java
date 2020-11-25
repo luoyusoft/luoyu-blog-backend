@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * bookNoteAdminServiceImpl
@@ -56,13 +53,20 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
     /**
      * 分页查询笔记列表
      *
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        Page<BookNoteVO> page = new Query<BookNoteVO>(params).getPage();
-        List<BookNoteVO> bookNoteList = baseMapper.listBookNoteVo(page, params);
+    public PageUtils queryPage(Integer page, Integer limit, String title) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+        params.put("title", title);
+
+        Page<BookNoteVO> notePage = new Query<BookNoteVO>(params).getPage();
+        List<BookNoteVO> bookNoteList = baseMapper.listBookNoteVo(notePage, params);
         // 查询所有分类
         List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType, ModuleEnum.BOOK.getValue()));
         // 封装BookNoteVo
@@ -75,8 +79,8 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
                     // 设置标签列表
                     bookNoteVo.setTagList(tagService.listByLinkId(bookNoteVo.getId(), ModuleEnum.BOOK_NOTE.getValue()));
                 })));
-        page.setRecords(bookNoteList);
-        return new PageUtils(page);
+        notePage.setRecords(bookNoteList);
+        return new PageUtils(notePage);
     }
 
 

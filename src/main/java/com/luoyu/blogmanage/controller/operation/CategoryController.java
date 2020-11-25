@@ -48,9 +48,9 @@ public class CategoryController extends AbstractController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/list")
     @RequiresPermissions("operation:category:list")
-    public Result list(@RequestParam("t") Long t, @RequestParam("name") String name, @RequestParam("type") Integer type){
+    public Result list(@RequestParam("name") String name, @RequestParam("type") Integer type){
         List<Category> categoryList = categoryService.queryWithParentName(name, type);
         return Result.ok().put("categoryList",categoryList);
     }
@@ -58,9 +58,9 @@ public class CategoryController extends AbstractController {
     /**
      * 树状列表
      */
-    @RequestMapping("/select")
+    @GetMapping("/select")
     @RequiresPermissions("operation:category:list")
-    public Result select(Integer type){
+    public Result select(@RequestParam("type") Integer type){
         List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(type!=null,Category::getType,type));
 
         //添加顶级分类
@@ -76,18 +76,17 @@ public class CategoryController extends AbstractController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
+    @GetMapping("/info/{id}")
     @RequiresPermissions("operation:category:info")
     public Result info(@PathVariable("id") Integer id){
         Category category = categoryService.getById(id);
-
         return Result.ok().put("category", category);
     }
 
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @PostMapping("/save")
     @RequiresPermissions("operation:category:save")
     @CacheEvict(allEntries = true)
     public Result save(@RequestBody Category category){
@@ -137,12 +136,11 @@ public class CategoryController extends AbstractController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @PutMapping("/update")
     @RequiresPermissions("operation:category:update")
     @CacheEvict(allEntries = true)
     public Result update(@RequestBody Category category){
         categoryService.updateById(category);
-
         return Result.ok();
     }
 
@@ -152,8 +150,7 @@ public class CategoryController extends AbstractController {
     @DeleteMapping("/delete/{id}")
     @RequiresPermissions("operation:category:delete")
     @CacheEvict(allEntries = true)
-    public Result delete(@PathVariable Integer id){
-
+    public Result delete(@PathVariable("id") Integer id){
         //判断是否有子菜单或按钮
         List<Category> categoryList = categoryService.queryListParentId(id);
         if(categoryList.size() > 0){

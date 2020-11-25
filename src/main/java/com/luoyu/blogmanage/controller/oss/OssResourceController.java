@@ -29,6 +29,9 @@ public class OssResourceController {
     @Autowired
     private CloudStorageService cloudStorageService;
 
+    /**
+     * 上传文件
+     */
     @PostMapping("/upload")
     public Result uploadCover(MultipartFile file) throws Exception {
         if (file!=null && file.isEmpty()) {

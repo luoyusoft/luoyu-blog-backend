@@ -1,11 +1,9 @@
 package com.luoyu.blogmanage.service.book;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.entity.book.Book;
 import com.luoyu.blogmanage.entity.book.dto.BookDTO;
-import com.luoyu.blogmanage.common.util.PageUtils;
-
-import java.util.Map;
 
 /**
  * <p>
@@ -19,10 +17,12 @@ public interface BookService extends IService<Book> {
 
     /**
      * 分页查询
-     * @param params
+     * @param page
+     * @param limit
+     * @param title
      * @return
      */
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Integer page, Integer limit, String title);
 
     /**
      * 保存图书
