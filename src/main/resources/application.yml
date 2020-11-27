@@ -16,13 +16,15 @@ server:
     context-path: /api/luoyublog/manage
 
 spring:
-  profiles:
-    # 环境 开发dev，测试test，生产prod
-    active: dev
+  application:
+    name: luoyublog-manage-backend
+  lifecycle:
+    # 默认时间为30S, 意味着最大等待30S，超时候无论线程任务是否执行完毕都会停机处理，一定要合理合理设置。
+    timeout-per-shutdown-phase: 20s
   jackson:
     serialization:
       # jackson返回时间戳
-      write-dates-as-timestamps : true
+      write-dates-as-timestamps: true
   servlet:
     multipart:
       #文件上传大小配置
@@ -36,6 +38,3 @@ spring:
   resources:
     #restFul风格: 不要为资源文件建立映射
     add-mappings: false
-
-logging:
-  config: classpath:logback-spring.xml

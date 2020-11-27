@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    # 环境 开发dev，测试test，生产prod
+    active: dev
+  # nacos
+  cloud:
+    nacos:
+      config:
+        server-addr: nacos.luoyublog.com:80
+        namespace: f22549fc-d57f-4844-9387-1d8383035df5
+        group: group-1
+        prefix: luoyublog-manage-backend
+        file-extension: yml
+      discovery:
+        server-addr: nacos.luoyublog.com:80
+        namespace: f22549fc-d57f-4844-9387-1d8383035df5
+        group: group-1
+        service: luoyublog-manage-backend
+
+logging:
+  config: classpath:logback-spring.xml
+
+log:
+  file: /Users/luoyu/Documents/log/luoyublog-manage-backend

@@ -212,7 +212,31 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <!-- nacos配置中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!-- nacos注册中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.3.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
@@ -268,6 +292,8 @@
                         <!--                        <useCurrentTimestamp>true</useCurrentTimestamp>-->
                         <args>
                             <arg>--spring.profiles.active=prod</arg>
+                            <arg>--spring.cloud.nacos.config.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
+                            <arg>--spring.cloud.nacos.discovery.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
                         </args>
                         <ports>
                             <!-- 指定镜像端口 , 这里没用docfile的操作 -->
