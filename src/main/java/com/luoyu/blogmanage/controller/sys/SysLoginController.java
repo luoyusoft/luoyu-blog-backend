@@ -1,11 +1,12 @@
 package com.luoyu.blogmanage.controller.sys;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IOUtils;
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.common.exception.MyException;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.entity.sys.SysUser;
 import com.luoyu.blogmanage.entity.sys.form.SysLoginForm;
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import com.luoyu.blogmanage.mapper.sys.SysUserMapper;
 import com.luoyu.blogmanage.service.sys.SysCaptchaService;
 import com.luoyu.blogmanage.service.sys.SysUserTokenService;
@@ -61,36 +62,36 @@ public class SysLoginController extends AbstractController {
      * 登录
      */
     @PostMapping("/admin/sys/login")
-    public Result login(@RequestBody SysLoginForm form) {
-        boolean captcha=sysCaptchaService.validate(form.getUuid(),form.getCaptcha());
+    public Response login(@RequestBody SysLoginForm form) {
+        boolean captcha = sysCaptchaService.validate(form.getUuid(),form.getCaptcha());
         if(!captcha){
             // 验证码不正确
-            return Result.error(ErrorEnums.CAPTCHA_WRONG);
+            throw new MyException(ResponseEnums.CAPTCHA_WRONG);
         }
 
         // 用户信息
         SysUser user = sysUserMapper.selectOne(new QueryWrapper<SysUser>()
                 .lambda()
                 .eq(SysUser:: getUsername,form.getUsername()));
-        if(user ==null || !user.getPassword().equals(new Sha256Hash(form.getPassword(),user.getSalt()).toHex())){
+        if(user == null || !user.getPassword().equals(new Sha256Hash(form.getPassword(),user.getSalt()).toHex())){
             // 用户名或密码错误
-            return Result.error(ErrorEnums.USERNAME_OR_PASSWORD_WRONG);
+            throw new MyException(ResponseEnums.USERNAME_OR_PASSWORD_WRONG);
         }
-        if(user.getStatus() ==0){
-            return Result.error("账号已被锁定，请联系管理员");
+        if(user.getStatus() == 0){
+            throw new MyException(ResponseEnums.ACCOUNT_LOCK);
         }
 
         //生成token，并保存到redis
-        return sysUserTokenService.createToken(user.getUserId());
+        return Response.success(sysUserTokenService.createToken(user.getUserId()));
     }
 
     /**
      * 退出
      */
     @PostMapping("/sys/logout")
-    public Result logout() {
+    public Response logout() {
         sysUserTokenService.logout(getUserId());
-        return Result.ok();
+        return Response.success();
     }
 
 }

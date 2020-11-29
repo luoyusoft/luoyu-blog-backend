@@ -4,7 +4,7 @@ import com.luoyu.blogmanage.common.constants.RedisCacheNames;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.entity.base.AbstractController;
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.operation.Link;
 import com.luoyu.blogmanage.service.operation.LinkService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -36,9 +36,9 @@ public class LinkController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("operation:link:list")
-    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title){
+    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title){
         PageUtils linkPage = linkService.queryPage(page, limit, title);
-        return Result.ok().put("page", linkPage);
+        return Response.success(linkPage);
     }
 
     /**
@@ -46,9 +46,9 @@ public class LinkController extends AbstractController {
      */
     @GetMapping("/info/{id}")
     @RequiresPermissions("operation:link:info")
-    public Result info(@PathVariable("id") String id){
+    public Response info(@PathVariable("id") String id){
        Link link = linkService.getById(id);
-        return Result.ok().put("link", link);
+        return Response.success(link);
     }
 
     /**
@@ -57,11 +57,11 @@ public class LinkController extends AbstractController {
     @PostMapping("/save")
     @RequiresPermissions("operation:link:save")
     @CacheEvict(allEntries = true)
-    public Result save(@RequestBody Link link){
+    public Response save(@RequestBody Link link){
         ValidatorUtils.validateEntity(link);
         linkService.save(link);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -70,10 +70,10 @@ public class LinkController extends AbstractController {
     @PutMapping("/update")
     @RequiresPermissions("operation:link:update")
     @CacheEvict(allEntries = true)
-    public Result update(@RequestBody Link link){
+    public Response update(@RequestBody Link link){
         ValidatorUtils.validateEntity(link);
         linkService.updateById(link);
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -82,9 +82,9 @@ public class LinkController extends AbstractController {
     @DeleteMapping("/delete")
     @RequiresPermissions("operation:link:delete")
     @CacheEvict(allEntries = true)
-    public Result delete(@RequestBody String[] ids){
+    public Response delete(@RequestBody String[] ids){
         linkService.removeByIds(Arrays.asList(ids));
-        return Result.ok();
+        return Response.success();
     }
 
 }

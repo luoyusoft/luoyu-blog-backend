@@ -1,7 +1,7 @@
 package com.luoyu.blogmanage.common.exception;
 
-import com.luoyu.blogmanage.entity.base.Result;
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
+import com.luoyu.blogmanage.entity.base.Response;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -26,35 +26,33 @@ public class MyExceptionHandler {
      * @return
      */
     @ExceptionHandler(MyException.class)
-    public Result handleMyException(MyException e){
-        Result result=new Result();
-        result.put("code",e.getCode());
-        result.put("msg",e.getMsg());
-        return result;
+    public Response handleMyException(MyException e){
+        log.error(e.getMessage(), e);
+        return Response.fail(e.getCode(), e.getMsg());
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public Result handlerNoFoundException(Exception e){
+    public Response handlerNoFoundException(Exception e){
         log.error(e.getMessage(),e);
-        return Result.exception(ErrorEnums.PATH_NOT_FOUND);
+        return Response.fail(ResponseEnums.PATH_NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    public Result handleDuplicateKeyException(DuplicateKeyException e){
+    public Response handleDuplicateKeyException(DuplicateKeyException e){
         log.error(e.getMessage(),e);
-        return Result.exception(ErrorEnums.DUPLICATE_KEY);
+        return Response.fail(ResponseEnums.DUPLICATE_KEY);
     }
 
     @ExceptionHandler(AuthorizationException.class)
-    public Result handleAuthorizationException(AuthorizationException e){
+    public Response handleAuthorizationException(AuthorizationException e){
         log.error(e.getMessage(),e);
-        return Result.exception(ErrorEnums.NO_AUTH);
+        return Response.fail(ResponseEnums.NO_AUTH);
     }
 
     @ExceptionHandler(Exception.class)
-    public Result handleException(Exception e){
+    public Response handleException(Exception e){
         log.error(e.getMessage(),e);
-        return Result.exception();
+        return Response.fail();
     }
 
 }

@@ -3,6 +3,7 @@ package com.luoyu.blogmanage.mapper.operation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blogmanage.entity.operation.Recommend;
 import com.luoyu.blogmanage.entity.operation.vo.RecommendVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,12 +16,6 @@ import java.util.List;
  * @since 2019-02-22
  */
 public interface RecommendMapper extends BaseMapper<Recommend> {
-
-    /**
-     * 获取推荐文章列表
-     * @return
-     */
-    List<RecommendVO> listSelect();
 
     /**
      * 获取推荐列表
@@ -39,5 +34,17 @@ public interface RecommendMapper extends BaseMapper<Recommend> {
      * @return
      */
     int selectCount();
+
+    /**
+     * 获取
+     * @return
+     */
+    Recommend selectRecommendByLinkIdAndType(Integer linkId, Integer type);
+
+    /**
+     * 更新
+     * @return
+     */
+    Boolean updateRecommendByLinkIdAndType(Recommend recommend);
 
 }

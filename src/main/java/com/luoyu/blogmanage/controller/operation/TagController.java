@@ -3,10 +3,12 @@ package com.luoyu.blogmanage.controller.operation;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.luoyu.blogmanage.common.constants.RedisCacheNames;
 import com.luoyu.blogmanage.common.enums.ModuleEnum;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
+import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.entity.base.AbstractController;
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.operation.Tag;
 import com.luoyu.blogmanage.entity.operation.TagLink;
 import com.luoyu.blogmanage.mapper.operation.TagLinkMapper;
@@ -45,9 +47,9 @@ public class TagController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("operation:tag:list")
-    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("key") String key){
+    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("key") String key){
         PageUtils tagPage = tagService.queryPage(page, limit, key);
-        return Result.ok().put("page", tagPage);
+        return Response.success(tagPage);
     }
 
     /**
@@ -55,9 +57,9 @@ public class TagController extends AbstractController {
      */
     @GetMapping("/select")
     @RequiresPermissions("operation:tag:list")
-    public Result select(@RequestParam("type") Integer type){
+    public Response select(@RequestParam("type") Integer type){
         List<Tag> tagList = tagService.list(new QueryWrapper<Tag>().lambda().eq(type != null,Tag::getType,type));
-        return Result.ok().put("tagList",tagList);
+        return Response.success(tagList);
     }
 
     /**
@@ -65,9 +67,9 @@ public class TagController extends AbstractController {
      */
     @GetMapping("/info/{id}")
     @RequiresPermissions("operation:tag:info")
-    public Result info(@PathVariable("id") String id){
+    public Response info(@PathVariable("id") String id){
        Tag tag = tagService.getById(id);
-        return Result.ok().put("tag", tag);
+        return Response.success(tag);
     }
 
     /**
@@ -76,11 +78,11 @@ public class TagController extends AbstractController {
     @PostMapping("/save")
     @RequiresPermissions("operation:tag:save")
     @CacheEvict(allEntries = true)
-    public Result save(@RequestBody Tag tag){
+    public Response save(@RequestBody Tag tag){
         ValidatorUtils.validateEntity(tag);
         tagService.save(tag);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -89,11 +91,11 @@ public class TagController extends AbstractController {
     @PutMapping("/update")
     @RequiresPermissions("operation:tag:update")
     @CacheEvict(allEntries = true)
-    public Result update(@RequestBody Tag tag){
+    public Response update(@RequestBody Tag tag){
         ValidatorUtils.validateEntity(tag);
         tagService.updateById(tag);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -102,25 +104,25 @@ public class TagController extends AbstractController {
     @DeleteMapping("/delete")
     @RequiresPermissions("operation:tag:delete")
     @CacheEvict(allEntries = true)
-    public Result delete(@RequestBody String[] ids){
+    public Response delete(@RequestBody String[] ids){
         for (String id : ids) {
             List<TagLink> tagLinkList = tagLinkMapper.selectList(new QueryWrapper<TagLink>().lambda().eq(TagLink::getTagId, id));
             if(!CollectionUtils.isEmpty(tagLinkList)) {
                 TagLink tagLink = tagLinkList.get(0);
-                if (tagLink.getType().equals(ModuleEnum.ARTICLE.getValue())) {
-                    return Result.error("该标签下有文章，无法删除");
+                if (tagLink.getType().equals(ModuleEnum.ARTICLE.getCode())) {
+                    throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该标签下有文章，无法删除");
                 }
-                if (tagLink.getType().equals(ModuleEnum.BOOK.getValue())) {
-                    return Result.error("该标签下有图书，无法删除");
+                if (tagLink.getType().equals(ModuleEnum.BOOK.getCode())) {
+                    throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该标签下有图书，无法删除");
                 }
-                if(tagLink.getType().equals(ModuleEnum.BOOK_NOTE.getValue())) {
-                    return Result.error("该标签下有笔记，无法删除");
+                if(tagLink.getType().equals(ModuleEnum.BOOK_NOTE.getCode())) {
+                    throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该标签下有笔记，无法删除");
                 }
             }
         }
         tagService.removeByIds(Arrays.asList(ids));
 
-        return Result.ok();
+        return Response.success();
     }
 
 }

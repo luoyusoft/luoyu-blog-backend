@@ -1,6 +1,6 @@
 package com.luoyu.blogmanage.controller.sys;
 
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.common.constants.SysConstants;
 import com.luoyu.blogmanage.entity.sys.SysRole;
@@ -40,7 +40,7 @@ public class SysRoleController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("sys:role:list")
-    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("roleName") String roleName){
+    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("roleName") String roleName){
         //如果不是超级管理员，则只查询自己创建的角色列表
         Integer createUserId = null;
         if(!SysConstants.SUPER_ADMIN.equals(getUserId())){
@@ -49,7 +49,7 @@ public class SysRoleController extends AbstractController {
 
         PageUtils rolePage = sysRoleService.queryPage(page, limit, roleName, createUserId);
 
-        return Result.ok().put("page", rolePage);
+        return Response.success(rolePage);
     }
 
     /**
@@ -57,7 +57,7 @@ public class SysRoleController extends AbstractController {
      */
     @GetMapping("/select")
     @RequiresPermissions("sys:role:select")
-    public Result select(){
+    public Response select(){
         Map<String, Object> map = new HashMap<>();
 
         //如果不是超级管理员，则只查询自己所拥有的角色列表
@@ -65,7 +65,7 @@ public class SysRoleController extends AbstractController {
             map.put("createUserId", getUserId());
         }
         Collection<SysRole> list = sysRoleService.listByMap(map);
-        return Result.ok().put("list", list);
+        return Response.success(list);
     }
 
     /**
@@ -75,12 +75,12 @@ public class SysRoleController extends AbstractController {
      */
     @PostMapping("/save")
     @RequiresPermissions("sys:role:save")
-    public Result save(@RequestBody SysRole role){
+    public Response save(@RequestBody SysRole role){
         ValidatorUtils.validateEntity(role);
         role.setCreateUserId(getUserId());
         sysRoleService.save(role);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -90,12 +90,12 @@ public class SysRoleController extends AbstractController {
      */
     @PutMapping("/update")
     @RequiresPermissions("sys:role:update")
-    public Result update(@RequestBody SysRole role){
+    public Response update(@RequestBody SysRole role){
         ValidatorUtils.validateEntity(role);
         role.setCreateUserId(getUserId());
         sysRoleService.updateById(role);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -105,12 +105,12 @@ public class SysRoleController extends AbstractController {
      */
     @GetMapping("/info/{roleId}")
     @RequiresPermissions("sys:role:info")
-    public Result info(@PathVariable("roleId") Integer roleId){
+    public Response info(@PathVariable("roleId") Integer roleId){
         SysRole role = sysRoleService.getById(roleId);
         List<Integer> menuIdList=sysRoleMenuService.queryMenuIdList(roleId);
         role.setMenuIdList(menuIdList);
 
-        return Result.ok().put("role",role);
+        return Response.success(role);
     }
 
     /**
@@ -120,9 +120,9 @@ public class SysRoleController extends AbstractController {
      */
     @DeleteMapping("/delete")
     @RequiresPermissions("sys:role:delete")
-    public Result delete(@RequestBody Integer[] roleIds){
+    public Response delete(@RequestBody Integer[] roleIds){
         sysRoleService.deleteBatch(roleIds);
-        return Result.ok();
+        return Response.success();
     }
 
 }

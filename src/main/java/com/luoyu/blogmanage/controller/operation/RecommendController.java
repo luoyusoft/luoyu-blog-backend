@@ -1,10 +1,12 @@
 package com.luoyu.blogmanage.controller.operation;
 
 import com.luoyu.blogmanage.common.constants.RedisCacheNames;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
+import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.entity.base.AbstractController;
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.operation.Recommend;
 import com.luoyu.blogmanage.entity.operation.vo.RecommendVO;
 import com.luoyu.blogmanage.service.operation.RecommendService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,16 +41,22 @@ public class RecommendController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("operation:recommend:list")
-    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title){
+    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title){
         PageUtils recommendPage = recommendService.queryPage(page, limit, title);
-        return Result.ok().put("page", recommendPage);
+        return Response.success(recommendPage);
     }
 
+    /**
+     * 查找
+     */
     @GetMapping("/select")
     @RequiresPermissions("operation:recommend:list")
-    public Result select () {
-        List<RecommendVO> recommendList = recommendService.listSelect();
-        return Result.ok().put("recommendList",recommendList);
+    public Response select (@RequestParam("type") Integer type, @RequestParam("title") String title) {
+        if(type == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
+        }
+        List<RecommendVO> recommendList = recommendService.listSelect(type, title);
+        return Response.success(recommendList);
     }
 
     /**
@@ -55,9 +64,9 @@ public class RecommendController extends AbstractController {
      */
     @GetMapping("/info/{id}")
     @RequiresPermissions("operation:recommend:info")
-    public Result info(@PathVariable("id") String id){
+    public Response info(@PathVariable("id") String id){
        Recommend recommend = recommendService.getById(id);
-        return Result.ok().put("recommend", recommend);
+        return Response.success(recommend);
     }
 
     /**
@@ -66,11 +75,14 @@ public class RecommendController extends AbstractController {
     @PostMapping("/save")
     @RequiresPermissions("operation:recommend:save")
     @CacheEvict(allEntries = true)
-    public Result save(@RequestBody Recommend recommend){
+    public Response save(@RequestBody Recommend recommend){
+        if(recommend.getLinkId() == null || recommend.getType() == null || recommend.getOrderNum() == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "linkId，type，orderNum不能为空");
+        }
         ValidatorUtils.validateEntity(recommend);
-        recommendService.save(recommend);
+        recommendService.insertRecommend(recommend);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -79,19 +91,27 @@ public class RecommendController extends AbstractController {
     @PutMapping("/update")
     @RequiresPermissions("operation:recommend:update")
     @CacheEvict(allEntries = true)
-    public Result update(@RequestBody Recommend recommend){
-        ValidatorUtils.validateEntity(recommend);
-        recommendService.updateById(recommend);
+    public Response update(@RequestBody Recommend recommend){
+        if(recommend.getId() == null || recommend.getLinkId() == null
+                || recommend.getType() == null || recommend.getOrderNum() == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，linkId，type，orderNum不能为空");
+        }
 
-        return Result.ok();
+        ValidatorUtils.validateEntity(recommend);
+        recommendService.updateRecommend(recommend);
+
+        return Response.success();
     }
 
+    /**
+     * 修改
+     */
     @PutMapping("/top/{id}")
     @RequiresPermissions("operation:recommend:update")
     @CacheEvict(allEntries = true)
-    public Result updateTop (@PathVariable("id") Integer id) {
+    public Response updateTop (@PathVariable("id") Integer id) {
         recommendService.updateTop(id);
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -100,9 +120,9 @@ public class RecommendController extends AbstractController {
     @DeleteMapping("/delete")
     @RequiresPermissions("operation:recommend:delete")
     @CacheEvict(allEntries = true)
-    public Result delete(@RequestBody String[] ids){
-        recommendService.removeByIds(Arrays.asList(ids));
-        return Result.ok();
+    public Response delete(@RequestBody Integer[] ids){
+        recommendService.deleteRecommend(Arrays.asList(ids));
+        return Response.success();
     }
 
 }

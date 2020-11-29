@@ -1,5 +1,6 @@
 package com.luoyu.blogmanage.common.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -10,33 +11,27 @@ import lombok.Getter;
  * @description 分类级别枚举
  */
 @Getter
+@AllArgsConstructor
 public enum CategoryRankEnum {
 
     /**
-     * 一级
+     * 负一级
      */
-    ROOT(-1),
+    ROOT(-1, "负一级"),
     /**
      * 一级
      */
-    FIRST(0),
+    FIRST(0, "一级"),
     /**
      * 二级
      */
-    SECOND(1),
+    SECOND(1, "二级"),
     /**
      * 三级
      */
-    THIRD(2);
+    THIRD(2, "三级");
 
-    private int value;
-
-    CategoryRankEnum(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
-    }
+    private int code;
+    private String name;
 
 }

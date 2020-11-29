@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.google.code.kaptcha.Producer;
 import com.luoyu.blogmanage.common.constants.RedisKeyConstants;
 import com.luoyu.blogmanage.common.exception.MyException;
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import com.luoyu.blogmanage.common.util.RedisUtils;
 import com.luoyu.blogmanage.service.sys.SysCaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class SysCaptchaServiceImpl implements SysCaptchaService {
     @Override
     public BufferedImage getCaptcha(String uuid) {
         if(StringUtils.isEmpty(uuid)){
-            throw new MyException(ErrorEnums.NO_UUID);
+            throw new MyException(ResponseEnums.NO_UUID);
         }
         //生成文字验证码
         String code = producer.createText();

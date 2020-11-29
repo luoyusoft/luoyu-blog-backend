@@ -1,6 +1,6 @@
 package com.luoyu.blogmanage.service.sys;
 
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.sys.SysUserToken;
 
 /**
@@ -17,7 +17,7 @@ public interface SysUserTokenService {
      * @param userId
      * @return
      */
-    Result createToken(Integer userId);
+    String createToken(Integer userId);
 
     /**
      * 查询token

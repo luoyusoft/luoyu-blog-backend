@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blogmanage.common.constants.SysConstants;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import com.luoyu.blogmanage.entity.sys.SysRole;
 import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.util.PageUtils;
@@ -128,7 +129,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
         //判断是否越权
         if(!menuIdList.containsAll(role.getMenuIdList())){
-            throw new MyException("新增角色的权限，已超出你的权限范围");
+            throw new MyException(ResponseEnums.NO_AUTH.getCode(), "新增角色的权限，已超出你的权限范围");
         }
     }
 

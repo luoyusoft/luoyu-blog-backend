@@ -27,9 +27,9 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 保存博文文章
-     * @param blogArticle
+     * @param article
      */
-    void saveArticle(ArticleDTO blogArticle);
+    void saveArticle(ArticleDTO article);
 
     /**
      * 批量删除
@@ -39,9 +39,15 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 更新博文
-     * @param blogArticle
+     * @param article
      */
-    void updateArticle(ArticleDTO blogArticle);
+    void updateArticle(ArticleDTO article);
+
+    /**
+     * 更新状态
+     * @param article
+     */
+    void updateStatus(Article article);
 
     /**
      * 获取文章对象

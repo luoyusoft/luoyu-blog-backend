@@ -4,7 +4,7 @@ import com.luoyu.blogmanage.common.constants.RedisCacheNames;
 import com.luoyu.blogmanage.common.enums.ModuleEnum;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.book.BookNote;
 import com.luoyu.blogmanage.entity.book.dto.BookNoteDTO;
 import com.luoyu.blogmanage.service.book.BookNoteService;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 
 
 /**
@@ -41,9 +42,9 @@ public class BookNoteController {
      */
     @GetMapping("/list")
     @RequiresPermissions("book:note:list")
-    public Result listBookNote(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title) {
+    public Response listBookNote(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title) {
         PageUtils notePage = bookNoteService.queryPage(page, limit, title);
-        return Result.ok().put("page",notePage);
+        return Response.success(notePage);
     }
 
     /**
@@ -51,9 +52,9 @@ public class BookNoteController {
      */
     @GetMapping("/info/{bookNoteId}")
     @RequiresPermissions("book:note:list")
-    public Result info(@PathVariable("bookNoteId") Integer bookNoteId) {
+    public Response info(@PathVariable("bookNoteId") Integer bookNoteId) {
         BookNoteDTO bookNote = bookNoteService.getBookNote(bookNoteId);
-        return Result.ok().put("bookNote",bookNote);
+        return Response.success(bookNote);
     }
 
     /**
@@ -62,11 +63,11 @@ public class BookNoteController {
     @PostMapping("/save")
     @RequiresPermissions("book:note:save")
     @CacheEvict(allEntries = true)
-    public Result saveBookNote(@RequestBody BookNoteDTO bookNote){
+    public Response saveBookNote(@RequestBody BookNoteDTO bookNote){
         ValidatorUtils.validateEntity(bookNote);
         bookNoteService.saveBookNote(bookNote);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -75,11 +76,11 @@ public class BookNoteController {
     @PutMapping("/update")
     @RequiresPermissions("book:note:update")
     @CacheEvict(allEntries = true)
-    public Result updateBookNote(@RequestBody BookNoteDTO bookNote){
+    public Response updateBookNote(@RequestBody BookNoteDTO bookNote){
         ValidatorUtils.validateEntity(bookNote);
         bookNoteService.updateBookNote(bookNote);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -91,9 +92,9 @@ public class BookNoteController {
     @PutMapping("/update/status")
     @RequiresPermissions("book:note:update")
     @CacheEvict(allEntries = true)
-    public Result updateStatus(@RequestBody BookNote bookNote) {
+    public Response updateStatus(@RequestBody BookNote bookNote) {
         bookNoteService.updateById(bookNote);
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -103,11 +104,11 @@ public class BookNoteController {
     @RequiresPermissions("book:note:delete")
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(allEntries = true)
-    public Result deleteBatch(@RequestBody Integer[] bookNoteIds){
-        recommendService.deleteBatchByLinkId(bookNoteIds, ModuleEnum.BOOK_NOTE.getValue());
+    public Response deleteBatch(@RequestBody Integer[] bookNoteIds){
+        recommendService.deleteBatchByLinkIdsAndType(Arrays.asList(bookNoteIds), ModuleEnum.BOOK_NOTE.getCode());
         bookNoteService.deleteBatch(bookNoteIds);
 
-        return Result.ok();
+        return Response.success();
     }
 
 }

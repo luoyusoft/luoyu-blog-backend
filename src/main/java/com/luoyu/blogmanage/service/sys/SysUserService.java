@@ -3,6 +3,7 @@ package com.luoyu.blogmanage.service.sys;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blogmanage.entity.sys.SysUser;
 import com.luoyu.blogmanage.common.util.PageUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -26,10 +27,13 @@ public interface SysUserService extends IService<SysUser> {
 
     /**
      * 分页查询用户信息
-     * @param params
+     * @param page
+     * @param limit
+     * @param username
+     * @param createUserId
      * @return
      */
-    PageUtils queryPage(Map<String, Object> params);
+    PageUtils queryPage(Integer page, Integer limit, String username, Integer createUserId);
 
     /**
      * 更新密码

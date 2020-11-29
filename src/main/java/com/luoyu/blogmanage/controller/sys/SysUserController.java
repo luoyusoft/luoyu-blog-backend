@@ -1,12 +1,14 @@
 package com.luoyu.blogmanage.controller.sys;
 
 import com.luoyu.blogmanage.common.constants.SysConstants;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
+import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.common.validator.group.AddGroup;
 import com.luoyu.blogmanage.common.validator.group.UpdateGroup;
 import com.luoyu.blogmanage.entity.base.AbstractController;
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.sys.SysUser;
 import com.luoyu.blogmanage.entity.sys.form.PasswordForm;
 import com.luoyu.blogmanage.service.sys.SysUserRoleService;
@@ -19,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -43,8 +44,8 @@ public class SysUserController extends AbstractController {
      * 获取登录的用户信息
      */
     @GetMapping("/info")
-    public Result info(){
-        return Result.ok().put("user", getUser());
+    public Response info(){
+        return Response.success(getUser());
     }
 
     /**
@@ -52,14 +53,15 @@ public class SysUserController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("sys:user:list")
-    public Result list(@RequestParam Map<String, Object> params){
+    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("username") String username){
+        Integer createUserId = null;
         //只有超级管理员，才能查看所有管理员列表
         if(SysConstants.SUPER_ADMIN.equals(getUserId())){
-            params.put("createUserId", getUserId());
+            createUserId = getUserId();
         }
-        PageUtils page = sysUserService.queryPage(params);
+        PageUtils userPage = sysUserService.queryPage(page, limit, username, createUserId);
 
-        return Result.ok().put("page", page);
+        return Response.success(userPage);
     }
 
     /**
@@ -68,9 +70,9 @@ public class SysUserController extends AbstractController {
      * @return
      */
     @PutMapping("/password")
-    public Result password(@RequestBody PasswordForm passwordForm){
+    public Response password(@RequestBody PasswordForm passwordForm){
         if(StringUtils.isEmpty(passwordForm.getNewPassword())) {
-            return Result.error("新密码不能为空");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "新密码不能为空");
         }
         //sha256加密
         String password = new Sha256Hash(passwordForm.getPassword(), getUser().getSalt()).toHex();
@@ -79,10 +81,10 @@ public class SysUserController extends AbstractController {
 
         boolean flag = sysUserService.updatePassword(getUserId(), password, newPassword);
         if(!flag){
-            return Result.error("原密码不正确");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "原密码不正确");
         }
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -90,13 +92,13 @@ public class SysUserController extends AbstractController {
      */
     @PostMapping("/save")
     @RequiresPermissions("sys:user:save")
-    public Result save(@RequestBody SysUser user){
+    public Response save(@RequestBody SysUser user){
         ValidatorUtils.validateEntity(user, AddGroup.class);
 
         user.setCreateUserId(getUserId());
         sysUserService.save(user);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -104,13 +106,13 @@ public class SysUserController extends AbstractController {
      */
     @PutMapping("/update")
     @RequiresPermissions("sys:user:update")
-    public Result update(@RequestBody SysUser user){
+    public Response update(@RequestBody SysUser user){
         ValidatorUtils.validateEntity(user, UpdateGroup.class);
 
         user.setCreateUserId(getUserId());
         sysUserService.updateById(user);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -118,18 +120,18 @@ public class SysUserController extends AbstractController {
      */
     @PostMapping("/delete")
     @RequiresPermissions("sys:user:delete")
-    public Result delete(@RequestBody Integer[] userIds){
+    public Response delete(@RequestBody Integer[] userIds){
         if(ArrayUtils.contains(userIds, SysConstants.SUPER_ADMIN)){
-            return Result.error("系统管理员不能删除");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "系统管理员不能删除");
         }
 
         if(ArrayUtils.contains(userIds, getUserId())){
-            return Result.error("当前用户不能删除");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "当前用户不能删除");
         }
 
         sysUserService.deleteBatch(userIds);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -137,14 +139,14 @@ public class SysUserController extends AbstractController {
      */
     @GetMapping("/info/{userId}")
     @RequiresPermissions("sys:user:info")
-    public Result info(@PathVariable("userId") Integer userId){
+    public Response info(@PathVariable("userId") Integer userId){
         SysUser user = sysUserService.getById(userId);
 
         //获取用户所属的角色列表
         List<Integer> roleIdList = sysUserRoleService.queryRoleIdList(userId);
         user.setRoleIdList(roleIdList);
 
-        return Result.ok().put("user", user);
+        return Response.success(user);
     }
 
 }

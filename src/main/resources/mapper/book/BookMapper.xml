@@ -91,4 +91,15 @@
         select <include refid="Base_Column_List"/> , 1 as `type`
         from book where id = #{id}
     </select>
+
+    <select id="selectBookListByTitle" parameterType="java.lang.String" resultType="com.luoyu.blogmanage.entity.book.Book">
+        select id, title
+        from book
+        where publish = true
+        <if test="name!=null and name!=''">
+            and title like concat('%',#{title},'%')
+        </if>
+        order by id desc
+    </select>
+
 </mapper>

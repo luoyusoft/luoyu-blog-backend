@@ -1,6 +1,7 @@
 package com.luoyu.blogmanage.controller.oss;
 
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.oss.OssResource;
 import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.service.oss.CloudStorageService;
@@ -33,16 +34,16 @@ public class OssResourceController {
      * 上传文件
      */
     @PostMapping("/upload")
-    public Result uploadCover(MultipartFile file) throws Exception {
+    public Response uploadCover(MultipartFile file) throws Exception {
         if (file!=null && file.isEmpty()) {
-            throw new MyException("上传文件不能为空");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件不能为空");
         }
         //上传文件
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         String url =cloudStorageService.uploadSuffix(file.getBytes(), suffix);
         OssResource resource=new OssResource(url,file.getOriginalFilename());
         ossResourceService.save(resource);
-        return Result.ok().put("resource", resource);
+        return Response.success(resource);
     }
 
 }

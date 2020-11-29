@@ -1,7 +1,7 @@
 package com.luoyu.blogmanage.common.auth;
 
 import com.luoyu.blogmanage.common.exception.MyException;
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 
 import java.security.MessageDigest;
 import java.util.UUID;
@@ -40,7 +40,7 @@ public class TokenGenerator {
             byte[] messageDigest = algorithm.digest();
             return toHexString(messageDigest);
         } catch (Exception e) {
-            throw new MyException(ErrorEnums.TOKEN_GENERATOR_ERROR, e);
+            throw new MyException(ResponseEnums.TOKEN_GENERATOR_ERROR, e);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.luoyu.blogmanage.common.exception;
 
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import lombok.Data;
 
 /**
@@ -17,24 +17,24 @@ public class MyException extends RuntimeException {
     private int code = 500;
 
     public MyException(){
-        super(ErrorEnums.UNKNOWN.getMsg());
-        this.msg= ErrorEnums.UNKNOWN.getMsg();
+        super(ResponseEnums.UNKNOWN.getMsg());
+        this.msg = ResponseEnums.UNKNOWN.getMsg();
     }
 
-
-    public MyException(ErrorEnums eEnum, Throwable e){
-        super(eEnum.getMsg(),e);
-        this.msg=eEnum.getMsg();
-        this.code=eEnum.getCode();
+    public MyException(ResponseEnums responseEnums, Throwable e){
+        super(responseEnums.getMsg(), e);
+        this.msg = responseEnums.getMsg();
+        this.code = responseEnums.getCode();
     }
 
-    public MyException(ErrorEnums eEnum){
-        this.msg=eEnum.getMsg();
-        this.code=eEnum.getCode();
+    public MyException(ResponseEnums responseEnums){
+        this.msg = responseEnums.getMsg();
+        this.code = responseEnums.getCode();
     }
 
-    public MyException(String exception){
-       this.msg=exception;
+    public MyException(int code, String msg){
+        this.msg = msg;
+        this.code = code;
     }
 
 }

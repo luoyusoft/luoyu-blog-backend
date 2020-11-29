@@ -2,6 +2,7 @@ package com.luoyu.blogmanage.mapper.book;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.luoyu.blogmanage.entity.article.Article;
 import com.luoyu.blogmanage.entity.book.Book;
 import com.luoyu.blogmanage.entity.book.vo.BookVO;
 import org.apache.ibatis.annotations.Param;
@@ -60,5 +61,11 @@ public interface BookMapper extends BaseMapper<Book> {
      * @return
      */
     BookVO selectByIdWithSubList(Integer id);
+
+    /**
+     * 查询所有图书列表
+     * @return
+     */
+    List<Book> selectBookListByTitle(String title);
 
 }

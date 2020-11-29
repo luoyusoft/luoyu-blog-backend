@@ -20,6 +20,9 @@ import java.io.Serializable;
 @ApiModel(value="Recommend对象", description="推荐")
 public class Recommend implements Serializable {
 
+    private static int TOP_NO = 0;
+    private static int TOP_YES = 1;
+
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键")
@@ -40,5 +43,8 @@ public class Recommend implements Serializable {
 
     @ApiModelProperty(value = "置顶")
     private Boolean top;
+
+    @ApiModelProperty(value = "发布状态")
+    private Boolean publish;
 
 }

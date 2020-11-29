@@ -1,7 +1,7 @@
 package com.luoyu.blogmanage.common.auth;
 
-import com.luoyu.blogmanage.entity.base.Result;
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
+import com.luoyu.blogmanage.entity.base.Response;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import com.luoyu.blogmanage.common.util.HttpContextUtils;
 import com.luoyu.blogmanage.common.util.JsonUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -54,7 +54,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setHeader("Access-Control-Allow-Origin", HttpContextUtils.getOrigin());
-            String json = JsonUtils.objectToJson(Result.error(ErrorEnums.INVALID_TOKEN));
+            String json = JsonUtils.objectToJson(Response.fail(ResponseEnums.INVALID_TOKEN));
             httpResponse.getWriter().print(json);
 
             return false;
@@ -72,7 +72,7 @@ public class OAuth2Filter extends AuthenticatingFilter {
         try {
             //处理登录失败的异常
             Throwable throwable = e.getCause() == null ? e : e.getCause();
-            Result r = Result.error(ErrorEnums.NO_AUTH.getCode(),throwable.getMessage());
+            Response r = Response.fail(ResponseEnums.NO_AUTH.getCode(), throwable.getMessage());
             String json = JsonUtils.objectToJson(r);
             httpResponse.getWriter().print(json);
         } catch (Exception e1) {

@@ -4,7 +4,7 @@ import com.luoyu.blogmanage.common.constants.RedisCacheNames;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.entity.base.AbstractController;
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.book.Book;
 import com.luoyu.blogmanage.entity.book.dto.BookDTO;
 import com.luoyu.blogmanage.service.book.BookService;
@@ -37,9 +37,9 @@ public class BookController extends AbstractController {
      */
     @GetMapping("/list")
     @RequiresPermissions("book:list")
-    public Result list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title) {
+    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title) {
         PageUtils bookPage = bookService.queryPage(page, limit, title);
-        return Result.ok().put("page", bookPage);
+        return Response.success(bookPage);
     }
 
     /**
@@ -47,9 +47,9 @@ public class BookController extends AbstractController {
      */
     @GetMapping("/select")
     @RequiresPermissions("book:list")
-    public Result select() {
+    public Response select() {
         List<Book> bookList = bookService.list(null);
-        return Result.ok().put("bookList", bookList);
+        return Response.success(bookList);
     }
 
     /**
@@ -57,9 +57,9 @@ public class BookController extends AbstractController {
      */
     @GetMapping("/info/{id}")
     @RequiresPermissions("book:info")
-    public Result info(@PathVariable("id") String id) {
+    public Response info(@PathVariable("id") String id) {
         BookDTO book = bookService.getBook(id);
-        return Result.ok().put("book", book);
+        return Response.success(book);
     }
 
     /**
@@ -68,11 +68,11 @@ public class BookController extends AbstractController {
     @PostMapping("/save")
     @CacheEvict(allEntries = true)
     @RequiresPermissions("book:save")
-    public Result save(@RequestBody BookDTO book) {
+    public Response save(@RequestBody BookDTO book) {
         ValidatorUtils.validateEntity(book);
         bookService.saveBook(book);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -81,11 +81,11 @@ public class BookController extends AbstractController {
     @PutMapping("/update")
     @CacheEvict(allEntries = true)
     @RequiresPermissions("book:update")
-    public Result update(@RequestBody BookDTO book) {
+    public Response update(@RequestBody BookDTO book) {
         ValidatorUtils.validateEntity(book);
         bookService.updateBook(book);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -97,9 +97,9 @@ public class BookController extends AbstractController {
     @PutMapping("/update/status")
     @CacheEvict(allEntries = true)
     @RequiresPermissions("book:update")
-    public Result updateStatus(@RequestBody Book readBook) {
+    public Response updateStatus(@RequestBody Book readBook) {
         bookService.updateById(readBook);
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -108,9 +108,9 @@ public class BookController extends AbstractController {
     @DeleteMapping("/delete")
     @CacheEvict(allEntries = true)
     @RequiresPermissions("book:delete")
-    public Result delete(@RequestBody Integer[] ids) {
+    public Response delete(@RequestBody Integer[] ids) {
         bookService.deleteBatch(ids);
-        return Result.ok();
+        return Response.success();
     }
 
 }

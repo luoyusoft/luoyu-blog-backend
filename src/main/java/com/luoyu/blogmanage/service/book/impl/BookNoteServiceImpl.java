@@ -68,7 +68,7 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
         Page<BookNoteVO> notePage = new Query<BookNoteVO>(params).getPage();
         List<BookNoteVO> bookNoteList = baseMapper.listBookNoteVo(notePage, params);
         // 查询所有分类
-        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType, ModuleEnum.BOOK.getValue()));
+        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType, ModuleEnum.BOOK.getCode()));
         // 封装BookNoteVo
         Optional.ofNullable(bookNoteList).ifPresent((bookNoteVos ->
                 bookNoteVos.forEach(bookNoteVo -> {
@@ -77,7 +77,7 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
                     // 设置类别
                     bookNoteVo.setCategoryListStr(categoryService.renderCategoryArr(bookNoteVo.getCategoryId(), categoryList));
                     // 设置标签列表
-                    bookNoteVo.setTagList(tagService.listByLinkId(bookNoteVo.getId(), ModuleEnum.BOOK_NOTE.getValue()));
+                    bookNoteVo.setTagList(tagService.listByLinkId(bookNoteVo.getId(), ModuleEnum.BOOK_NOTE.getCode()));
                 })));
         notePage.setRecords(bookNoteList);
         return new PageUtils(notePage);
@@ -93,7 +93,7 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
     @Transactional(rollbackFor = Exception.class)
     public void saveBookNote(BookNoteDTO bookNote) {
         baseMapper.insert(bookNote);
-        tagService.saveTagAndNew(bookNote.getTagList(), bookNote.getId(), ModuleEnum.BOOK_NOTE.getValue());
+        tagService.saveTagAndNew(bookNote.getTagList(), bookNote.getId(), ModuleEnum.BOOK_NOTE.getCode());
         InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
         initGitalkRequest.setId(bookNote.getId());
         initGitalkRequest.setTitle(bookNote.getTitle());
@@ -110,9 +110,9 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
     @Transactional(rollbackFor = Exception.class)
     public void updateBookNote(BookNoteDTO bookNote) {
         // 删除多对多所属标签
-        tagService.deleteTagLink(bookNote.getId(), ModuleEnum.BOOK_NOTE.getValue());
+        tagService.deleteTagLink(bookNote.getId(), ModuleEnum.BOOK_NOTE.getCode());
         // 更新所属标签
-        tagService.saveTagAndNew(bookNote.getTagList(), bookNote.getId(), ModuleEnum.BOOK_NOTE.getValue());
+        tagService.saveTagAndNew(bookNote.getTagList(), bookNote.getId(), ModuleEnum.BOOK_NOTE.getCode());
         // 更新笔记
         baseMapper.updateById(bookNote);
     }
@@ -129,7 +129,7 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
         BookNote bookNote = this.baseMapper.selectById(bookNoteId);
         BeanUtils.copyProperties(bookNote, bookNoteDto);
         // 查询所属标签
-        bookNoteDto.setTagList(tagService.listByLinkId(bookNoteId, ModuleEnum.BOOK_NOTE.getValue()));
+        bookNoteDto.setTagList(tagService.listByLinkId(bookNoteId, ModuleEnum.BOOK_NOTE.getCode()));
         return bookNoteDto;
     }
 
@@ -154,7 +154,7 @@ public class BookNoteServiceImpl extends ServiceImpl<BookNoteMapper, BookNote> i
     public void deleteBatch(Integer[] bookNoteIds) {
         //先删除笔记标签多对多关联
         Arrays.stream(bookNoteIds).forEach(bookNoteId -> {
-            tagService.deleteTagLink(bookNoteId, ModuleEnum.BOOK_NOTE.getValue());
+            tagService.deleteTagLink(bookNoteId, ModuleEnum.BOOK_NOTE.getCode());
         });
         this.baseMapper.deleteBatchIds(Arrays.asList(bookNoteIds));
     }

@@ -1,4 +1,4 @@
-package com.luoyu.blogmanage.common.exception.enums;
+package com.luoyu.blogmanage.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,9 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ErrorEnums {
+public enum ResponseEnums {
+
+    SUCCESS(200,"成功"),
 
     // 系统错误
     UNKNOWN(500,"系统内部错误，请联系管理员"),
@@ -30,10 +32,17 @@ public enum ErrorEnums {
     LOGIN_FAIL(10001,"登录失败"),
     CAPTCHA_WRONG(10002,"验证码错误"),
     USERNAME_OR_PASSWORD_WRONG(10003,"用户名或密码错误"),
+    ACCOUNT_LOCK(10004,"账号已被锁定，请联系管理员"),
 
     //七牛OSS错误
     OSS_CONFIG_ERROR(10050,"七牛配置信息错误"),
-    OSS_UPLOAD_ERROR(10051,"OSSBookNote上传失败");
+    OSS_UPLOAD_ERROR(10051,"OSSBookNote上传失败"),
+
+    //参数
+    PARAM_ERROR(20001,"参数错误"),
+    SAVE_FAIL(20002,"保存数据失败"),
+    UPDATE_FAILR(20003,"更新数据失败"),
+    DELETE_FAIL(20004,"删除数据失败");
 
     private int code;
     private String msg;

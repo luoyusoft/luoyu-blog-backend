@@ -94,4 +94,14 @@
         select count(*) from book_note where category_id = #{categoryId}
     </select>
 
+    <select id="selectBookNoteListByTitle" parameterType="java.lang.String" resultType="com.luoyu.blogmanage.entity.book.BookNote">
+        select id, title
+        from book_note
+        where publish = true
+        <if test="name!=null and name!=''">
+            and title like concat('%',#{title},'%')
+        </if>
+        order by id desc
+    </select>
+
 </mapper>

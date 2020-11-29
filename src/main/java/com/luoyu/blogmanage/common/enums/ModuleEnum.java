@@ -1,5 +1,6 @@
 package com.luoyu.blogmanage.common.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -10,25 +11,23 @@ import lombok.Getter;
  * @description 模块枚举
  */
 @Getter
+@AllArgsConstructor
 public enum ModuleEnum {
 
     /**
      * 文章模块
      */
-    ARTICLE(0),
+    ARTICLE(0, "文章模块"),
     /**
      * 图书模块
      */
-    BOOK(1),
+    BOOK(1, "文章模块"),
     /**
      * 图书笔记模块
      */
-    BOOK_NOTE(2);
+    BOOK_NOTE(2, "文章模块");
 
-    private int value;
-
-    ModuleEnum(int value) {
-        this.value = value;
-    }
+    private int code;
+    private String name;
 
 }

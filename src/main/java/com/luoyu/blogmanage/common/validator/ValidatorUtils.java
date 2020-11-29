@@ -1,5 +1,6 @@
 package com.luoyu.blogmanage.common.validator;
 
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import com.luoyu.blogmanage.common.exception.MyException;
 import org.apache.commons.lang.StringUtils;
 
@@ -37,7 +38,7 @@ public class ValidatorUtils {
         if (!constraintViolations.isEmpty()) {
             List<String> collect = constraintViolations.stream().map(constant -> constant.getMessage()).collect(Collectors.toList());
             String msg = StringUtils.join(collect, ",");
-            throw new MyException(msg);
+            throw new MyException(ResponseEnums.PARAM_ERROR);
         }
     }
 

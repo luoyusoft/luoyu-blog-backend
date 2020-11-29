@@ -2,7 +2,7 @@
 package com.luoyu.blogmanage.service.oss.impl;
 
 import com.luoyu.blogmanage.common.exception.MyException;
-import com.luoyu.blogmanage.common.exception.enums.ErrorEnums;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import com.luoyu.blogmanage.common.config.CloudStorageConfig;
 import com.luoyu.blogmanage.service.oss.CloudStorageService;
 import com.qiniu.common.Zone;
@@ -54,7 +54,7 @@ public class QiniuCloudStorageServiceImpl extends CloudStorageService {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new MyException(ErrorEnums.OSS_CONFIG_ERROR);
+            throw new MyException(ResponseEnums.OSS_CONFIG_ERROR);
         }
 
         return config.getQiniuDomain() + "/" + path;
@@ -67,7 +67,7 @@ public class QiniuCloudStorageServiceImpl extends CloudStorageService {
             return this.upload(data, path);
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new MyException(ErrorEnums.OSS_CONFIG_ERROR);
+            throw new MyException(ResponseEnums.OSS_CONFIG_ERROR);
         }
     }
 

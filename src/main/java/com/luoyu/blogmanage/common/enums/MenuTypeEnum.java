@@ -1,5 +1,6 @@
 package com.luoyu.blogmanage.common.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -10,29 +11,23 @@ import lombok.Getter;
  * @description 菜单类型
  */
 @Getter
+@AllArgsConstructor
 public enum MenuTypeEnum {
 
     /**
      * 目录
      */
-    CATALOG(0),
+    CATALOG(0, "目录"),
     /**
      * 菜单
      */
-    MENU(1),
+    MENU(1, "菜单"),
     /**
      * 按钮
      */
-    BUTTON(2);
+    BUTTON(2, "按钮");
 
-    private int value;
-
-    MenuTypeEnum(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
-    }
+    private int code;
+    private String name;
 
 }

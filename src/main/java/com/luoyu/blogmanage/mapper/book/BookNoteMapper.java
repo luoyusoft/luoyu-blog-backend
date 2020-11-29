@@ -2,6 +2,7 @@ package com.luoyu.blogmanage.mapper.book;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.luoyu.blogmanage.entity.book.Book;
 import com.luoyu.blogmanage.entity.book.BookNote;
 import com.luoyu.blogmanage.entity.book.vo.BookNoteVO;
 import org.apache.ibatis.annotations.Param;
@@ -68,5 +69,11 @@ public interface BookNoteMapper extends BaseMapper<BookNote> {
      * @return
      */
     int checkByCategory(Integer categoryId);
+
+    /**
+     * 查询所有笔记列表
+     * @return
+     */
+    List<BookNote> selectBookNoteListByTitle(String title);
 
 }

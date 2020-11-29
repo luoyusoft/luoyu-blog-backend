@@ -63,7 +63,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
         for(SysMenu entity : menuList){
             //目录
-            if(entity.getType() == MenuTypeEnum.CATALOG.getValue()){
+            if(entity.getType() == MenuTypeEnum.CATALOG.getCode()){
                 entity.setList(getMenuTreeList(queryListParentId(entity.getMenuId(), menuIdList), menuIdList));
             }
             subMenuList.add(entity);

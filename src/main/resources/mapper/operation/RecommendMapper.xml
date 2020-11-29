@@ -4,16 +4,8 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, link_id, type, order_num, title, top
+        id, link_id, type, order_num, title, top, publish
     </sql>
-
-    <select id="listSelect" resultType="com.luoyu.blogmanage.entity.operation.vo.RecommendVO">
-        select a.id as linkId, a.title, 0 as type
-        from article a
-        union all
-        select b.id as linkId, b.title, 2 as type
-        from book_note b
-    </select>
 
     <select id="listRecommendVo" resultType="com.luoyu.blogmanage.entity.operation.vo.RecommendVO">
         select <include refid="Base_Column_List"/> from recommend order by top desc,id desc  limit 5
@@ -27,7 +19,30 @@
     </select>
 
     <select id="selectCount" resultType="java.lang.Integer">
-      select count(*) from recommend
+      select count(1) from recommend
     </select>
+
+    <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blogmanage.entity.operation.Recommend">
+      select * from recommend where type = #{type} and link_id = #{linkId}
+    </select>
+
+    <update id="updateRecommendByLinkIdAndType" parameterType="com.luoyu.blogmanage.entity.operation.Recommend">
+      update recommend
+      <set>
+          <if test="top!=null">
+              top = #{top},
+          </if>
+          <if test="orderNum!=null">
+              order_num = #{orderNum},
+          </if>
+          <if test="title!=null">
+              title = #{title}
+          </if>
+          <if test="publish!=null">
+              publish = #{publish}
+          </if>
+      </set>
+      where type = #{type} and link_id = #{linkId}
+    </update>
 
 </mapper>

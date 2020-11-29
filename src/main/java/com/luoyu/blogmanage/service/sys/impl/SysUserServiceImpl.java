@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blogmanage.common.constants.SysConstants;
+import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import com.luoyu.blogmanage.entity.sys.SysUser;
 import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.util.PageUtils;
@@ -21,10 +22,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -59,19 +57,26 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     /**
      * 分页查询用户信息
      *
-     * @param params
+     * @param page
+     * @param limit
+     * @param username
+     * @param createUserId
      * @return
      */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        String username = (String)params.get("username");
-        Integer createUserId = (Integer)params.get("createUserId");
-        IPage<SysUser> page = baseMapper.selectPage(
+    public PageUtils queryPage(Integer page, Integer limit, String username, Integer createUserId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+        params.put("username", username);
+        params.put("createUserId", String.valueOf(createUserId));
+
+        IPage<SysUser> userPage = baseMapper.selectPage(
                 new Query<SysUser>(params).getPage(),
                 new QueryWrapper<SysUser>().lambda()
                         .like(StringUtils.isNotBlank(username),SysUser::getUsername, username)
                         .eq(createUserId != null,SysUser::getCreateUserId, createUserId));
-        return new PageUtils(page);
+        return new PageUtils(userPage);
     }
 
     /**
@@ -152,7 +157,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         //判断是否越权
         if(!roleIdList.containsAll(user.getRoleIdList())){
-            throw new MyException("新增用户所选角色，不是本人创建");
+            throw new MyException(ResponseEnums.NO_AUTH.getCode(), "新增用户所选角色，不是本人创建");
         }
     }
 

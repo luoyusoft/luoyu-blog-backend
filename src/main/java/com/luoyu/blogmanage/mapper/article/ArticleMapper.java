@@ -44,16 +44,16 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     /**
      * 获取简单的对象
-     * @param articleId
+     * @param id
      * @return
      */
-    ArticleVO getSimpleArticleVo(Integer articleId);
+    ArticleVO getSimpleArticleVo(Integer id);
 
     /**
      * 更新点赞记录
-     * @param parseInt
+     * @param id
      */
-    void updateLikeNum(int parseInt);
+    void updateLikeNum(int id);
 
     /**
      * 判断类别下是否有文章
@@ -67,5 +67,23 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @return
      */
     List<ArticleVO> selectArticleList();
+
+    /**
+     * 查询所有文章列表
+     * @return
+     */
+    List<Article> selectArticleListByTitle(String title);
+
+    /**
+     * 更新文章
+     * @return
+     */
+    Boolean updateArticle(Article article);
+
+    /**
+     * 查询已发布文章
+     * @return
+     */
+    Article selectArticleById(Integer id);
 
 }

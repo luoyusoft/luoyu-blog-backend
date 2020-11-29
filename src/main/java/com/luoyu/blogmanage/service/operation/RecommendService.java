@@ -32,7 +32,7 @@ public interface RecommendService extends IService<Recommend> {
      * 获取推荐列表
      * @return
      */
-    List<RecommendVO> listSelect();
+    List<RecommendVO> listSelect(Integer type, String title);
 
     /**
      * 更新置顶状态
@@ -41,17 +41,42 @@ public interface RecommendService extends IService<Recommend> {
     void updateTop(Integer id);
 
     /**
-     * 批量删除
+     * 从主删除过来批量删除
      * @param articleIds
-     * @param value
+     * @param type
      */
-    void deleteBatchByLinkId(Integer[] articleIds, int value);
+    void deleteBatchByLinkIdsAndType(List<Integer> articleIds, int type);
+
+    /**
+     * 从主新增过来新增
+     * @param articleId
+     * @param type
+     */
+    void insertRecommend(Integer articleId, int type);
 
     /**
      * 新增
-     * @param articleId
-     * @param value
+     * @param recommend
      */
-    void insertRecommend(Integer articleId, int value);
+    void insertRecommend(Recommend recommend);
+
+    /**
+     * 更新
+     * @param recommend
+     */
+    void updateRecommend(Recommend recommend);
+
+    /**
+     * 删除
+     * @param ids
+     */
+    void deleteRecommend(List<Integer> ids);
+
+    /**
+     * 查找
+     * @param linkId
+     * @param type
+     */
+    Recommend selectRecommendByLinkIdAndType(Integer linkId, Integer type);
 
 }

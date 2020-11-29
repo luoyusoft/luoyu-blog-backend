@@ -1,6 +1,6 @@
 package com.luoyu.blogmanage.controller.book;
 
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.common.constants.RedisCacheNames;
 import com.luoyu.blogmanage.entity.book.BookSense;
@@ -34,9 +34,9 @@ public class BookSenseController extends AbstractController {
      */
     @GetMapping("/{bookId}")
     @RequiresPermissions("book:info")
-    public Result getReadSense(@PathVariable("bookId") Integer bookId) {
+    public Response getReadSense(@PathVariable("bookId") Integer bookId) {
         BookSense bookSense = bookSenseService.getBookSense(bookId);
-        return Result.ok().put("bookSense",bookSense);
+        return Response.success(bookSense);
     }
 
     /**
@@ -45,11 +45,11 @@ public class BookSenseController extends AbstractController {
     @PostMapping("/save")
     @RequiresPermissions("book:save")
     @CacheEvict(allEntries = true)
-    public Result save(@RequestBody BookSense bookSense) {
+    public Response save(@RequestBody BookSense bookSense) {
         ValidatorUtils.validateEntity(bookSense);
         bookSenseService.save(bookSense);
 
-        return Result.ok();
+        return Response.success();
     }
 
     /**
@@ -58,10 +58,10 @@ public class BookSenseController extends AbstractController {
     @PutMapping("/update")
     @RequiresPermissions("book:update")
     @CacheEvict(allEntries = true)
-    public Result update(@RequestBody BookSense bookSense) {
+    public Response update(@RequestBody BookSense bookSense) {
         ValidatorUtils.validateEntity(bookSense);
         bookSenseService.updateById(bookSense);
-        return Result.ok();
+        return Response.success();
     }
 
 }

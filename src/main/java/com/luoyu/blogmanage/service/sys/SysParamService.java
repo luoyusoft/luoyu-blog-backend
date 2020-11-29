@@ -22,6 +22,6 @@ public interface SysParamService extends IService<SysParam> {
      * @param type
      * @return
      */
-     PageUtils queryPage(Integer page, Integer limit, String menuUrl, Integer type);
+     PageUtils queryPage(Integer page, Integer limit, String menuUrl, String type);
 
 }

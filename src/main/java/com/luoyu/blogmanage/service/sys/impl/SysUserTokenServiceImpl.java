@@ -1,6 +1,6 @@
 package com.luoyu.blogmanage.service.sys.impl;
 
-import com.luoyu.blogmanage.entity.base.Result;
+import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.common.constants.RedisKeyConstants;
 import com.luoyu.blogmanage.entity.sys.SysUserToken;
 import com.luoyu.blogmanage.common.util.RedisUtils;
@@ -33,7 +33,7 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
      * @return
      */
     @Override
-    public Result createToken(Integer userId) {
+    public String createToken(Integer userId) {
         // 生成一个token
         String token = TokenGenerator.generateValue();
 
@@ -50,7 +50,7 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
         redisUtils.set(tokenKey,userId,EXPIRE);
         redisUtils.set(userIdKey,token,EXPIRE);
 
-        return new Result().put("token",token).put("expire",EXPIRE);
+        return token;
     }
 
     /**

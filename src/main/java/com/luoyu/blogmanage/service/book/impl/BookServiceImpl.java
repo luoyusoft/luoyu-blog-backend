@@ -70,13 +70,13 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
         Page<BookVO> bookPage = new Query<BookVO>(params).getPage();
         List<BookVO> bookList = this.baseMapper.listBookVo(bookPage, params);
         // 查询所有分类
-        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType, ModuleEnum.BOOK.getValue()));
+        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType, ModuleEnum.BOOK.getCode()));
         // 封装BookVo
         bookList.forEach(bookVo -> {
             // 设置类别
             bookVo.setCategoryListStr(categoryService.renderCategoryArr(bookVo.getCategoryId(), categoryList));
             // 设置标签列表
-            bookVo.setTagList(tagService.listByLinkId(bookVo.getId(), ModuleEnum.BOOK.getValue()));
+            bookVo.setTagList(tagService.listByLinkId(bookVo.getId(), ModuleEnum.BOOK.getCode()));
         });
         bookPage.setRecords(bookList);
         return new PageUtils(bookPage);
@@ -91,7 +91,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     @Transactional(rollbackFor = Exception.class)
     public void saveBook(BookDTO book) {
         this.baseMapper.insert(book);
-        tagService.saveTagAndNew(book.getTagList(), book.getId(), ModuleEnum.BOOK.getValue());
+        tagService.saveTagAndNew(book.getTagList(), book.getId(), ModuleEnum.BOOK.getCode());
         InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
         initGitalkRequest.setId(book.getId());
         initGitalkRequest.setTitle(book.getTitle());
@@ -110,7 +110,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
         Book readBook = this.baseMapper.selectById(id);
         BookDTO readBookDto = new BookDTO();
         BeanUtils.copyProperties(readBook, readBookDto);
-        readBookDto.setTagList(tagService.listByLinkId(readBook.getId(), ModuleEnum.BOOK.getValue()));
+        readBookDto.setTagList(tagService.listByLinkId(readBook.getId(), ModuleEnum.BOOK.getCode()));
         return readBookDto;
     }
 
@@ -123,9 +123,9 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     @Transactional(rollbackFor = Exception.class)
     public void updateBook(BookDTO book) {
         // 删除多对多所属标签
-        tagService.deleteTagLink(book.getId(), ModuleEnum.BOOK.getValue());
+        tagService.deleteTagLink(book.getId(), ModuleEnum.BOOK.getCode());
         // 更新所属标签
-        tagService.saveTagAndNew(book.getTagList(), book.getId(), ModuleEnum.BOOK.getValue());
+        tagService.saveTagAndNew(book.getTagList(), book.getId(), ModuleEnum.BOOK.getCode());
         // 更新图书
         baseMapper.updateById(book);
     }
@@ -140,7 +140,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     public void deleteBatch(Integer[] bookIds) {
         //先删除标签多对多关联
         Arrays.stream(bookIds).forEach(bookId -> {
-            tagService.deleteTagLink(bookId, ModuleEnum.BOOK.getValue());
+            tagService.deleteTagLink(bookId, ModuleEnum.BOOK.getCode());
         });
         this.baseMapper.deleteBatchIds(Arrays.asList(bookIds));
     }
