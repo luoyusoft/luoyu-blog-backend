@@ -1,21 +1,21 @@
-package com.luoyu.blogmanage.entity.operation.vo;
+package com.luoyu.blogmanage.entity.operation.dto;
 
-import com.luoyu.blogmanage.entity.operation.Recommend;
 import com.luoyu.blogmanage.entity.operation.Tag;
+import com.luoyu.blogmanage.entity.operation.Top;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * RecommendVo
+ * TopDTO
  *
  * @author luoyu
  * @date 2019/02/22 10:49
  * @description
  */
 @Data
-public class RecommendVO extends Recommend {
+public class TopDTO extends Top {
 
     private String description;
 
@@ -29,7 +29,7 @@ public class RecommendVO extends Recommend {
 
     private String cover;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     private List<Tag> tagList;
 

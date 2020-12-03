@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 /**
- * Result
+ * Response
  *
  * @author luoyu
  * @date 2018/10/07 13:28
@@ -23,14 +23,15 @@ public class Response implements Serializable {
     private int code;
     private Object data;
     private String time;
+    private String srs;
 
-    public Response(int code, String msg) {
+    private Response(int code, String msg) {
         this.code = code;
         this.msg = msg;
         this.time = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
     }
 
-    public Response(int code, String msg, Object data) {
+    private Response(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;

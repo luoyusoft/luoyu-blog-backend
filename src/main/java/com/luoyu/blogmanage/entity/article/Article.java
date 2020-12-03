@@ -1,11 +1,13 @@
 package com.luoyu.blogmanage.entity.article;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.luoyu.blogmanage.entity.base.BaseEntity;
 import com.luoyu.blogmanage.common.validator.group.AddGroup;
 import com.luoyu.blogmanage.common.validator.group.UpdateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.validation.constraints.NotBlank;
@@ -22,23 +24,24 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value="BlogArticle对象", description="文章")
-@Document(indexName = "luoyublog",type = "article")
+@EqualsAndHashCode(callSuper = false)
+@TableName("article")
 public class Article extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "文章标题")
-    @NotEmpty(message="博文标题不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @NotBlank(message="文章标题不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String title;
 
     @ApiModelProperty(value = "文章描述")
     private String description;
 
     @ApiModelProperty(value = "文章作者")
+    @NotBlank(message="文章作者不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String author;
 
     @ApiModelProperty(value = "文章内容")
-    @NotBlank(message="博文内容不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String content;
 
     @ApiModelProperty(value = "阅读量")
@@ -56,19 +59,15 @@ public class Article extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "文章展示类别,0:普通，1：大图片，2：无图片")
     private Integer coverType;
 
-    @ApiModelProperty(value = "是否推荐文章")
-    private Boolean recommend;
-
-    @ApiModelProperty(value = "分类类别")
+    @ApiModelProperty(value = "文章分类类别")
+    @NotBlank(message="文章分类类别不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String categoryId;
 
     @ApiModelProperty(value = "发布状态")
     private Boolean publish;
 
-    @ApiModelProperty(value = "是否置顶")
-    private Boolean top;
-
     @ApiModelProperty(value = "格式化后的内容")
+    @NotBlank(message="文章内容不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String contentFormat;
 
 }

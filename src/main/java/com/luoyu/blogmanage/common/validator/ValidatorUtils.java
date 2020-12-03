@@ -38,7 +38,7 @@ public class ValidatorUtils {
         if (!constraintViolations.isEmpty()) {
             List<String> collect = constraintViolations.stream().map(constant -> constant.getMessage()).collect(Collectors.toList());
             String msg = StringUtils.join(collect, ",");
-            throw new MyException(ResponseEnums.PARAM_ERROR);
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), msg);
         }
     }
 

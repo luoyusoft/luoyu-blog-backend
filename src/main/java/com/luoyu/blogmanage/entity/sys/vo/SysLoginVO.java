@@ -1,16 +1,16 @@
-package com.luoyu.blogmanage.entity.sys.form;
+package com.luoyu.blogmanage.entity.sys.vo;
 
 import lombok.Data;
 
 /**
- * SysLoginForm
+ * SysLoginVO
  *
  * @author luoyu
  * @date 2018/10/20 14:51
  * @description 登录表单对象
  */
 @Data
-public class SysLoginForm {
+public class SysLoginVO {
 
     private String username;
     private String password;

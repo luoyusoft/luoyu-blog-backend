@@ -8,7 +8,7 @@ import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.operation.Recommend;
-import com.luoyu.blogmanage.entity.operation.vo.RecommendVO;
+import com.luoyu.blogmanage.entity.operation.dto.RecommendDTO;
 import com.luoyu.blogmanage.service.operation.RecommendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -51,11 +50,11 @@ public class RecommendController extends AbstractController {
      */
     @GetMapping("/select")
     @RequiresPermissions("operation:recommend:list")
-    public Response select (@RequestParam("type") Integer type, @RequestParam("title") String title) {
+    public Response select(@RequestParam("type") Integer type, @RequestParam("title") String title) {
         if(type == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
         }
-        List<RecommendVO> recommendList = recommendService.listSelect(type, title);
+        List<RecommendDTO> recommendList = recommendService.select(type, title);
         return Response.success(recommendList);
     }
 
@@ -104,24 +103,13 @@ public class RecommendController extends AbstractController {
     }
 
     /**
-     * 修改
-     */
-    @PutMapping("/top/{id}")
-    @RequiresPermissions("operation:recommend:update")
-    @CacheEvict(allEntries = true)
-    public Response updateTop (@PathVariable("id") Integer id) {
-        recommendService.updateTop(id);
-        return Response.success();
-    }
-
-    /**
      * 删除
      */
     @DeleteMapping("/delete")
     @RequiresPermissions("operation:recommend:delete")
     @CacheEvict(allEntries = true)
-    public Response delete(@RequestBody Integer[] ids){
-        recommendService.deleteRecommend(Arrays.asList(ids));
+    public Response deleteRecommendsByIds(@RequestBody Integer[] ids){
+        recommendService.deleteRecommendsByIds(Arrays.asList(ids));
         return Response.success();
     }
 

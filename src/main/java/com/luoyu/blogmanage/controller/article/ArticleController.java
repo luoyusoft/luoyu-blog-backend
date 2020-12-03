@@ -6,7 +6,7 @@ import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.util.PageUtils;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.entity.article.Article;
-import com.luoyu.blogmanage.entity.article.dto.ArticleDTO;
+import com.luoyu.blogmanage.entity.article.vo.ArticleVO;
 import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.service.article.ArticleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -53,7 +53,7 @@ public class ArticleController {
     @GetMapping("/info/{articleId}")
     @RequiresPermissions("article:list")
     public Response info(@PathVariable("articleId") Integer articleId) {
-        ArticleDTO article = articleService.getArticle(articleId);
+        ArticleVO article = articleService.getArticle(articleId);
         return Response.success(article);
     }
 
@@ -63,7 +63,7 @@ public class ArticleController {
     @PostMapping("/save")
     @RequiresPermissions("article:save")
     @CacheEvict(allEntries = true)
-    public Response saveArticle(@RequestBody ArticleDTO article){
+    public Response saveArticle(@RequestBody ArticleVO article){
         ValidatorUtils.validateEntity(article);
         articleService.saveArticle(article);
 
@@ -76,28 +76,10 @@ public class ArticleController {
     @PutMapping("/update")
     @RequiresPermissions("article:update")
     @CacheEvict(allEntries = true)
-    public Response updateArticle(@RequestBody ArticleDTO article){
+    public Response updateArticle(@RequestBody ArticleVO article){
         ValidatorUtils.validateEntity(article);
         articleService.updateArticle(article);
 
-        return Response.success();
-    }
-
-    /**
-     * 更新状态
-     *
-     * @param article
-     * @return
-     */
-    @PutMapping("/update/status")
-    @RequiresPermissions("article:update")
-    @CacheEvict(allEntries = true)
-    public Response updateStatus(@RequestBody Article article) {
-        if(article.getId() == null || (article.getPublish() == null
-                && article.getRecommend() == null && article.getTop() == null)){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，recommend，publish，top不能同时为空");
-        }
-        articleService.updateStatus(article);
         return Response.success();
     }
 
@@ -106,10 +88,9 @@ public class ArticleController {
      */
     @DeleteMapping("/delete")
     @RequiresPermissions("article:delete")
-    @Transactional(rollbackFor = Exception.class)
     @CacheEvict(allEntries = true)
-    public Response deleteBatch(@RequestBody Integer[] articleIds) {
-        articleService.deleteBatch(articleIds);
+    public Response deleteArticles(@RequestBody Integer[] ids) {
+        articleService.deleteArticles(ids);
         return Response.success();
     }
 

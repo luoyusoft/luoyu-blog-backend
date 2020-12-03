@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 /**
- * BookNoteAdminController
+ * RedisCacheController
  *
  * @author luoyu
  * @date 2019/11/12 20:25

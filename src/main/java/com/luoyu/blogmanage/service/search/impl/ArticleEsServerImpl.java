@@ -4,10 +4,10 @@ import com.luoyu.blogmanage.common.constants.ElasticSearchConstants;
 import com.luoyu.blogmanage.common.constants.RabbitMqConstants;
 import com.luoyu.blogmanage.common.util.ElasticSearchUtils;
 import com.luoyu.blogmanage.entity.article.Article;
-import com.luoyu.blogmanage.entity.article.dto.ArticleDTO;
 import com.luoyu.blogmanage.entity.article.vo.ArticleVO;
 import com.luoyu.blogmanage.common.util.JsonUtils;
 import com.luoyu.blogmanage.common.util.RabbitMqUtils;
+import com.luoyu.blogmanage.entity.article.dto.ArticleDTO;
 import com.luoyu.blogmanage.mapper.article.ArticleMapper;
 import com.luoyu.blogmanage.service.search.ArticleEsServer;
 import com.rabbitmq.client.Channel;
@@ -38,12 +38,12 @@ public class ArticleEsServerImpl implements ArticleEsServer {
     public boolean initArticle() throws Exception {
         if(elasticSearchUtils.deleteIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)){
             if(elasticSearchUtils.createIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)){
-                List<ArticleVO> articleVOList = articleMapper.selectArticleList();
-                if(articleVOList != null && articleVOList.size() > 0){
-                    articleVOList.forEach(x -> {
-                        ArticleDTO articleDTO = new ArticleDTO();
-                        BeanUtils.copyProperties(x, articleDTO);
-                        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD, JsonUtils.objectToJson(articleDTO));
+                List<ArticleDTO> articleDTOList = articleMapper.selectArticleList();
+                if(articleDTOList != null && articleDTOList.size() > 0){
+                    articleDTOList.forEach(x -> {
+                        ArticleVO articleVO = new ArticleVO();
+                        BeanUtils.copyProperties(x, articleVO);
+                        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD, JsonUtils.objectToJson(articleVO));
                     });
                     return true;
                 }

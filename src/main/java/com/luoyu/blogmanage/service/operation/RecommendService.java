@@ -1,13 +1,11 @@
 package com.luoyu.blogmanage.service.operation;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.luoyu.blogmanage.entity.operation.Recommend;
-import com.luoyu.blogmanage.entity.operation.vo.RecommendVO;
 import com.luoyu.blogmanage.common.util.PageUtils;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.luoyu.blogmanage.entity.operation.Recommend;
+import com.luoyu.blogmanage.entity.operation.dto.RecommendDTO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -32,27 +30,14 @@ public interface RecommendService extends IService<Recommend> {
      * 获取推荐列表
      * @return
      */
-    List<RecommendVO> listSelect(Integer type, String title);
+    List<RecommendDTO> select(Integer type, String title);
 
     /**
-     * 更新置顶状态
-     * @param id
-     */
-    void updateTop(Integer id);
-
-    /**
-     * 从主删除过来批量删除
+     * 批量删除
      * @param articleIds
      * @param type
      */
-    void deleteBatchByLinkIdsAndType(List<Integer> articleIds, int type);
-
-    /**
-     * 从主新增过来新增
-     * @param articleId
-     * @param type
-     */
-    void insertRecommend(Integer articleId, int type);
+    void deleteRecommendsByLinkIdsAndType(List<Integer> articleIds, int type);
 
     /**
      * 新增
@@ -70,7 +55,7 @@ public interface RecommendService extends IService<Recommend> {
      * 删除
      * @param ids
      */
-    void deleteRecommend(List<Integer> ids);
+    void deleteRecommendsByIds(List<Integer> ids);
 
     /**
      * 查找

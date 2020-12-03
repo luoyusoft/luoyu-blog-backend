@@ -2,7 +2,7 @@ package com.luoyu.blogmanage.service.gitalk.impl;
 
 import com.luoyu.blogmanage.common.constants.GitalkConstants;
 import com.luoyu.blogmanage.common.constants.RabbitMqConstants;
-import com.luoyu.blogmanage.entity.article.vo.ArticleVO;
+import com.luoyu.blogmanage.entity.article.dto.ArticleDTO;
 import com.luoyu.blogmanage.entity.gitalk.InitGitalkRequest;
 import com.luoyu.blogmanage.common.util.JsonUtils;
 import com.luoyu.blogmanage.common.util.RabbitMqUtils;
@@ -108,9 +108,9 @@ public class GitalkServiceImpl implements GitalkService {
      * @return
      */
     public boolean initArticleList(){
-        List<ArticleVO> articleVOList = articleMapper.selectArticleList();
-        if (articleVOList != null && articleVOList.size() > 0){
-            articleVOList.forEach(x -> {
+        List<ArticleDTO> articleDTOList = articleMapper.selectArticleList();
+        if (articleDTOList != null && articleDTOList.size() > 0){
+            articleDTOList.forEach(x -> {
                 InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
                 initGitalkRequest.setId(x.getId());
                 initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);

@@ -1,8 +1,6 @@
 package com.luoyu.blogmanage.entity.operation;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.luoyu.blogmanage.common.validator.group.AddGroup;
 import com.luoyu.blogmanage.common.validator.group.UpdateGroup;
@@ -24,26 +22,26 @@ import java.io.Serializable;
  * @since 2019-02-22
  */
 @Data
-@ApiModel(value="Recommend对象", description="推荐")
+@ApiModel(value="Top对象", description="置顶")
 @EqualsAndHashCode(callSuper = false)
-@TableName("recommend")
-public class Recommend extends BaseEntity implements Serializable {
+@TableName("top")
+public class Top extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "推荐链接id")
-    @NotBlank(message="推荐链接id不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @ApiModelProperty(value = "置顶链接id")
+    @NotBlank(message="置顶链接id不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private Integer linkId;
 
-    @ApiModelProperty(value = "推荐类型")
-    @NotBlank(message="推荐类型不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @ApiModelProperty(value = "置顶类型")
+    @NotBlank(message="置顶类型不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private Integer type;
 
-    @ApiModelProperty(value = "推荐顺序")
-    @NotBlank(message="推荐顺序不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @ApiModelProperty(value = "置顶顺序")
+    @NotBlank(message="置顶顺序不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private Integer orderNum;
 
-    @ApiModelProperty(value = "推荐标题")
+    @ApiModelProperty(value = "标题")
     @TableField(exist = false)
     private String title;
 

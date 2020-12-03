@@ -9,7 +9,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -40,7 +40,7 @@ public class SysRole implements Serializable {
     private Integer createUserId;
 
     @ApiModelProperty(value = "创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @TableField(exist=false)
     private List<Integer> menuIdList;

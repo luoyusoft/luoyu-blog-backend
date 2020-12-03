@@ -5,7 +5,7 @@ import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.entity.sys.SysUser;
-import com.luoyu.blogmanage.entity.sys.form.SysLoginForm;
+import com.luoyu.blogmanage.entity.sys.vo.SysLoginVO;
 import com.luoyu.blogmanage.common.enums.ResponseEnums;
 import com.luoyu.blogmanage.mapper.sys.SysUserMapper;
 import com.luoyu.blogmanage.service.sys.SysCaptchaService;
@@ -62,7 +62,7 @@ public class SysLoginController extends AbstractController {
      * 登录
      */
     @PostMapping("/admin/sys/login")
-    public Response login(@RequestBody SysLoginForm form) {
+    public Response login(@RequestBody SysLoginVO form) {
         boolean captcha = sysCaptchaService.validate(form.getUuid(),form.getCaptcha());
         if(!captcha){
             // 验证码不正确

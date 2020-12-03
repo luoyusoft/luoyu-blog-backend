@@ -10,7 +10,7 @@ import com.luoyu.blogmanage.common.validator.group.UpdateGroup;
 import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.sys.SysUser;
-import com.luoyu.blogmanage.entity.sys.form.PasswordForm;
+import com.luoyu.blogmanage.entity.sys.vo.PasswordVO;
 import com.luoyu.blogmanage.service.sys.SysUserRoleService;
 import com.luoyu.blogmanage.service.sys.SysUserService;
 import org.apache.commons.lang.ArrayUtils;
@@ -66,18 +66,18 @@ public class SysUserController extends AbstractController {
 
     /**
      * 修改密码
-     * @param passwordForm
+     * @param passwordVO
      * @return
      */
     @PutMapping("/password")
-    public Response password(@RequestBody PasswordForm passwordForm){
-        if(StringUtils.isEmpty(passwordForm.getNewPassword())) {
+    public Response password(@RequestBody PasswordVO passwordVO){
+        if(StringUtils.isEmpty(passwordVO.getNewPassword())) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "新密码不能为空");
         }
         //sha256加密
-        String password = new Sha256Hash(passwordForm.getPassword(), getUser().getSalt()).toHex();
+        String password = new Sha256Hash(passwordVO.getPassword(), getUser().getSalt()).toHex();
         //sha256加密
-        String newPassword = new Sha256Hash(passwordForm.getNewPassword(), getUser().getSalt()).toHex();
+        String newPassword = new Sha256Hash(passwordVO.getNewPassword(), getUser().getSalt()).toHex();
 
         boolean flag = sysUserService.updatePassword(getUserId(), password, newPassword);
         if(!flag){

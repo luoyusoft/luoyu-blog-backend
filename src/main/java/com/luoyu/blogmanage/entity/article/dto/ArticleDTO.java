@@ -7,15 +7,23 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * ArticleDto
+ * ArticleDTO
  *
  * @author luoyu
- * @date 2019/01/08 19:04
- * @description
+ * @date 2019/01/09 16:51
+ * @description 文章列表VO
  */
 @Data
 public class ArticleDTO extends Article {
 
+    /**
+     * 所属分类，以逗号分隔
+     */
+    private String categoryListStr;
+
+    /**
+     * 所属标签
+     */
     private List<Tag> tagList;
 
 }

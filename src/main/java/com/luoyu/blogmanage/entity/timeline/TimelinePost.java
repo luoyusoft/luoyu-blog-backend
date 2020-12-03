@@ -2,7 +2,7 @@ package com.luoyu.blogmanage.entity.timeline;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * TimeLineData
@@ -22,6 +22,6 @@ public class TimelinePost {
 
     private String postType;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
 }

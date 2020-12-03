@@ -3,15 +3,13 @@ package com.luoyu.blogmanage.controller.operation;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.luoyu.blogmanage.common.constants.RedisCacheNames;
 import com.luoyu.blogmanage.common.enums.CategoryRankEnum;
-import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.enums.ResponseEnums;
+import com.luoyu.blogmanage.common.exception.MyException;
 import com.luoyu.blogmanage.common.validator.ValidatorUtils;
 import com.luoyu.blogmanage.entity.base.AbstractController;
 import com.luoyu.blogmanage.entity.base.Response;
 import com.luoyu.blogmanage.entity.operation.Category;
 import com.luoyu.blogmanage.service.article.ArticleService;
-import com.luoyu.blogmanage.service.book.BookNoteService;
-import com.luoyu.blogmanage.service.book.BookService;
 import com.luoyu.blogmanage.service.operation.CategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
@@ -39,12 +37,6 @@ public class CategoryController extends AbstractController {
 
     @Resource
     private ArticleService articleService;
-
-    @Resource
-    private BookService bookService;
-
-    @Resource
-    private BookNoteService bookNoteService;
 
     /**
      * 列表
@@ -160,14 +152,6 @@ public class CategoryController extends AbstractController {
         // 判断是否有文章
         if(articleService.checkByCategory(id)) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该类别下有文章，无法删除");
-        }
-        // 判断是否有图书
-        if(bookService.checkByCategory(id)){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该类别下有图书，无法删除");
-        }
-        // 判断是否有笔记
-        if(bookNoteService.checkByCategory(id)) {
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该类别下有笔记，无法删除");
         }
 
         categoryService.removeById(id);

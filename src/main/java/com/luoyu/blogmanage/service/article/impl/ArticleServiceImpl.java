@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blogmanage.common.constants.GitalkConstants;
 import com.luoyu.blogmanage.common.constants.RabbitMqConstants;
 import com.luoyu.blogmanage.entity.article.Article;
-import com.luoyu.blogmanage.entity.article.dto.ArticleDTO;
 import com.luoyu.blogmanage.entity.article.vo.ArticleVO;
+import com.luoyu.blogmanage.entity.article.dto.ArticleDTO;
 import com.luoyu.blogmanage.entity.gitalk.InitGitalkRequest;
 import com.luoyu.blogmanage.entity.operation.Category;
 import com.luoyu.blogmanage.common.enums.ModuleEnum;
@@ -70,17 +70,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         params.put("limit", String.valueOf(limit));
         params.put("title", title);
 
-        Page<ArticleVO> articlePage = new Query<ArticleVO>(params).getPage();
-        List<ArticleVO> articleList = baseMapper.listArticleVo(articlePage, params);
+        Page<ArticleDTO> articlePage = new Query<ArticleDTO>(params).getPage();
+        List<ArticleDTO> articleList = baseMapper.listArticleVo(articlePage, params);
         // 查询所有分类
         List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType,ModuleEnum.ARTICLE.getCode()));
         // 封装ArticleVo
         Optional.ofNullable(articleList).ifPresent((articleVos ->
-                articleVos.forEach(articleVo -> {
+                articleVos.forEach(articleDTO -> {
                 // 设置类别
-                articleVo.setCategoryListStr(categoryService.renderCategoryArr(articleVo.getCategoryId(),categoryList));
+                articleDTO.setCategoryListStr(categoryService.renderCategoryArr(articleDTO.getCategoryId(),categoryList));
                 // 设置标签列表
-                articleVo.setTagList(tagService.listByLinkId(articleVo.getId(), ModuleEnum.ARTICLE.getCode()));
+                articleDTO.setTagList(tagService.listByLinkId(articleDTO.getId(), ModuleEnum.ARTICLE.getCode()));
             })));
         articlePage.setRecords(articleList);
         return new PageUtils(articlePage);
@@ -93,7 +93,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveArticle(ArticleDTO article) {
+    public void saveArticle(ArticleVO article) {
         baseMapper.insert(article);
         tagService.saveTagAndNew(article.getTagList(),article.getId(),ModuleEnum.ARTICLE.getCode());
         InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
@@ -102,18 +102,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
         rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT, JsonUtils.objectToJson(initGitalkRequest));
         rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD, JsonUtils.objectToJson(article));
-        if (article.getRecommend()){
-            Recommend recommend = new Recommend();
-            int count = recommendMapper.selectCount();
-
-            recommend.setLinkId(article.getId());
-            recommend.setType(ModuleEnum.ARTICLE.getCode());
-            recommend.setOrderNum(count + 1);
-            recommend.setTop(article.getTop());
-            recommend.setTitle(article.getTitle());
-            recommend.setPublish(article.getPublish());
-            recommendMapper.insert(recommend);
-        }
     }
 
     /**
@@ -123,41 +111,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateArticle(ArticleDTO article) {
+    public void updateArticle(ArticleVO article) {
         // 删除多对多所属标签
         tagService.deleteTagLink(article.getId(),ModuleEnum.ARTICLE.getCode());
         // 更新所属标签
         tagService.saveTagAndNew(article.getTagList(),article.getId(), ModuleEnum.ARTICLE.getCode());
         // 更新博文
-        baseMapper.updateArticle(article);
+        baseMapper.updateArticleById(article);
+        // 发送rabbitmq消息同步到es
         rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_UPDATE, JsonUtils.objectToJson(article));
-
-        if(article.getRecommend()) {
-            recommendService.insertRecommend(article.getId(), ModuleEnum.ARTICLE.getCode());
-        }else {
-            Integer[] articleIds = {article.getId()};
-            recommendService.deleteBatchByLinkIdsAndType(Arrays.asList(articleIds), ModuleEnum.ARTICLE.getCode());
-        }
-    }
-
-    /**
-     * 更新状态
-     * @param article
-     */
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void updateStatus(Article article) {
-        if(baseMapper.updateArticle(article)){
-            if (article.getPublish() == null){
-                if(article.getRecommend()){
-                    recommendService.insertRecommend(article.getId(), ModuleEnum.ARTICLE.getCode());
-                }else {
-                    Integer[] articleIds = {article.getId()};
-                    recommendService.deleteBatchByLinkIdsAndType(Arrays.asList(articleIds), ModuleEnum.ARTICLE.getCode());
-                }
-            }
-        }
-
     }
 
     /**
@@ -167,13 +129,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @return
      */
     @Override
-    public ArticleDTO getArticle(Integer articleId) {
-        ArticleDTO articleDto = new ArticleDTO();
+    public ArticleVO getArticle(Integer articleId) {
+        ArticleVO articleVO = new ArticleVO();
         Article article = this.baseMapper.selectById(articleId);
-        BeanUtils.copyProperties(article,articleDto);
+        BeanUtils.copyProperties(article, articleVO);
         // 查询所属标签
-        articleDto.setTagList(tagService.listByLinkId(articleId,ModuleEnum.ARTICLE.getCode()));
-        return articleDto;
+        articleVO.setTagList(tagService.listByLinkId(articleId,ModuleEnum.ARTICLE.getCode()));
+        return articleVO;
     }
 
     @Override
@@ -184,20 +146,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     /**
      * 批量删除
      *
-     * @param articleIds
+     * @param ids
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteBatch(Integer[] articleIds) {
+    public void deleteArticles(Integer[] ids) {
         //先删除博文标签多对多关联
-        Arrays.stream(articleIds).forEach(articleId -> {
-            tagService.deleteTagLink(articleId,ModuleEnum.ARTICLE.getCode());
+        Arrays.stream(ids).forEach(articleId -> {
+            tagService.deleteTagLink(articleId, ModuleEnum.ARTICLE.getCode());
         });
-        this.baseMapper.deleteBatchIds(Arrays.asList(articleIds));
+        this.baseMapper.deleteBatchIds(Arrays.asList(ids));
 
-        recommendService.deleteBatchByLinkIdsAndType(Arrays.asList(articleIds), ModuleEnum.ARTICLE.getCode());
-
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_DELETE, JsonUtils.objectToJson(articleIds));
+        recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(ids), ModuleEnum.ARTICLE.getCode());
+        // 发送rabbitmq消息同步到es
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_DELETE, JsonUtils.objectToJson(ids));
     }
 
 }

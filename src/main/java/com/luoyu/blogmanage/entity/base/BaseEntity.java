@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 基础实体类
@@ -33,7 +33,7 @@ public class BaseEntity {
     @ApiModelProperty(value = "创建时间")
     @Field(type = FieldType.Date, format = DateFormat.none)
     @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
@@ -41,6 +41,6 @@ public class BaseEntity {
     @ApiModelProperty(value = "更新时间")
     @Field(type = FieldType.Date, format = DateFormat.none)
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
 }
