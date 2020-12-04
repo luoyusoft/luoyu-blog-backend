@@ -13,11 +13,11 @@ server:
   port: 8800
   servlet:
     #映射项目路径
-    context-path: /api/luoyublog/manage
+    context-path: /api/luoyublog
 
 spring:
   application:
-    name: luoyublog-manage-backend
+    name: luoyublog-backend
   lifecycle:
     # 默认时间为30S, 意味着最大等待30S，超时候无论线程任务是否执行完毕都会停机处理，一定要合理合理设置。
     timeout-per-shutdown-phase: 20s

@@ -34,7 +34,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
         <!-- 2.1 所有日志，时间滚动输出  -->
         <appender name="ALL_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <!-- 正在记录的日志文档的路径及文档名 -->
-            <file>${LOG_HOME}/luoyublog-manage-backend-all.log</file>
+            <file>${LOG_HOME}/luoyublog-backend-all.log</file>
             <!--日志文档输出格式-->
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -42,7 +42,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
             </encoder>
             <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_HOME}/all/luoyublog-manage-backend-all-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOG_HOME}/all/luoyublog-backend-all-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                     <maxFileSize>100MB</maxFileSize>
                 </timeBasedFileNamingAndTriggeringPolicy>
@@ -56,7 +56,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
         <!-- 2.2 level为 INFO 日志，时间滚动输出  -->
         <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <!-- 正在记录的日志文档的路径及文档名 -->
-            <file>${LOG_HOME}/luoyublog-manage-backend-info.log</file>
+            <file>${LOG_HOME}/luoyublog-backend-info.log</file>
             <!--日志文档输出格式-->
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -65,7 +65,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
             <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
                 <!-- 每天日志归档路径以及格式 -->
-                <fileNamePattern>${LOG_HOME}/info/luoyublog-manage-backend-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOG_HOME}/info/luoyublog-backend-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                     <maxFileSize>100MB</maxFileSize>
                 </timeBasedFileNamingAndTriggeringPolicy>
@@ -85,7 +85,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
         <!-- 2.3 level为 WARN 日志，时间滚动输出  -->
         <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <!-- 正在记录的日志文档的路径及文档名 -->
-            <file>${LOG_HOME}/luoyublog-manage-backend-warn.log</file>
+            <file>${LOG_HOME}/luoyublog-backend-warn.log</file>
             <!--日志文档输出格式-->
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -93,7 +93,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
             </encoder>
             <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_HOME}/warn/luoyublog-manage-backend-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOG_HOME}/warn/luoyublog-backend-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                     <maxFileSize>100MB</maxFileSize>
                 </timeBasedFileNamingAndTriggeringPolicy>
@@ -113,7 +113,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
         <!-- 2.4 level为 ERROR 日志，时间滚动输出  -->
         <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <!-- 正在记录的日志文档的路径及文档名 -->
-            <file>${LOG_HOME}/luoyublog-manage-backend-error.log</file>
+            <file>${LOG_HOME}/luoyublog-backend-error.log</file>
             <!--日志文档输出格式-->
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -121,7 +121,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
             </encoder>
             <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>${LOG_HOME}/error/luoyublog-manage-backend-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <fileNamePattern>${LOG_HOME}/error/luoyublog-backend-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
                 <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                     <maxFileSize>100MB</maxFileSize>
                 </timeBasedFileNamingAndTriggeringPolicy>

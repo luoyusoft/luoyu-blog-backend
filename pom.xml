@@ -10,12 +10,12 @@
     </parent>
 
     <groupId>com.luoyu</groupId>
-    <artifactId>luoyublog-manage-backend</artifactId>
+    <artifactId>luoyublog</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>luoyublog-manage-backend</name>
-    <description>LuoYu Blog Manage Backend</description>
+    <name>luoyublog</name>
+    <description>LuoYuBlog</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -287,7 +287,7 @@
                             <!--                            <jvmFlag>-Xmy:flag=jib-rules</jvmFlag>-->
                         </jvmFlags>
                         <!-- springboot项目的入口类 -->
-                        <mainClass>com.luoyu.blogmanage.LuoYuBlogManageApplication</mainClass>
+                        <mainClass>com.luoyu.blog.LuoYuBlogApplication</mainClass>
                         <!-- 对准机器时差 -->
                         <!--                        <useCurrentTimestamp>true</useCurrentTimestamp>-->
                         <args>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blogmanage.mapper.operation.TopMapper">
+<mapper namespace="com.luoyu.blog.mapper.operation.TopMapper">
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, link_id, type, order_num, title
     </sql>
 
-    <select id="selectTopByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blogmanage.entity.operation.Top">
+    <select id="selectTopByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Top">
       select * from top where type = #{type} and link_id = #{linkId}
     </select>
 
-    <update id="updateTopByLinkIdAndType" parameterType="com.luoyu.blogmanage.entity.operation.Top">
+    <update id="updateTopByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Top">
       update top
       <set>
           <if test="orderNum!=null">

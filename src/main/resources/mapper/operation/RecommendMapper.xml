@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blogmanage.mapper.operation.RecommendMapper">
+<mapper namespace="com.luoyu.blog.mapper.operation.RecommendMapper">
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, link_id, type, order_num, title
     </sql>
 
-    <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blogmanage.entity.operation.Recommend">
+    <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
       select * from recommend where type = #{type} and link_id = #{linkId}
     </select>
 
-    <update id="updateRecommendByLinkIdAndType" parameterType="com.luoyu.blogmanage.entity.operation.Recommend">
+    <update id="updateRecommendByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Recommend">
       update recommend
       <set>
           <if test="orderNum!=null">
@@ -20,5 +20,11 @@
       </set>
       where type = #{type} and link_id = #{linkId}
     </update>
+
+    <!-- *************************** portal ****************************** -->
+
+    <select id="listRecommendDTO" resultType="com.luoyu.blog.entity.operation.dto.RecommendDTO">
+        select <include refid="Base_Column_List"/> from recommend order by id desc limit 5
+    </select>
 
 </mapper>

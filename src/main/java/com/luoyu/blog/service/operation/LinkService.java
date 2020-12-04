@@ -1,0 +1,36 @@
+package com.luoyu.blog.service.operation;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.luoyu.blog.common.util.PageUtils;
+import com.luoyu.blog.entity.operation.Link;
+
+import java.util.List;
+
+/**
+ * <p>
+ * 友链 服务类
+ * </p>
+ *
+ * @author luoyu
+ * @since 2019-02-14
+ */
+public interface LinkService extends IService<Link> {
+
+    /**
+     * 分页查询
+     * @param page
+     * @param limit
+     * @param title
+     * @return
+     */
+     PageUtils queryPage(Integer page, Integer limit, String title);
+
+    /********************** portal ********************************/
+
+    /**
+     * 获取link列表
+     * @return
+     */
+    List<Link> listLink();
+
+}

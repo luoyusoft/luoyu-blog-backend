@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blogmanage.mapper.article.ArticleMapper">
+<mapper namespace="com.luoyu.blog.mapper.article.ArticleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.luoyu.blogmanage.entity.article.Article">
+    <resultMap id="BaseResultMap" type="com.luoyu.blog.entity.article.Article">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="description" property="description" />
@@ -20,8 +20,8 @@
         <result column="publish" property="publish" />
     </resultMap>
 
-    <resultMap id="WithTagList" type="com.luoyu.blogmanage.entity.article.vo.ArticleVO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id, type=type}" select="com.luoyu.blogmanage.mapper.operation.TagMapper.listByLinkId"/>
+    <resultMap id="WithTagList" type="com.luoyu.blog.entity.article.vo.ArticleVO" extends="BaseResultMap">
+        <association property="tagList" column="{linkId=id, type=type}" select="com.luoyu.blog.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <sql id="homeArticleColumn">
@@ -32,7 +32,7 @@
        id,title,description,author,read_num,like_num,cover,cover_type,create_time,publish,category_id
     </sql>
 
-    <select id="listArticleVo" resultType="com.luoyu.blogmanage.entity.article.dto.ArticleDTO">
+    <select id="listArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
         select <include refid="manageArticleColumn"/> from article
         <where>
             <if test="params.title!=null and params.title !=''">
@@ -46,10 +46,6 @@
         update article set read_num = read_num + 1 where id = #{id}
     </update>
 
-    <select id="getSimpleArticleVo" resultType="com.luoyu.blogmanage.entity.article.dto.ArticleDTO">
-        select <include refid="homeArticleColumn"/> from article where id = #{id}
-    </select>
-
     <update id="updateLikeNum">
         update article set like_num = like_num + 1 where id = #{id}
     </update>
@@ -58,11 +54,11 @@
         select count(*) from article where category_id = #{categoryId}
     </select>
 
-    <select id="selectArticleList" resultType="com.luoyu.blogmanage.entity.article.dto.ArticleDTO">
+    <select id="selectArticleList" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
         select <include refid="homeArticleColumn"/> from article where publish = true
     </select>
 
-    <select id="selectArticleListByTitle" parameterType="java.lang.String" resultType="com.luoyu.blogmanage.entity.article.Article">
+    <select id="selectArticleListByTitle" parameterType="java.lang.String" resultType="com.luoyu.blog.entity.article.Article">
         select id, title
         from article
         where publish = true
@@ -72,7 +68,7 @@
         order by id desc
     </select>
 
-    <update id="updateArticleById" parameterType="com.luoyu.blogmanage.entity.article.Article">
+    <update id="updateArticleById" parameterType="com.luoyu.blog.entity.article.Article">
         update article
         <set>
             <if test="title!=null and title!=''">
@@ -115,10 +111,39 @@
         where id = #{id}
     </update>
 
-    <select id="selectArticleById" parameterType="java.lang.Integer" resultType="com.luoyu.blogmanage.entity.article.Article">
+    <!-- *************************** portal ****************************** -->
+
+    <select id="getSimpleArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
+        select <include refid="homeArticleColumn"/> from article where id = #{id}
+    </select>
+
+    <select id="selectArticleById" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.article.Article">
         select *
         from article
         where id = #{id} and publish = true
+    </select>
+
+    <select id="queryPageCondition" resultMap="WithTagList">
+        select <include refid="homeArticleColumn"/> , 0 as `type` from article
+        <where>
+            publish = true
+            <if test="params.recommend != null and params.recommend != ''">
+                and recommend = true
+            </if>
+            <if test="params.categoryId !=null and params.categoryId != ''">
+                and find_in_set(#{params.categoryId},category_id)
+            </if>
+            and publish = true
+        </where>
+        <if test="params.recommend !=null and params.recommend != ''">
+            order by top desc, recommend desc
+        </if>
+        <if test="params.latest !=null and params.latest != ''">
+            order by top desc,create_time desc
+        </if>
+        <if test="params.favorite !=null and params.favorite != ''">
+            order by top desc,like_num desc
+        </if>
     </select>
 
 </mapper>
