@@ -55,8 +55,16 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
         params.put("limit", String.valueOf(limit));
         params.put("title", title);
         IPage<Recommend> recommendPage = baseMapper.selectPage(new Query<Recommend>(params).getPage(),
-                new QueryWrapper<Recommend>().lambda()
-                        .like(StringUtils.isNotEmpty(title),Recommend::getTitle,title));
+                new QueryWrapper<Recommend>().lambda());
+        recommendPage.getRecords().forEach(recommendPageItem -> {
+            if (ModuleEnum.ARTICLE.getCode() == recommendPageItem.getType()){
+                Article article = articleMapper.selectById(recommendPageItem.getLinkId());
+                if (article != null){
+                    recommendPageItem.setTitle(article.getTitle());
+                }
+            }
+        });
+
         return new PageUtils(recommendPage);
     }
 

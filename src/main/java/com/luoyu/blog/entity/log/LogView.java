@@ -11,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -46,7 +47,7 @@ public class LogView implements Serializable {
     private String params;
 
     @ApiModelProperty(value = "执行时长(毫秒)")
-    @NotBlank(message = "执行时长(毫秒)不能为空", groups = {AddGroup.class})
+    @NotNull(message = "执行时长(毫秒)不能为空", groups = {AddGroup.class})
     private Long time;
 
     @ApiModelProperty(value = "ip地址")

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -28,7 +29,7 @@ public class SysParam extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "参数键")
-    @NotBlank(message = "参数键不能为空", groups = {AddGroup.class})
+    @NotNull(message = "参数键不能为空", groups = {AddGroup.class})
     private Integer parKey;
 
     @ApiModelProperty(value = "参数值")

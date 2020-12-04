@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -30,11 +31,11 @@ public class SysUserRole extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "用户id")
-    @NotBlank(message = "用户id不能为空", groups = {AddGroup.class})
+    @NotNull(message = "用户id不能为空", groups = {AddGroup.class})
     private Integer userId;
 
     @ApiModelProperty(value = "角色id")
-    @NotBlank(message = "角色id不能为空", groups = {AddGroup.class})
+    @NotNull(message = "角色id不能为空", groups = {AddGroup.class})
     private Integer roleId;
 
 }

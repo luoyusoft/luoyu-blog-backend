@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -28,11 +29,11 @@ public class SysRoleMenu extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "角色id")
-    @NotBlank(message = "角色id不能为空", groups = {AddGroup.class})
+    @NotNull(message = "角色id不能为空", groups = {AddGroup.class})
     private Integer roleId;
 
     @ApiModelProperty(value = "菜单id")
-    @NotBlank(message = "菜单id不能为空", groups = {AddGroup.class})
+    @NotNull(message = "菜单id不能为空", groups = {AddGroup.class})
     private Integer menuId;
 
 }

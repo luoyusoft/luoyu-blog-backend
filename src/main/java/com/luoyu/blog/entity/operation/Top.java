@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -29,15 +30,15 @@ public class Top extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "置顶链接id")
-    @NotBlank(message="置顶链接id不能为空", groups = {AddGroup.class})
+    @NotNull(message="置顶链接id不能为空", groups = {AddGroup.class})
     private Integer linkId;
 
     @ApiModelProperty(value = "置顶类型")
-    @NotBlank(message="置顶类型不能为空", groups = {AddGroup.class})
+    @NotNull(message="置顶类型不能为空", groups = {AddGroup.class})
     private Integer type;
 
     @ApiModelProperty(value = "置顶顺序")
-    @NotBlank(message="置顶顺序不能为空", groups = {AddGroup.class})
+    @NotNull(message="置顶顺序不能为空", groups = {AddGroup.class})
     private Integer orderNum;
 
     @ApiModelProperty(value = "标题")

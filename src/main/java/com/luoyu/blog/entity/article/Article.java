@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -54,7 +55,7 @@ public class Article extends BaseEntity implements Serializable {
     private String cover;
 
     @ApiModelProperty(value = "文章展示类别,0:普通，1：大图片，2：无图片")
-    @NotBlank(message="文章展示类别不能为空", groups = {AddGroup.class})
+    @NotNull(message="文章展示类别不能为空", groups = {AddGroup.class})
     private Integer coverType;
 
     @ApiModelProperty(value = "文章分类类别")

@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -33,16 +34,16 @@ public class Category extends BaseEntity implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "类型")
-    @NotBlank(message = "类型不能为空", groups = {AddGroup.class})
+    @NotNull(message = "类型不能为空", groups = {AddGroup.class})
     private Integer type;
 
     @ApiModelProperty(value = "级别")
-    @NotBlank(message = "级别不能为空", groups = {AddGroup.class})
+    @NotNull(message = "级别不能为空", groups = {AddGroup.class})
     @TableField(value = "`rank`")
     private Integer rank;
 
     @ApiModelProperty(value = "父主键")
-    @NotBlank(message = "父主键不能为空", groups = {AddGroup.class})
+    @NotNull(message = "父主键不能为空", groups = {AddGroup.class})
     private Integer parentId;
 
     @ApiModelProperty(value = "父主键名称")

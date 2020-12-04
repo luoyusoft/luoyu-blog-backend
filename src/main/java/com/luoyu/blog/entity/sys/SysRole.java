@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class SysRole extends BaseEntity implements Serializable {
     private String remark;
 
     @ApiModelProperty(value = "创建者id")
-    @NotBlank(message = "创建者id不能为空", groups = {AddGroup.class})
+    @NotNull(message = "创建者id不能为空", groups = {AddGroup.class})
     private Integer createUserId;
 
     @TableField(exist=false)

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -28,15 +29,15 @@ public class TagLink extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "标签链接id")
-    @NotBlank(message="标签链接id不能为空", groups = {AddGroup.class})
+    @NotNull(message="标签链接id不能为空", groups = {AddGroup.class})
     private Integer linkId;
 
     @ApiModelProperty(value = "标签id")
-    @NotBlank(message="标签id不能为空", groups = {AddGroup.class})
+    @NotNull(message="标签id不能为空", groups = {AddGroup.class})
     private Integer tagId;
 
     @ApiModelProperty(value = "标签所属类型：0文章，1阅读")
-    @NotBlank(message="所属类型不能为空", groups = {AddGroup.class})
+    @NotNull(message="所属类型不能为空", groups = {AddGroup.class})
     private Integer type;
 
     public TagLink() {

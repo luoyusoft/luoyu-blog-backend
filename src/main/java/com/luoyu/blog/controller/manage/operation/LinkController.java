@@ -71,7 +71,6 @@ public class LinkController extends AbstractController {
     @RequiresPermissions("operation:link:update")
     @CacheEvict(allEntries = true)
     public Response update(@RequestBody Link link){
-        ValidatorUtils.validateEntity(link);
         linkService.updateById(link);
         return Response.success();
     }
