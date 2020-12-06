@@ -47,6 +47,7 @@ public class OAuth2Realm extends AuthorizingRealm {
         info.setStringPermissions(permsSet);
         return info;
     }
+
     /**
      * 认证(登录时调用)
      */

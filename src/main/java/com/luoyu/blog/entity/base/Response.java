@@ -24,6 +24,9 @@ public class Response implements Serializable {
     private String time;
     private String srs;
 
+    private Response() {
+    }
+
     private Response(int code, String msg) {
         this.code = code;
         this.msg = msg;

@@ -27,7 +27,7 @@ public interface ArticleService extends IService<Article> {
     PageUtils queryPage(Integer page, Integer limit, String title);
 
     /**
-     * 保存博文文章
+     * 保存文章
      * @param article
      */
     void saveArticle(ArticleVO article);
@@ -39,7 +39,7 @@ public interface ArticleService extends IService<Article> {
     void deleteArticles(Integer[] ids);
 
     /**
-     * 更新博文
+     * 更新文章
      * @param article
      */
     void updateArticle(ArticleVO article);

@@ -1,4 +1,4 @@
-package com.luoyu.blog.controller.manage.sys;
+package com.luoyu.blog.controller.sys;
 
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.entity.base.Response;
@@ -25,9 +25,7 @@ import java.util.Set;
  * @author luoyu
  * @since 2018-10-19
  */
-
 @RestController
-@RequestMapping("/admin/sys/menu")
 public class SysMenuController extends AbstractController {
 
     @Autowired
@@ -39,10 +37,10 @@ public class SysMenuController extends AbstractController {
     /**
      * 信息
      */
-    @GetMapping("/nav")
+    @GetMapping("/manage/sys/menu/nav")
     public Response nav(){
-        List<SysMenu> menuList=sysMenuService.listUserMenu(getUserId());
-        Set<String> permissions=shiroService.getUserPermissions(getUserId());
+        List<SysMenu> menuList = sysMenuService.listUserMenu(getUserId());
+        Set<String> permissions = shiroService.getUserPermissions(getUserId());
         SysMenuVO sysMenuVO = new SysMenuVO();
         sysMenuVO.setMenuList(menuList);
         sysMenuVO.setPermissions(permissions);
@@ -52,7 +50,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 所有菜单列表
      */
-    @GetMapping("/list")
+    @GetMapping("/manage/sys/menu/list")
     @RequiresPermissions("sys:menu:list")
     public Response list(){
         List<SysMenu> menuList = sysMenuService.list(null);
@@ -68,7 +66,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 选择菜单(添加、修改菜单)
      */
-    @GetMapping("/select")
+    @GetMapping("/manage/sys/menu/select")
     @RequiresPermissions("sys:menu:select")
     public Response select(){
         //查询列表数据
@@ -90,7 +88,7 @@ public class SysMenuController extends AbstractController {
      * @param menuId
      * @return
      */
-    @GetMapping("/info/{menuId}")
+    @GetMapping("/manage/sys/menu/info/{menuId}")
     @RequiresPermissions("sys:menu:info")
     public Response update(@PathVariable("menuId") Integer menuId){
         SysMenu menu = sysMenuService.getById(menuId);
@@ -100,7 +98,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 保存
      */
-    @PostMapping("/save")
+    @PostMapping("/manage/sys/menu/save")
     @RequiresPermissions("sys:menu:save")
     public Response save(@RequestBody SysMenu menu){
         //数据校验
@@ -115,7 +113,7 @@ public class SysMenuController extends AbstractController {
      * @param menu
      * @return
      */
-    @PutMapping("/update")
+    @PutMapping("/manage/sys/menu/update")
     @RequiresPermissions("sys:menu:update")
     public Response update(@RequestBody SysMenu menu){
         //数据校验
@@ -130,7 +128,7 @@ public class SysMenuController extends AbstractController {
      * @param menuId
      * @return
      */
-    @DeleteMapping("/delete/{menuId}")
+    @DeleteMapping("/manage/sys/menu/delete/{menuId}")
     @RequiresPermissions("sys:menu:delete")
     public Response delete(@PathVariable("menuId") Integer menuId){
         if(menuId <= 29){

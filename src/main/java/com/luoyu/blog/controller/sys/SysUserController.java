@@ -1,4 +1,4 @@
-package com.luoyu.blog.controller.manage.sys;
+package com.luoyu.blog.controller.sys;
 
 import com.luoyu.blog.common.constants.SysConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
@@ -31,7 +31,6 @@ import java.util.List;
  * @since 2018-10-08
  */
 @RestController
-@RequestMapping("/admin/sys/user")
 public class SysUserController extends AbstractController {
 
     @Autowired
@@ -43,7 +42,7 @@ public class SysUserController extends AbstractController {
     /**
      * 获取登录的用户信息
      */
-    @GetMapping("/info")
+    @GetMapping("/manage/sys/user/info")
     public Response info(){
         return Response.success(getUser());
     }
@@ -51,7 +50,7 @@ public class SysUserController extends AbstractController {
     /**
      * 所有用户列表
      */
-    @GetMapping("/list")
+    @GetMapping("/manage/sys/user/list")
     @RequiresPermissions("sys:user:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("username") String username){
         Integer createUserId = null;
@@ -69,7 +68,7 @@ public class SysUserController extends AbstractController {
      * @param passwordVO
      * @return
      */
-    @PutMapping("/password")
+    @PutMapping("/manage/sys/user/password")
     public Response password(@RequestBody PasswordVO passwordVO){
         if(StringUtils.isEmpty(passwordVO.getNewPassword())) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "新密码不能为空");
@@ -90,7 +89,7 @@ public class SysUserController extends AbstractController {
     /**
      * 保存用户
      */
-    @PostMapping("/save")
+    @PostMapping("/manage/sys/user/save")
     @RequiresPermissions("sys:user:save")
     public Response save(@RequestBody SysUser user){
         ValidatorUtils.validateEntity(user, AddGroup.class);
@@ -104,11 +103,9 @@ public class SysUserController extends AbstractController {
     /**
      * 修改用户
      */
-    @PutMapping("/update")
+    @PutMapping("/manage/sys/user/update")
     @RequiresPermissions("sys:user:update")
     public Response update(@RequestBody SysUser user){
-        ValidatorUtils.validateEntity(user, UpdateGroup.class);
-
         user.setCreateUserId(getUserId());
         sysUserService.updateById(user);
 
@@ -118,7 +115,7 @@ public class SysUserController extends AbstractController {
     /**
      * 删除用户
      */
-    @PostMapping("/delete")
+    @PostMapping("/manage/sys/user/delete")
     @RequiresPermissions("sys:user:delete")
     public Response delete(@RequestBody Integer[] userIds){
         if(ArrayUtils.contains(userIds, SysConstants.SUPER_ADMIN)){
@@ -137,7 +134,7 @@ public class SysUserController extends AbstractController {
     /**
      * 用户信息
      */
-    @GetMapping("/info/{userId}")
+    @GetMapping("/manage/sys/user/info/{userId}")
     @RequiresPermissions("sys:user:info")
     public Response info(@PathVariable("userId") Integer userId){
         SysUser user = sysUserService.getById(userId);

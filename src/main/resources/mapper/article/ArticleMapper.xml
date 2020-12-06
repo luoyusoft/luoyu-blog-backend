@@ -25,11 +25,11 @@
     </resultMap>
 
     <sql id="homeArticleColumn">
-        id,title,description,author,read_num,like_num,cover,cover_type,create_time
+        id,title,description,author,read_num,like_num,cover,cover_type,create_time,update_time
     </sql>
 
     <sql id="manageArticleColumn">
-       id,title,description,author,read_num,like_num,cover,cover_type,create_time,publish,category_id
+       id,title,description,author,read_num,like_num,cover,cover_type,create_time,update_time,publish,category_id
     </sql>
 
     <select id="listArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
@@ -135,14 +135,11 @@
             </if>
             and publish = true
         </where>
-        <if test="params.recommend !=null and params.recommend != ''">
-            order by top desc, recommend desc
-        </if>
         <if test="params.latest !=null and params.latest != ''">
-            order by top desc,create_time desc
+            order by create_time desc
         </if>
         <if test="params.favorite !=null and params.favorite != ''">
-            order by top desc,like_num desc
+            order by like_num desc
         </if>
     </select>
 

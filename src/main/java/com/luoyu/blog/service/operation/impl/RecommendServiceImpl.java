@@ -16,10 +16,10 @@ import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.operation.RecommendMapper;
 import com.luoyu.blog.service.operation.RecommendService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,17 +45,15 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
      * 分页查询
      * @param page
      * @param limit
-     * @param title
      * @return
      */
     @Override
-    public PageUtils queryPage(Integer page, Integer limit, String title) {
+    public PageUtils queryPage(Integer page, Integer limit) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
-        params.put("title", title);
         IPage<Recommend> recommendPage = baseMapper.selectPage(new Query<Recommend>(params).getPage(),
-                new QueryWrapper<Recommend>().lambda());
+                new QueryWrapper<Recommend>().orderByDesc("order_num"));
         recommendPage.getRecords().forEach(recommendPageItem -> {
             if (ModuleEnum.ARTICLE.getCode() == recommendPageItem.getType()){
                 Article article = articleMapper.selectById(recommendPageItem.getLinkId());
@@ -114,6 +112,9 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
      */
     @Override
     public void insertRecommend(Recommend recommend) {
+        if (baseMapper.selectRecommendByOrderNum(recommend.getOrderNum()) != null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该顺序已被占用");
+        }
         if (ModuleEnum.ARTICLE.getCode() == recommend.getType()){
             Article article = articleMapper.selectById(recommend.getLinkId());
             if(article == null) {
@@ -123,7 +124,7 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
             if(oldRecommend == null){
                 baseMapper.insert(recommend);
             }else {
-                baseMapper.updateRecommendByLinkIdAndType(recommend);
+                baseMapper.updateRecommendOrderNumByLinkIdAndType(recommend);
             }
         }
 
@@ -143,6 +144,9 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
      */
     @Override
     public void updateRecommend(Recommend recommend) {
+        if (baseMapper.selectRecommendByOrderNum(recommend.getOrderNum()) != null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该顺序已被占用");
+        }
         if (ModuleEnum.ARTICLE.getCode() == recommend.getType()){
             Article article = articleMapper.selectById(recommend.getLinkId());
             if(article == null) {
@@ -152,7 +156,7 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
             if(oldRecommend == null){
                 baseMapper.insert(recommend);
             }else {
-                baseMapper.updateRecommendByLinkIdAndType(recommend);
+                baseMapper.updateRecommendOrderNumByLinkIdAndType(recommend);
             }
         }
 
@@ -163,6 +167,26 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
 
         if (ModuleEnum.BOOK_NOTE.getCode() == recommend.getType()){
 
+        }
+    }
+
+    /**
+     * 推荐置顶
+     * @param id
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateRecommendTop(Integer id) {
+        if(baseMapper.selectRecommendByOrderNum(Recommend.ORDER_NUM_TOP) != null){
+            List<Recommend> recommends = baseMapper.selectRecommends();
+            recommends.forEach(recommendsItem -> {
+                recommendsItem.setOrderNum(recommendsItem.getOrderNum() + 1);
+            });
+            // 批量修改顺序，注意从大的开始，不然会有唯一索引冲突
+            baseMapper.updateRecommendsOrderNumById(recommends);
+        }
+        if(!baseMapper.updateRecommendOrderNumById(Recommend.ORDER_NUM_TOP, id)){
+            throw new MyException(ResponseEnums.UPDATE_FAILR.getCode(), "更新数据失败");
         }
     }
 

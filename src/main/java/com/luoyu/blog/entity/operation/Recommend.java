@@ -28,6 +28,8 @@ public class Recommend extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final Integer ORDER_NUM_TOP = 1;
+
     @ApiModelProperty(value = "推荐链接id")
     @NotNull(message="推荐链接id不能为空", groups = {AddGroup.class})
     private Integer linkId;

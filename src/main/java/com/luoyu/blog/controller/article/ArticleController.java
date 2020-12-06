@@ -1,19 +1,24 @@
-package com.luoyu.blog.controller.manage.article;
+package com.luoyu.blog.controller.article;
 
+import com.luoyu.blog.common.aop.annotation.LogLike;
+import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.constants.RedisCacheNames;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
+import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.service.article.ArticleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,7 +29,6 @@ import java.util.Set;
  * @description
  */
 @RestController
-@RequestMapping("/admin/article")
 @CacheConfig(cacheNames ={RedisCacheNames.RECOMMEND,RedisCacheNames.TAG,RedisCacheNames.ARTICLE,RedisCacheNames.TIMELINE})
 public class ArticleController {
 
@@ -37,7 +41,7 @@ public class ArticleController {
     /**
      * 列表
      */
-    @GetMapping("/list")
+    @GetMapping("/manage/article/list")
     @RequiresPermissions("article:list")
     public Response listArticle(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title) {
         PageUtils articlePage = articleService.queryPage(page, limit, title);
@@ -47,7 +51,7 @@ public class ArticleController {
     /**
      * 信息
      */
-    @GetMapping("/info/{articleId}")
+    @GetMapping("/manage/article/info/{articleId}")
     @RequiresPermissions("article:list")
     public Response info(@PathVariable("articleId") Integer articleId) {
         ArticleVO article = articleService.getArticle(articleId);
@@ -57,7 +61,7 @@ public class ArticleController {
     /**
      * 保存
      */
-    @PostMapping("/save")
+    @PostMapping("/manage/article/save")
     @RequiresPermissions("article:save")
     @CacheEvict(allEntries = true)
     public Response saveArticle(@RequestBody ArticleVO article){
@@ -70,7 +74,7 @@ public class ArticleController {
     /**
      * 修改
      */
-    @PutMapping("/update")
+    @PutMapping("/manage/article/update")
     @RequiresPermissions("article:update")
     @CacheEvict(allEntries = true)
     public Response updateArticle(@RequestBody ArticleVO article){
@@ -81,7 +85,7 @@ public class ArticleController {
     /**
      * 删除
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/manage/article/delete")
     @RequiresPermissions("article:delete")
     @CacheEvict(allEntries = true)
     public Response deleteArticles(@RequestBody Integer[] ids) {
@@ -92,13 +96,35 @@ public class ArticleController {
     /**
      * 删除缓存
      */
-    @DeleteMapping("/cache/refresh")
+    @DeleteMapping("/manage/article/cache/refresh")
     @RequiresPermissions("article:cache:refresh")
     public Response flush() {
         Set<String> keys = redisTemplate.keys(RedisCacheNames.PROFIX + "*");
         redisTemplate.delete(keys);
 
         return Response.success();
+    }
+
+    /********************** portal ********************************/
+
+    @GetMapping("/article/{articleId}")
+    @LogView(type = "article")
+    public Response getArticle(@PathVariable Integer articleId){
+        ArticleDTO article = articleService.getArticleDTOById(articleId);
+        return Response.success(article);
+    }
+
+    @PutMapping("/article/like/{id}")
+    @LogLike(type = "article")
+    public Response likeArticle(@PathVariable Integer id) {
+        return Response.success();
+    }
+
+    @GetMapping("/articles")
+    @Cacheable
+    public Response list(@RequestParam Map<String, Object> params){
+        PageUtils page = articleService.queryPageCondition(params);
+        return Response.success(page);
     }
 
 }

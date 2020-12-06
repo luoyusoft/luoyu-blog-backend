@@ -1,4 +1,4 @@
-package com.luoyu.blog.controller.manage.oss;
+package com.luoyu.blog.controller.oss;
 
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.entity.base.Response;
@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 2018-11-30
  */
 @RestController
-@RequestMapping("/admin/oss/resource")
 public class OssResourceController {
 
     @Autowired
@@ -33,7 +32,7 @@ public class OssResourceController {
     /**
      * 上传文件
      */
-    @PostMapping("/upload")
+    @PostMapping("/manage/oss/resource/upload")
     public Response uploadCover(MultipartFile file) throws Exception {
         if (file!=null && file.isEmpty()) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件不能为空");

@@ -1,8 +1,9 @@
-package com.luoyu.blog.controller.manage.operation;
+package com.luoyu.blog.controller.operation;
 
 import com.luoyu.blog.common.constants.RedisCacheNames;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
+import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.Link;
@@ -10,10 +11,12 @@ import com.luoyu.blog.service.operation.LinkService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -24,7 +27,6 @@ import java.util.Arrays;
  * @since 2019-02-14
  */
 @RestController
-@RequestMapping("/admin/operation/link")
 @CacheConfig(cacheNames = RedisCacheNames.LINK)
 public class LinkController extends AbstractController {
 
@@ -34,7 +36,7 @@ public class LinkController extends AbstractController {
     /**
      * 列表
      */
-    @GetMapping("/list")
+    @GetMapping("/manage/operation/link/list")
     @RequiresPermissions("operation:link:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title){
         PageUtils linkPage = linkService.queryPage(page, limit, title);
@@ -44,7 +46,7 @@ public class LinkController extends AbstractController {
     /**
      * 信息
      */
-    @GetMapping("/info/{id}")
+    @GetMapping("/manage/operation/link/info/{id}")
     @RequiresPermissions("operation:link:info")
     public Response info(@PathVariable("id") String id){
        Link link = linkService.getById(id);
@@ -54,11 +56,11 @@ public class LinkController extends AbstractController {
     /**
      * 保存
      */
-    @PostMapping("/save")
+    @PostMapping("/manage/operation/link/save")
     @RequiresPermissions("operation:link:save")
     @CacheEvict(allEntries = true)
     public Response save(@RequestBody Link link){
-        ValidatorUtils.validateEntity(link);
+        ValidatorUtils.validateEntity(link, AddGroup.class);
         linkService.save(link);
 
         return Response.success();
@@ -67,7 +69,7 @@ public class LinkController extends AbstractController {
     /**
      * 修改
      */
-    @PutMapping("/update")
+    @PutMapping("/manage/operation/link/update")
     @RequiresPermissions("operation:link:update")
     @CacheEvict(allEntries = true)
     public Response update(@RequestBody Link link){
@@ -78,12 +80,21 @@ public class LinkController extends AbstractController {
     /**
      * 删除
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/manage/operation/link/delete")
     @RequiresPermissions("operation:link:delete")
     @CacheEvict(allEntries = true)
     public Response delete(@RequestBody String[] ids){
         linkService.removeByIds(Arrays.asList(ids));
         return Response.success();
+    }
+
+    /********************** portal ********************************/
+
+    @RequestMapping("/operation/links")
+    @Cacheable
+    public Response listLink() {
+        List<Link> linkList = linkService.listLink();
+        return Response.success(linkList);
     }
 
 }

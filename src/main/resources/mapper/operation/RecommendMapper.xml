@@ -4,21 +4,39 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, link_id, type, order_num, title
+        id, link_id, type, order_num,create_time,update_time
     </sql>
 
     <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
       select * from recommend where type = #{type} and link_id = #{linkId}
     </select>
 
-    <update id="updateRecommendByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Recommend">
+    <select id="selectRecommendByOrderNum" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
+      select * from recommend where order_num = #{orderNum}
+    </select>
+
+    <select id="selectRecommends" resultType="com.luoyu.blog.entity.operation.Recommend">
+        select * from recommend order by order_num desc
+    </select>
+
+    <update id="updateRecommendsOrderNumById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update recommend
+            set order_num = #{item.orderNum}
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+    <update id="updateRecommendOrderNumByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Recommend">
       update recommend
-      <set>
-          <if test="orderNum!=null">
-              order_num = #{orderNum},
-          </if>
-      </set>
+      set order_num = #{orderNum}
       where type = #{type} and link_id = #{linkId}
+    </update>
+
+    <update id="updateRecommendOrderNumById" parameterType="java.lang.Integer">
+        update recommend
+        set order_num = #{orderNum}
+        where id = #{id}
     </update>
 
     <!-- *************************** portal ****************************** -->

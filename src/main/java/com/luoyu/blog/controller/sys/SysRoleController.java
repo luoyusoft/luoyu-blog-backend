@@ -1,5 +1,6 @@
-package com.luoyu.blog.controller.manage.sys;
+package com.luoyu.blog.controller.sys;
 
+import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.common.constants.SysConstants;
@@ -25,7 +26,6 @@ import java.util.Map;
  * @description
  */
 @RestController
-@RequestMapping("/admin/sys/role")
 public class SysRoleController extends AbstractController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class SysRoleController extends AbstractController {
      * 分页查询角色列表
      * @return
      */
-    @GetMapping("/list")
+    @GetMapping("/manage/sys/role/list")
     @RequiresPermissions("sys:role:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("roleName") String roleName){
         //如果不是超级管理员，则只查询自己创建的角色列表
@@ -55,7 +55,7 @@ public class SysRoleController extends AbstractController {
     /**
      * 角色列表
      */
-    @GetMapping("/select")
+    @GetMapping("/manage/sys/role/select")
     @RequiresPermissions("sys:role:select")
     public Response select(){
         Map<String, Object> map = new HashMap<>();
@@ -73,10 +73,10 @@ public class SysRoleController extends AbstractController {
      * @param role
      * @return
      */
-    @PostMapping("/save")
+    @PostMapping("/manage/sys/role/save")
     @RequiresPermissions("sys:role:save")
     public Response save(@RequestBody SysRole role){
-        ValidatorUtils.validateEntity(role);
+        ValidatorUtils.validateEntity(role, AddGroup.class);
         role.setCreateUserId(getUserId());
         sysRoleService.save(role);
 
@@ -88,10 +88,10 @@ public class SysRoleController extends AbstractController {
      * @param role
      * @return
      */
-    @PutMapping("/update")
+    @PutMapping("/manage/sys/role/update")
     @RequiresPermissions("sys:role:update")
     public Response update(@RequestBody SysRole role){
-        ValidatorUtils.validateEntity(role);
+        ValidatorUtils.validateEntity(role, AddGroup.class);
         role.setCreateUserId(getUserId());
         sysRoleService.updateById(role);
 
@@ -103,7 +103,7 @@ public class SysRoleController extends AbstractController {
      * @param roleId
      * @return
      */
-    @GetMapping("/info/{roleId}")
+    @GetMapping("/manage/sys/role/info/{roleId}")
     @RequiresPermissions("sys:role:info")
     public Response info(@PathVariable("roleId") Integer roleId){
         SysRole role = sysRoleService.getById(roleId);
@@ -118,7 +118,7 @@ public class SysRoleController extends AbstractController {
      * @param roleIds
      * @return
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/manage/sys/role/delete")
     @RequiresPermissions("sys:role:delete")
     public Response delete(@RequestBody Integer[] roleIds){
         sysRoleService.deleteBatch(roleIds);

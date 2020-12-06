@@ -1,4 +1,4 @@
-package com.luoyu.blog.controller.manage.operation;
+package com.luoyu.blog.controller.operation;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.luoyu.blog.common.constants.RedisCacheNames;
@@ -6,6 +6,7 @@ import com.luoyu.blog.common.enums.CategoryRankEnum;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.validator.ValidatorUtils;
+import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.Category;
@@ -14,10 +15,12 @@ import com.luoyu.blog.service.operation.CategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,7 +32,6 @@ import java.util.List;
  */
 @RestController
 @CacheConfig(cacheNames = RedisCacheNames.CATEGORY)
-@RequestMapping("/admin/operation/category")
 public class CategoryController extends AbstractController {
 
     @Resource
@@ -41,7 +43,7 @@ public class CategoryController extends AbstractController {
     /**
      * 列表
      */
-    @GetMapping("/list")
+    @GetMapping("/manage/operation/category/list")
     @RequiresPermissions("operation:category:list")
     public Response list(@RequestParam("name") String name, @RequestParam("type") Integer type){
         List<Category> categoryList = categoryService.queryWithParentName(name, type);
@@ -51,7 +53,7 @@ public class CategoryController extends AbstractController {
     /**
      * 树状列表
      */
-    @GetMapping("/select")
+    @GetMapping("/manage/operation/category/select")
     @RequiresPermissions("operation:category:list")
     public Response select(@RequestParam("type") Integer type){
         List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(type!=null,Category::getType,type));
@@ -69,7 +71,7 @@ public class CategoryController extends AbstractController {
     /**
      * 信息
      */
-    @GetMapping("/info/{id}")
+    @GetMapping("/manage/operation/category/info/{id}")
     @RequiresPermissions("operation:category:info")
     public Response info(@PathVariable("id") Integer id){
         Category category = categoryService.getById(id);
@@ -79,12 +81,12 @@ public class CategoryController extends AbstractController {
     /**
      * 保存
      */
-    @PostMapping("/save")
+    @PostMapping("/manage/operation/category/save")
     @RequiresPermissions("operation:category:save")
     @CacheEvict(allEntries = true)
     public Response save(@RequestBody Category category){
         // 数据校验
-        ValidatorUtils.validateEntity(category);
+        ValidatorUtils.validateEntity(category, AddGroup.class);
         verifyCategory(category);
         categoryService.save(category);
 
@@ -129,7 +131,7 @@ public class CategoryController extends AbstractController {
     /**
      * 修改
      */
-    @PutMapping("/update")
+    @PutMapping("/manage/operation/category/update")
     @RequiresPermissions("operation:category:update")
     @CacheEvict(allEntries = true)
     public Response update(@RequestBody Category category){
@@ -140,7 +142,7 @@ public class CategoryController extends AbstractController {
     /**
      * 删除
      */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/manage/operation/category/delete/{id}")
     @RequiresPermissions("operation:category:delete")
     @CacheEvict(allEntries = true)
     public Response delete(@PathVariable("id") Integer id){
@@ -157,6 +159,15 @@ public class CategoryController extends AbstractController {
         categoryService.removeById(id);
 
         return Response.success();
+    }
+
+    /********************** portal ********************************/
+
+    @GetMapping("/operation/categories")
+    @Cacheable
+    public Response listCategory(@RequestParam Map<String, Object> params) {
+        List<Category> categoryList = categoryService.listCategory(params);
+        return Response.success(categoryList);
     }
 
 }

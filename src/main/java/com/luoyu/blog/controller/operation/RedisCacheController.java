@@ -1,4 +1,4 @@
-package com.luoyu.blog.controller.manage.operation;
+package com.luoyu.blog.controller.operation;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * @description
  */
 @RestController
-@RequestMapping("/admin/operation/redis")
+@RequestMapping("/manage/operation/redis")
 public class RedisCacheController {
 
     @Resource

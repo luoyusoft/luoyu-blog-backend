@@ -1,5 +1,9 @@
 package com.luoyu.blog.entity.operation.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.luoyu.blog.entity.operation.Tag;
 import com.luoyu.blog.entity.operation.Top;
 import lombok.Data;
@@ -29,6 +33,8 @@ public class TopDTO extends Top {
 
     private String cover;
 
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createTime;
 
     private List<Tag> tagList;

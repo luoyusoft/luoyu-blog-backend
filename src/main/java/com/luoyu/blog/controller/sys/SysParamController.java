@@ -1,7 +1,8 @@
-package com.luoyu.blog.controller.manage.sys;
+package com.luoyu.blog.controller.sys;
 
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
+import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.sys.SysParam;
@@ -24,7 +25,6 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-@RequestMapping("/admin/sys/param")
 public class SysParamController extends AbstractController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class SysParamController extends AbstractController {
     /**
      * 列表
      */
-    @GetMapping("/list")
+    @GetMapping("/manage/sys/param/list")
     @RequiresPermissions("sys:param:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("menuUrl") String menuUrl, @RequestParam("type") String type){
         PageUtils paramPage = paramService.queryPage(page, limit, menuUrl, type);
@@ -43,7 +43,7 @@ public class SysParamController extends AbstractController {
     /**
      * 获取所有参数
      */
-    @GetMapping("/all")
+    @GetMapping("/manage/sys/param/all")
     public Response listAll(){
         List<SysParam> sysParamList = paramService.list(null);
         return Response.success(sysParamList);
@@ -52,7 +52,7 @@ public class SysParamController extends AbstractController {
     /**
      * 信息
      */
-    @GetMapping("/info/{id}")
+    @GetMapping("/manage/sys/param/info/{id}")
     @RequiresPermissions("sys:param:info")
     public Response info(@PathVariable("id") String id){
        SysParam param = paramService.getById(id);
@@ -62,10 +62,10 @@ public class SysParamController extends AbstractController {
     /**
      * 保存
      */
-    @PostMapping("/save")
+    @PostMapping("/manage/sys/param/save")
     @RequiresPermissions("sys:param:save")
     public Response save(@RequestBody SysParam param){
-        ValidatorUtils.validateEntity(param);
+        ValidatorUtils.validateEntity(param, AddGroup.class);
         paramService.save(param);
 
         return Response.success();
@@ -74,10 +74,10 @@ public class SysParamController extends AbstractController {
     /**
      * 修改
      */
-    @PutMapping("/update")
+    @PutMapping("/manage/sys/param/update")
     @RequiresPermissions("sys:param:update")
     public Response update(@RequestBody SysParam param){
-        ValidatorUtils.validateEntity(param);
+        ValidatorUtils.validateEntity(param, AddGroup.class);
         paramService.updateById(param);
 
         return Response.success();
@@ -86,7 +86,7 @@ public class SysParamController extends AbstractController {
     /**
      * 删除
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/manage/sys/param/delete")
     @RequiresPermissions("sys:param:delete")
     public Response delete(@RequestBody String[] ids){
         paramService.removeByIds(Arrays.asList(ids));

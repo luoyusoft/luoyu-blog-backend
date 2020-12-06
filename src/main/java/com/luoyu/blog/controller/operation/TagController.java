@@ -1,4 +1,4 @@
-package com.luoyu.blog.controller.manage.operation;
+package com.luoyu.blog.controller.operation;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.luoyu.blog.common.constants.RedisCacheNames;
@@ -7,15 +7,18 @@ import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
+import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.Tag;
 import com.luoyu.blog.entity.operation.TagLink;
+import com.luoyu.blog.entity.operation.dto.TagDTO;
 import com.luoyu.blog.mapper.operation.TagLinkMapper;
 import com.luoyu.blog.service.operation.TagService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +36,6 @@ import java.util.List;
  */
 @RestController
 @CacheConfig(cacheNames = RedisCacheNames.TAG)
-@RequestMapping("/admin/operation/tag")
 public class TagController extends AbstractController {
 
     @Resource
@@ -45,7 +47,7 @@ public class TagController extends AbstractController {
     /**
      * 列表
      */
-    @GetMapping("/list")
+    @GetMapping("/manage/operation/tag/list")
     @RequiresPermissions("operation:tag:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("key") String key){
         PageUtils tagPage = tagService.queryPage(page, limit, key);
@@ -55,7 +57,7 @@ public class TagController extends AbstractController {
     /**
      * 列表
      */
-    @GetMapping("/select")
+    @GetMapping("/manage/operation/tag/select")
     @RequiresPermissions("operation:tag:list")
     public Response select(@RequestParam("type") Integer type){
         List<Tag> tagList = tagService.list(new QueryWrapper<Tag>().lambda().eq(type != null,Tag::getType,type));
@@ -65,7 +67,7 @@ public class TagController extends AbstractController {
     /**
      * 信息
      */
-    @GetMapping("/info/{id}")
+    @GetMapping("/manage/operation/tag/info/{id}")
     @RequiresPermissions("operation:tag:info")
     public Response info(@PathVariable("id") String id){
        Tag tag = tagService.getById(id);
@@ -75,11 +77,11 @@ public class TagController extends AbstractController {
     /**
      * 保存
      */
-    @PostMapping("/save")
+    @PostMapping("/manage/operation/tag/save")
     @RequiresPermissions("operation:tag:save")
     @CacheEvict(allEntries = true)
     public Response save(@RequestBody Tag tag){
-        ValidatorUtils.validateEntity(tag);
+        ValidatorUtils.validateEntity(tag, AddGroup.class);
         tagService.save(tag);
 
         return Response.success();
@@ -88,11 +90,11 @@ public class TagController extends AbstractController {
     /**
      * 修改
      */
-    @PutMapping("/update")
+    @PutMapping("/manage/operation/tag/update")
     @RequiresPermissions("operation:tag:update")
     @CacheEvict(allEntries = true)
     public Response update(@RequestBody Tag tag){
-        ValidatorUtils.validateEntity(tag);
+        ValidatorUtils.validateEntity(tag, AddGroup.class);
         tagService.updateById(tag);
 
         return Response.success();
@@ -101,7 +103,7 @@ public class TagController extends AbstractController {
     /**
      * 删除
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping("/manage/operation/tag/delete")
     @RequiresPermissions("operation:tag:delete")
     @CacheEvict(allEntries = true)
     public Response delete(@RequestBody String[] ids){
@@ -117,6 +119,15 @@ public class TagController extends AbstractController {
         tagService.removeByIds(Arrays.asList(ids));
 
         return Response.success();
+    }
+
+    /********************** portal ********************************/
+
+    @GetMapping("/operation/tags")
+    @Cacheable
+    public Response listTag() {
+        List<TagDTO> tagList = tagService.listTagDTO();
+        return Response.success(tagList);
     }
 
 }

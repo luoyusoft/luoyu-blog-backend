@@ -21,10 +21,9 @@ public interface RecommendService extends IService<Recommend> {
      * 分页查询
      * @param page
      * @param limit
-     * @param title
      * @return
      */
-     PageUtils queryPage(Integer page, Integer limit, String title);
+     PageUtils queryPage(Integer page, Integer limit);
 
     /**
      * 获取推荐列表
@@ -50,6 +49,12 @@ public interface RecommendService extends IService<Recommend> {
      * @param recommend
      */
     void updateRecommend(Recommend recommend);
+
+    /**
+     * 推荐置顶
+     * @param id
+     */
+    void updateRecommendTop(Integer id);
 
     /**
      * 删除

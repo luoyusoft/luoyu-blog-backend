@@ -2,7 +2,6 @@ package com.luoyu.blog.entity.log;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.luoyu.blog.common.validator.group.AddGroup;
-import com.luoyu.blog.common.validator.group.UpdateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

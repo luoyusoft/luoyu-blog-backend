@@ -77,9 +77,9 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
      */
     @Override
     public void logout(Integer userId) {
-        String userIdKey= RedisKeyConstants.MANAGE_SYS_USER_TOKEN+userId;
-        String token=redisUtils.get(userIdKey);
-        String tokenKey= RedisKeyConstants.MANAGE_SYS_USER_TOKEN+token;
+        String userIdKey = RedisKeyConstants.MANAGE_SYS_USER_TOKEN+userId;
+        String token = redisUtils.get(userIdKey);
+        String tokenKey = RedisKeyConstants.MANAGE_SYS_USER_TOKEN+token;
         redisUtils.delete(userIdKey);
         redisUtils.delete(tokenKey);
     }

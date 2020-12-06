@@ -1,10 +1,9 @@
-package com.luoyu.blog.controller.portal.timeline;
+package com.luoyu.blog.controller.timeline;
 
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.timeline.Timeline;
 import com.luoyu.blog.service.timeline.TimelineService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -18,16 +17,16 @@ import java.util.List;
  * @description
  */
 @RestController
-@RequestMapping("/timeline")
 public class TimelineController {
 
     @Resource
     private TimelineService timelineService;
 
-    @GetMapping("")
+    /********************** portal ********************************/
+
+    @GetMapping("/timeline")
     public Response listTimeline() {
         List<Timeline> timelineList = timelineService.listTimeLine();
-
         return Response.success(timelineList);
     }
 

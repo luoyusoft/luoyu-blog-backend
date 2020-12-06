@@ -10,12 +10,12 @@
         <result column="params" property="params" />
         <result column="time" property="time" />
         <result column="ip" property="ip" />
-        <result column="create_date" property="createDate" />
+        <result column="create_time" property="createTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, type, method, params, time, ip, create_date
+        id, type, method, params, time, ip, create_time
     </sql>
 
 </mapper>

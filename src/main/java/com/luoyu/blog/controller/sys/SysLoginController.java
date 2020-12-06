@@ -1,4 +1,5 @@
-package com.luoyu.blog.controller.manage.sys;
+package com.luoyu.blog.controller.sys;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IOUtils;
 import com.luoyu.blog.common.exception.MyException;
@@ -61,7 +62,7 @@ public class SysLoginController extends AbstractController {
     /**
      * 登录
      */
-    @PostMapping("/admin/sys/login")
+    @PostMapping("/manage/sys/login")
     public Response login(@RequestBody SysLoginVO form) {
         boolean captcha = sysCaptchaService.validate(form.getUuid(),form.getCaptcha());
         if(!captcha){
@@ -88,7 +89,7 @@ public class SysLoginController extends AbstractController {
     /**
      * 退出
      */
-    @PostMapping("/sys/logout")
+    @PostMapping("/manage/sys/logout")
     public Response logout() {
         sysUserTokenService.logout(getUserId());
         return Response.success();

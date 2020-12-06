@@ -1,9 +1,8 @@
-package com.luoyu.blog.controller.portal.search;
+package com.luoyu.blog.controller.search;
 
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.service.search.ArticleEsServer;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,18 +18,19 @@ import java.util.List;
  * @description
  */
 @RestController
-@Slf4j
 public class ArticleEsController {
 
     @Resource
     private ArticleEsServer articleEsServer;
+
+    /********************** portal ********************************/
 
     /**
      * 搜索标题，描述，内容
      * @param keyword
      * @return
      */
-    @GetMapping("articles/search")
+    @GetMapping("/articles/search")
     public Response searchArticleList(@RequestParam("keyword") String keyword) throws Exception {
         List<ArticleDTO> articleDTOList= articleEsServer.searchArticleList(keyword);
         return Response.success(articleDTOList);
