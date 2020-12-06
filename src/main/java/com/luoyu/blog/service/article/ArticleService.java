@@ -5,7 +5,9 @@ import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
 import com.luoyu.blog.common.util.PageUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,9 +42,15 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 更新文章
-     * @param article
+     * @param articleVO
      */
-    void updateArticle(ArticleVO article);
+    void updateArticle(ArticleVO articleVO);
+
+    /**
+     * 更新文章状态
+     * @param articleVO
+     */
+    void updateArticleStatus(ArticleVO articleVO);
 
     /**
      * 获取文章对象
@@ -57,10 +65,13 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 分页分类获取列表
-     * @param params
+     * @param page
+     * @param limit
+     * @param latest
+     * @param categoryId
      * @return
      */
-    PageUtils queryPageCondition(Map<String, Object> params);
+    PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId);
 
     /**
      * 获取ArticleVo对象
@@ -75,5 +86,11 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     ArticleDTO getSimpleArticleDTO(Integer articleId);
+
+    /**
+     * 获取热读榜
+     * @return
+     */
+    List<ArticleVO> getHotReadList();
 
 }

@@ -39,10 +39,14 @@
         where id = #{id}
     </update>
 
+    <select id="selectRecommendMaxOrderNum" resultType="java.lang.Integer">
+        select order_num from recommend order by order_num desc limit 1
+    </select>
+
     <!-- *************************** portal ****************************** -->
 
-    <select id="listRecommendDTO" resultType="com.luoyu.blog.entity.operation.dto.RecommendDTO">
-        select <include refid="Base_Column_List"/> from recommend order by id desc limit 5
+    <select id="listRecommendDTO" resultType="com.luoyu.blog.entity.operation.vo.RecommendVO">
+        select <include refid="Base_Column_List"/> from recommend order by order_num asc limit 5
     </select>
 
 </mapper>

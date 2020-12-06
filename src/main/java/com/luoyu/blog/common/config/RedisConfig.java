@@ -54,8 +54,6 @@ public class RedisConfig {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
         redisCacheConfigurationMap.put(RedisCacheNames.BOOK, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
-        redisCacheConfigurationMap.put(RedisCacheNames.BOOKNOTE, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
         return redisCacheConfigurationMap;
     }
 

@@ -7,7 +7,7 @@ import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.operation.Tag;
 import com.luoyu.blog.entity.operation.TagLink;
-import com.luoyu.blog.entity.operation.dto.TagDTO;
+import com.luoyu.blog.entity.operation.vo.TagVO;
 import com.luoyu.blog.mapper.operation.TagLinkMapper;
 import com.luoyu.blog.mapper.operation.TagMapper;
 import com.luoyu.blog.service.operation.TagService;
@@ -105,7 +105,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      * @return
      */
     @Override
-    public List<TagDTO> listTagDTO() {
+    public List<TagVO> listTagDTO() {
         return baseMapper.listTagDTO();
     }
 

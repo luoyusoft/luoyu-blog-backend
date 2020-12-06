@@ -1,5 +1,6 @@
 package com.luoyu.blog.common.util;
 
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
@@ -125,6 +126,15 @@ public class RedisUtils {
      */
     public void updateExpire(String key) {
         redisTemplate.expire(key,DEFAULT_EXPIRE, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 更新热读榜
+     * @param value
+     * @param readNum
+     */
+    public void updateHotReadList(String value, Integer readNum) {
+        zSetOperations.add(RedisKeyConstants.HOST_READ_LIST, value, readNum);
     }
 
 }

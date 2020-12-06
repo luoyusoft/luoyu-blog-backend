@@ -34,13 +34,13 @@ public class OssResourceController {
      */
     @PostMapping("/manage/oss/resource/upload")
     public Response uploadCover(MultipartFile file) throws Exception {
-        if (file!=null && file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件不能为空");
         }
         //上传文件
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-        String url =cloudStorageService.uploadSuffix(file.getBytes(), suffix);
-        OssResource resource=new OssResource(url,file.getOriginalFilename());
+        String url = cloudStorageService.uploadSuffix(file.getBytes(), suffix);
+        OssResource resource = new OssResource(url, file.getOriginalFilename());
         ossResourceService.save(resource);
         return Response.success(resource);
     }

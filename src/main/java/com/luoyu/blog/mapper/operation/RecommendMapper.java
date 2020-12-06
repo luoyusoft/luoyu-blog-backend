@@ -2,7 +2,7 @@ package com.luoyu.blog.mapper.operation;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blog.entity.operation.Recommend;
-import com.luoyu.blog.entity.operation.dto.RecommendDTO;
+import com.luoyu.blog.entity.operation.vo.RecommendVO;
 import io.lettuce.core.dynamic.annotation.Param;
 
 import java.util.List;
@@ -53,12 +53,17 @@ public interface RecommendMapper extends BaseMapper<Recommend> {
      */
     Boolean updateRecommendOrderNumById(@Param("orderNum") Integer orderNum, @Param("id") Integer id);
 
+    /**
+     * 查找最大顺序
+     */
+    Integer selectRecommendMaxOrderNum();
+
     /********************** portal ********************************/
 
     /**
      * 获取推荐列表
      * @return
      */
-    List<RecommendDTO> listRecommendDTO();
+    List<RecommendVO> listRecommendDTO();
 
 }

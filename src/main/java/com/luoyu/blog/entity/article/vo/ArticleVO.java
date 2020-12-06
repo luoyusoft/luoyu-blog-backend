@@ -16,6 +16,19 @@ import java.util.List;
 @Data
 public class ArticleVO extends Article {
 
+    /**
+     * 所属分类，以逗号分隔
+     */
+    private String categoryListStr;
+
+    /**
+     * 所属标签
+     */
     private List<Tag> tagList;
+
+    /**
+     * 推荐
+     */
+    private Boolean recommend;
 
 }

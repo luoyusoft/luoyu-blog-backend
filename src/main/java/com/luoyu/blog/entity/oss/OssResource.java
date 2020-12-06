@@ -28,16 +28,14 @@ public class OssResource extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "名称")
-    @NotBlank(message="名称不能为空", groups = {AddGroup.class})
     private String name;
 
     @ApiModelProperty(value = "url地址")
-    @NotBlank(message="url地址不能为空", groups = {AddGroup.class})
     private String url;
 
     public OssResource (String url, String name){
-        this.name=name;
-        this.url=url;
+        this.name = name;
+        this.url = url;
     }
 
 }

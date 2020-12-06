@@ -12,11 +12,16 @@ public class RedisKeyConstants {
     /**
      * 后台管理验证码key
      */
-    public final static String MANAGE_SYS_CAPTCHA = "MANAGE:SYS:CAPTCHA:";
+    public final static String MANAGE_SYS_CAPTCHA = "manage:sys:captcha:";
 
     /**
      * 后台管理用户token key
      */
-    public final static String MANAGE_SYS_USER_TOKEN = "MANAGE:SYS:USER:TOKEN:";
+    public final static String MANAGE_SYS_USER_TOKEN = "manage:sys:user:token:";
+
+    /**
+     * 最热阅读
+     */
+    public final static String HOST_READ_LIST = "host:read:list:";
 
 }

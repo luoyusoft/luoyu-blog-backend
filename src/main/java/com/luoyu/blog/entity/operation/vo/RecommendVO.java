@@ -1,14 +1,9 @@
-package com.luoyu.blog.entity.operation.dto;
+package com.luoyu.blog.entity.operation.vo;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.luoyu.blog.entity.operation.Recommend;
 import com.luoyu.blog.entity.operation.Tag;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -19,7 +14,7 @@ import java.util.List;
  * @description
  */
 @Data
-public class RecommendDTO extends Recommend {
+public class RecommendVO extends Recommend {
 
     private String description;
 

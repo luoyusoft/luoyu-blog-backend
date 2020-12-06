@@ -21,12 +21,12 @@
 
     <!-- *************************** portal ****************************** -->
 
-    <select id="listTagDTO" resultType="com.luoyu.blog.entity.operation.dto.TagDTO">
+    <select id="listTagDTO" resultType="com.luoyu.blog.entity.operation.vo.TagVO">
         select t.name ,sum(t.num) as linkNum from (
           select distinct t.type, t.name, (select count(*) from tag_link tl2 where tl2.tag_id = t.id) as num
           from tag t
           left join tag_link tl on t.id = tl.tag_id and t.type = tl.type) t
-        group by t.name
+        group by t.name order by linkNum desc limit 15
     </select>
 
 </mapper>

@@ -2,7 +2,7 @@ package com.luoyu.blog.mapper.operation;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blog.entity.operation.Tag;
-import com.luoyu.blog.entity.operation.dto.TagDTO;
+import com.luoyu.blog.entity.operation.vo.TagVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -38,6 +38,6 @@ public interface TagMapper extends BaseMapper<Tag> {
      * 获取tagVoList
      * @return
      */
-    List<TagDTO> listTagDTO();
+    List<TagVO> listTagDTO();
 
 }

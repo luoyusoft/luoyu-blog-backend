@@ -1,4 +1,4 @@
-package com.luoyu.blog.entity.operation.dto;
+package com.luoyu.blog.entity.operation.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -19,7 +19,7 @@ import java.util.List;
  * @description
  */
 @Data
-public class TopDTO extends Top {
+public class TopVO extends Top {
 
     private String description;
 

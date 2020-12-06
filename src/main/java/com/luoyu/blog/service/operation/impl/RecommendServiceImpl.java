@@ -11,7 +11,7 @@ import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.operation.Recommend;
-import com.luoyu.blog.entity.operation.dto.RecommendDTO;
+import com.luoyu.blog.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.operation.RecommendMapper;
 import com.luoyu.blog.service.operation.RecommendService;
@@ -53,7 +53,7 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
         IPage<Recommend> recommendPage = baseMapper.selectPage(new Query<Recommend>(params).getPage(),
-                new QueryWrapper<Recommend>().orderByDesc("order_num"));
+                new QueryWrapper<Recommend>().orderByAsc("order_num"));
         recommendPage.getRecords().forEach(recommendPageItem -> {
             if (ModuleEnum.ARTICLE.getCode() == recommendPageItem.getType()){
                 Article article = articleMapper.selectById(recommendPageItem.getLinkId());
@@ -72,23 +72,23 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
      * @return
      */
     @Override
-    public List<RecommendDTO> select(Integer type, String title) {
-        List<RecommendDTO> recommendDTOList = new ArrayList<>();
+    public List<RecommendVO> select(Integer type, String title) {
+        List<RecommendVO> recommendVOList = new ArrayList<>();
 
         if (ModuleEnum.ARTICLE.getCode() == type){
             List<Article> articleList = articleMapper.selectArticleListByTitle(title);
             if (articleList != null && articleList.size() > 0){
                 articleList.forEach(articleListItem -> {
-                    RecommendDTO recommendDTO = new RecommendDTO();
-                    recommendDTO.setTitle(articleListItem.getTitle());
-                    recommendDTO.setLinkId(articleListItem.getId());
-                    recommendDTO.setType(type);
-                    recommendDTOList.add(recommendDTO);
+                    RecommendVO recommendVO = new RecommendVO();
+                    recommendVO.setTitle(articleListItem.getTitle());
+                    recommendVO.setLinkId(articleListItem.getId());
+                    recommendVO.setType(type);
+                    recommendVOList.add(recommendVO);
                 });
             }
         }
 
-        return recommendDTOList;
+        return recommendVOList;
     }
 
     /**
@@ -213,20 +213,28 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
         return baseMapper.selectRecommendByLinkIdAndType(linkId, type);
     }
 
+    /**
+     * 查找最大顺序
+     */
+    @Override
+    public Integer selectRecommendMaxOrderNum() {
+        return baseMapper.selectRecommendMaxOrderNum();
+    }
+
     /********************** portal ********************************/
 
     @Override
-    public List<RecommendDTO> listRecommendDTO() {
-        List<RecommendDTO> recommendList =this.baseMapper.listRecommendDTO();
+    public List<RecommendVO> listRecommendVO() {
+        List<RecommendVO> recommendList =this.baseMapper.listRecommendDTO();
         return genRecommendList(recommendList);
     }
 
-    private List<RecommendDTO> genRecommendList(List<RecommendDTO> recommendList) {
-        recommendList.forEach(recommendDTO -> {
-            if(ModuleEnum.ARTICLE.getCode() == recommendDTO.getType()){
-                ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(recommendDTO.getLinkId());
-                BeanUtils.copyProperties(simpleArticleDTO,recommendDTO);
-                recommendDTO.setUrlType("article");
+    private List<RecommendVO> genRecommendList(List<RecommendVO> recommendList) {
+        recommendList.forEach(recommendVO -> {
+            if(ModuleEnum.ARTICLE.getCode() == recommendVO.getType()){
+                ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(recommendVO.getLinkId());
+                BeanUtils.copyProperties(simpleArticleDTO, recommendVO);
+                recommendVO.setUrlType("article");
             }
         });
         return recommendList;

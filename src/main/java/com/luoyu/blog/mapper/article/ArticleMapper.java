@@ -84,6 +84,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
     ArticleDTO getSimpleArticleDTO(Integer id);
 
     /**
+     * 获取热读榜
+     * @return
+     */
+    List<ArticleDTO> getHotReadList();
+
+    /**
      * 查询已发布文章
      * @return
      */

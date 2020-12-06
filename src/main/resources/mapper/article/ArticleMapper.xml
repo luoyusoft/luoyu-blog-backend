@@ -98,6 +98,9 @@
             <if test="cover!=null">
                 cover = #{cover},
             </if>
+            <if test="coverType!=null">
+                cover_type = #{coverType},
+            </if>
             <if test="updateTime!=null">
                 update_time = #{updateTime},
             </if>
@@ -115,6 +118,10 @@
 
     <select id="getSimpleArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
         select <include refid="homeArticleColumn"/> from article where id = #{id}
+    </select>
+
+    <select id="getHotReadList" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
+        select <include refid="homeArticleColumn"/> from article order by read_num desc limit 5
     </select>
 
     <select id="selectArticleById" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.article.Article">

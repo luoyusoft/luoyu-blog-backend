@@ -1,5 +1,6 @@
 package com.luoyu.blog.service.job;
 
+import com.luoyu.blog.common.util.RedisUtils;
 import com.luoyu.blog.service.gitalk.GitalkService;
 import com.luoyu.blog.service.search.ArticleEsServer;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,8 +41,11 @@ public class XxlJobService {
     @Autowired
     private GitalkService gitalkService;
 
+    @Resource
+    private RedisUtils redisUtils;
+
     /**
-     * 测试job
+     * 更新热读榜
      */
     @XxlJob("testJobHandler")
     public ReturnT<String> testJobHandler(String param) throws Exception {

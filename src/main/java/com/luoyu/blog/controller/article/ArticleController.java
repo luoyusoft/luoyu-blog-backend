@@ -77,8 +77,19 @@ public class ArticleController {
     @PutMapping("/manage/article/update")
     @RequiresPermissions("article:update")
     @CacheEvict(allEntries = true)
-    public Response updateArticle(@RequestBody ArticleVO article){
-        articleService.updateArticle(article);
+    public Response updateArticle(@RequestBody ArticleVO articleVO){
+        articleService.updateArticle(articleVO);
+        return Response.success();
+    }
+
+    /**
+     * 修改状态
+     */
+    @PutMapping("/manage/article/update/status")
+    @RequiresPermissions("article:update")
+    @CacheEvict(allEntries = true)
+    public Response updateArticleStatus(@RequestBody ArticleVO articleVO){
+        articleService.updateArticleStatus(articleVO);
         return Response.success();
     }
 
@@ -122,9 +133,16 @@ public class ArticleController {
 
     @GetMapping("/articles")
     @Cacheable
-    public Response list(@RequestParam Map<String, Object> params){
-        PageUtils page = articleService.queryPageCondition(params);
-        return Response.success(page);
+    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+                         @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId){
+        PageUtils queryPageCondition = articleService.queryPageCondition(page, limit, latest, categoryId);
+        return Response.success(queryPageCondition);
+    }
+
+    @GetMapping("/articles/hotread")
+    @Cacheable
+    public Response getHotReadList(){
+        return Response.success(articleService.getHotReadList());
     }
 
 }

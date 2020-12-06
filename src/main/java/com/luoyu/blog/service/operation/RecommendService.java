@@ -3,7 +3,7 @@ package com.luoyu.blog.service.operation;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.operation.Recommend;
-import com.luoyu.blog.entity.operation.dto.RecommendDTO;
+import com.luoyu.blog.entity.operation.vo.RecommendVO;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public interface RecommendService extends IService<Recommend> {
      * 获取推荐列表
      * @return
      */
-    List<RecommendDTO> select(Integer type, String title);
+    List<RecommendVO> select(Integer type, String title);
 
     /**
      * 批量删除
@@ -69,8 +69,13 @@ public interface RecommendService extends IService<Recommend> {
      */
     Recommend selectRecommendByLinkIdAndType(Integer linkId, Integer type);
 
+    /**
+     * 查找最大顺序
+     */
+    Integer selectRecommendMaxOrderNum();
+
     /********************** portal ********************************/
 
-    List<RecommendDTO> listRecommendDTO();
+    List<RecommendVO> listRecommendVO();
 
 }

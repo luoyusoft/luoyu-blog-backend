@@ -1,4 +1,4 @@
-package com.luoyu.blog.entity.operation.dto;
+package com.luoyu.blog.entity.operation.vo;
 
 import com.luoyu.blog.entity.operation.Tag;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Data;
  * @description
  */
 @Data
-public class TagDTO extends Tag {
+public class TagVO extends Tag {
 
     private String linkNum;
 

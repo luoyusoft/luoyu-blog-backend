@@ -12,7 +12,7 @@ import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.Tag;
 import com.luoyu.blog.entity.operation.TagLink;
-import com.luoyu.blog.entity.operation.dto.TagDTO;
+import com.luoyu.blog.entity.operation.vo.TagVO;
 import com.luoyu.blog.mapper.operation.TagLinkMapper;
 import com.luoyu.blog.service.operation.TagService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -126,7 +126,7 @@ public class TagController extends AbstractController {
     @GetMapping("/operation/tags")
     @Cacheable
     public Response listTag() {
-        List<TagDTO> tagList = tagService.listTagDTO();
+        List<TagVO> tagList = tagService.listTagDTO();
         return Response.success(tagList);
     }
 

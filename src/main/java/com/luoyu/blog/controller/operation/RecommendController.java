@@ -9,7 +9,7 @@ import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.Recommend;
-import com.luoyu.blog.entity.operation.dto.RecommendDTO;
+import com.luoyu.blog.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.service.operation.RecommendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
@@ -55,7 +55,7 @@ public class RecommendController extends AbstractController {
         if(type == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
         }
-        List<RecommendDTO> recommendList = recommendService.select(type, title);
+        List<RecommendVO> recommendList = recommendService.select(type, title);
         return Response.success(recommendList);
     }
 
@@ -132,7 +132,7 @@ public class RecommendController extends AbstractController {
     @RequestMapping("/operation/recommends")
     @Cacheable(key = "'RECOMMEND'")
     public Response listRecommend() {
-        List<RecommendDTO> recommendList = recommendService.listRecommendDTO();
+        List<RecommendVO> recommendList = recommendService.listRecommendVO();
         return Response.success(recommendList);
     }
 

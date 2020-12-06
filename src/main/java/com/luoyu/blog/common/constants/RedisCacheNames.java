@@ -9,45 +9,45 @@ package com.luoyu.blog.common.constants;
  */
 public class RedisCacheNames {
 
-    public final static String PROFIX = "LUOYUBLOG:";
+    public final static String PROFIX = "luoyublog:";
 
     /**
      * 文章缓存空间名称
      */
-    public final static String ARTICLE = PROFIX + "ARTICLE";
+    public final static String ARTICLE = PROFIX + "article";
     /**
      * 图书缓存空间名称
      */
-    public final static String BOOK = PROFIX + "BOOK";
-
-    /**
-     * 笔记缓存空间名称
-     */
-    public final static String BOOKNOTE = PROFIX + "BOOKNOTE";
+    public final static String BOOK = PROFIX + "book";
 
     /**
      * 友情链接列表
      */
-    public final static String LINK = PROFIX + "LINK";
+    public final static String LINK = PROFIX + "link";
 
     /**
      * 推荐列表
      */
-    public final static String RECOMMEND = PROFIX + "RECOMMEND";
+    public final static String RECOMMEND = PROFIX + "recommend";
+
+    /**
+     * 置顶列表
+     */
+    public final static String TOP = PROFIX + "top";
 
     /**
      * 标签列表
      */
-    public final static String TAG = PROFIX + "TAG";
+    public final static String TAG = PROFIX + "tag";
 
     /**
      * 分类列表
      */
-    public final static String CATEGORY = PROFIX +"CATEGORY";
+    public final static String CATEGORY = PROFIX + "category";
 
     /**
      * 时光轴
      */
-    public static final String TIMELINE =  PROFIX +"TIMELINE";
+    public static final String TIMELINE =  PROFIX + "timeline";
 
 }
