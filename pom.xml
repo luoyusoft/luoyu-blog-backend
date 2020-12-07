@@ -294,6 +294,7 @@
                             <arg>--spring.profiles.active=prod</arg>
                             <arg>--spring.cloud.nacos.config.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
                             <arg>--spring.cloud.nacos.discovery.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
+                            <arg>--log.file=/usr/local/project/luoyublog-backend/log</arg>
                         </args>
                         <ports>
                             <!-- 指定镜像端口 , 这里没用docfile的操作 -->
