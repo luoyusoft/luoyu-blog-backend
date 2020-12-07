@@ -29,7 +29,7 @@ import java.util.Set;
  * @description
  */
 @RestController
-@CacheConfig(cacheNames ={RedisCacheNames.RECOMMEND,RedisCacheNames.TAG,RedisCacheNames.ARTICLE,RedisCacheNames.TIMELINE})
+@CacheConfig(cacheNames ={RedisCacheNames.ARTICLE})
 public class ArticleController {
 
     @Resource
