@@ -240,14 +240,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @param limit
      * @param latest
      * @param categoryId
+     * @param like
+     * @param read
      * @return
      */
     @Override
-    public PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId) {
+    public PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
-        params.put("latest", String.valueOf(latest));
+        params.put("latest", latest);
+        params.put("like", like);
+        params.put("read", read);
         if (categoryId != null){
             params.put("categoryId", String.valueOf(categoryId));
         }

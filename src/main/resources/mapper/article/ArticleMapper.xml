@@ -134,19 +134,18 @@
         select <include refid="homeArticleColumn"/> , 0 as `type` from article
         <where>
             publish = true
-            <if test="params.recommend != null and params.recommend != ''">
-                and recommend = true
-            </if>
             <if test="params.categoryId !=null and params.categoryId != ''">
                 and find_in_set(#{params.categoryId},category_id)
             </if>
-            and publish = true
         </where>
-        <if test="params.latest !=null and params.latest != ''">
+        <if test="params.latest">
             order by create_time desc
         </if>
-        <if test="params.favorite !=null and params.favorite != ''">
+        <if test="params.like">
             order by like_num desc
+        </if>
+        <if test="params.read">
+            order by read_num desc
         </if>
     </select>
 

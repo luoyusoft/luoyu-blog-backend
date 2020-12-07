@@ -134,8 +134,9 @@ public class ArticleController {
     @GetMapping("/articles")
     @Cacheable
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
-                         @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId){
-        PageUtils queryPageCondition = articleService.queryPageCondition(page, limit, latest, categoryId);
+                         @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
+                         @RequestParam("like") Boolean like, @RequestParam("read") Boolean read) {
+        PageUtils queryPageCondition = articleService.queryPageCondition(page, limit, latest, categoryId, like, read);
         return Response.success(queryPageCondition);
     }
 

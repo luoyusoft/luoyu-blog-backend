@@ -69,9 +69,11 @@ public interface ArticleService extends IService<Article> {
      * @param limit
      * @param latest
      * @param categoryId
+     * @param like
+     * @param read
      * @return
      */
-    PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId);
+    PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read);
 
     /**
      * 获取ArticleVo对象
