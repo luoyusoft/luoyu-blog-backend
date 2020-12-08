@@ -175,7 +175,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
 
     <!-- 4. 生产环境，输出到文档-->
     <springProfile name="prod">
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="ALL_FILE" />
             <appender-ref ref="INFO_FILE" />
