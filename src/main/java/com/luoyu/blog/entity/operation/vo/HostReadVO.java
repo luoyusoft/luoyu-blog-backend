@@ -1,9 +1,11 @@
-package com.luoyu.blog.entity.operation;
+package com.luoyu.blog.entity.operation.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.BaseEntity;
@@ -25,7 +27,7 @@ import java.time.LocalDateTime;
  * @since 2019-02-22
  */
 @Data
-public class HostRead implements Serializable {
+public class HostReadVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,6 +39,7 @@ public class HostRead implements Serializable {
 
     private Integer likeNum;
 
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;

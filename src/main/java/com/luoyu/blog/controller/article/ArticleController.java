@@ -119,14 +119,14 @@ public class ArticleController {
     /********************** portal ********************************/
 
     @GetMapping("/article/{articleId}")
-    @LogView(type = "article")
+    @LogView(type = 0)
     public Response getArticle(@PathVariable Integer articleId){
         ArticleDTO article = articleService.getArticleDTOById(articleId);
         return Response.success(article);
     }
 
     @PutMapping("/article/like/{id}")
-    @LogLike(type = "article")
+    @LogLike(type = 0)
     public Response likeArticle(@PathVariable Integer id) {
         return Response.success();
     }

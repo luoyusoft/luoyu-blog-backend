@@ -105,8 +105,8 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      * @return
      */
     @Override
-    public List<TagVO> listTagDTO() {
-        return baseMapper.listTagDTO();
+    public List<TagVO> listTagDTO(Integer type) {
+        return baseMapper.listTagDTO(type);
     }
 
 }

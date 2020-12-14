@@ -1,7 +1,7 @@
-package com.luoyu.blog.mapper.oss;
+package com.luoyu.blog.mapper.file;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.luoyu.blog.entity.oss.OssResource;
+import com.luoyu.blog.entity.file.FileResource;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.luoyu.blog.entity.oss.OssResource;
  * @author luoyu
  * @since 2018-11-30
  */
-public interface OssResourceMapper extends BaseMapper<OssResource> {
+public interface FileResourceMapper extends BaseMapper<FileResource> {
 
 }

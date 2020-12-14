@@ -59,6 +59,6 @@ public interface TagService extends IService<Tag> {
      * 获取tagVoList
      * @return
      */
-    List<TagVO> listTagDTO();
+    List<TagVO> listTagDTO(Integer type);
 
 }

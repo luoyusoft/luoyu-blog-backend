@@ -36,7 +36,22 @@ public enum ResponseEnums {
 
     //七牛OSS错误
     OSS_CONFIG_ERROR(10050,"七牛配置信息错误"),
-    OSS_UPLOAD_ERROR(10051,"OSSBookNote上传失败"),
+    OSS_UPLOAD_ERROR(10051,"七牛云OSS上传失败"),
+
+    //Minio错误
+    MINIO_UPLOAD_ERROR(10060,"Minio上传失败"),
+    MINIO_DOWNLOAD_ERROR(10061,"Minio下载失败"),
+    MINIO_GET_URL_ERROR(10062,"Minio获取下载地址失败"),
+    MINIO_INIT_ERROR(10063,"Minio初始化失败"),
+    MINIO_DELETE_FILE_ERROR(10064,"Minio删除文件失败"),
+    MINIO_GET_FILE_ERROR(10065,"Minio获取文件失败"),
+    MINIO_BUCKET_EXISTS_ERROR(10066,"Minio检查存储桶是否存在失败"),
+    MINIO_CREATE_BUCKET_ERROR(10067,"Minio创建存储桶失败"),
+    MINIO_GET_BUCKET_ERROR(10068,"Minio获取存储桶失败"),
+    MINIO_DELETE_BUCKET_ERROR(10069,"Minio删除存储桶失败"),
+
+    //Zxing错误
+    ZXING_CREATE_ERROR(10070,"生成二维码失败"),
 
     //参数
     PARAM_ERROR(20001,"参数错误"),

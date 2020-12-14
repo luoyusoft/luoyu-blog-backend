@@ -1,9 +1,10 @@
-
-package com.luoyu.blog.service.oss;
+package com.luoyu.blog.service.file;
 
 import com.luoyu.blog.common.util.DateUtils;
-import com.luoyu.blog.common.config.CloudStorageConfig;
+import com.luoyu.blog.common.config.CloudStorageProperties;
+import com.luoyu.blog.entity.file.vo.FileResourceVO;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -19,26 +20,13 @@ import java.util.UUID;
 public abstract class CloudStorageService {
 
     /** 云存储配置信息 */
-    protected CloudStorageConfig config;
+    protected CloudStorageProperties config;
 
     /**
-     * 文件路径
-     * @param prefix 前缀
-     * @param suffix 后缀
-     * @return 返回上传路径
+     * 文件上传
+     * @return        返回http地址
      */
-    public String getPath(String prefix, String suffix) {
-        //生成uuid
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-        //文件路径
-        String path = DateUtils.format(new Date(), "yyyyMMdd") + "/" + uuid;
-
-        if(StringUtils.isNotBlank(prefix)){
-            path = prefix + "/" + path;
-        }
-
-        return path + suffix;
-    }
+    public abstract FileResourceVO upload(MultipartFile file, Integer fileModule);
 
     /**
      * 文件上传

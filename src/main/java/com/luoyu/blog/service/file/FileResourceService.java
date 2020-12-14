@@ -1,7 +1,7 @@
-package com.luoyu.blog.service.oss;
+package com.luoyu.blog.service.file;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.luoyu.blog.entity.oss.OssResource;
+import com.luoyu.blog.entity.file.FileResource;
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import com.luoyu.blog.entity.oss.OssResource;
  * @author luoyu
  * @since 2018-11-30
  */
-public interface OssResourceService extends IService<OssResource> {
+public interface FileResourceService extends IService<FileResource> {
 
 }

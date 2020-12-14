@@ -38,6 +38,6 @@ public interface TagMapper extends BaseMapper<Tag> {
      * 获取tagVoList
      * @return
      */
-    List<TagVO> listTagDTO();
+    List<TagVO> listTagDTO(Integer type);
 
 }

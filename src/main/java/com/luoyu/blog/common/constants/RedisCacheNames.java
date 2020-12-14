@@ -18,7 +18,7 @@ public class RedisCacheNames {
     /**
      * 图书缓存空间名称
      */
-    public final static String BOOK = PROFIX + "book";
+    public final static String VIDEO = PROFIX + "video";
 
     /**
      * 友情链接列表

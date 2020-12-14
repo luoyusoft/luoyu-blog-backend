@@ -17,15 +17,11 @@ public enum ModuleEnum {
     /**
      * 文章模块
      */
-    ARTICLE(0, "文章模块"),
+    ARTICLE(0, "article"),
     /**
-     * 图书模块
+     * 视频模块
      */
-    BOOK(1, "文章模块"),
-    /**
-     * 图书笔记模块
-     */
-    BOOK_NOTE(2, "文章模块");
+    VIDEO(1, "video");
 
     private int code;
     private String name;

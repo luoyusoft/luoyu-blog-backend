@@ -45,8 +45,8 @@
 
     <!-- *************************** portal ****************************** -->
 
-    <select id="listRecommendDTO" resultType="com.luoyu.blog.entity.operation.vo.RecommendVO">
-        select <include refid="Base_Column_List"/> from recommend order by order_num asc limit 5
+    <select id="listRecommendDTO" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.vo.RecommendVO">
+        select <include refid="Base_Column_List"/> from recommend where type = #{type} order by order_num asc limit 5
     </select>
 
 </mapper>

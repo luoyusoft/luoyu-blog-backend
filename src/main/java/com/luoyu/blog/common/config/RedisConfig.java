@@ -52,11 +52,10 @@ public class RedisConfig {
         // 文章、图书的缓存默认一天失效
         redisCacheConfigurationMap.put(RedisCacheNames.ARTICLE, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
-        redisCacheConfigurationMap.put(RedisCacheNames.BOOK, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
+        redisCacheConfigurationMap.put(RedisCacheNames.VIDEO, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
         return redisCacheConfigurationMap;
     }
-
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {

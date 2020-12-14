@@ -1,11 +1,13 @@
 package com.luoyu.blog.common.aop.aspect;
 
 import com.luoyu.blog.common.aop.annotation.LogView;
+import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.log.LogViewMapper;
+import com.luoyu.blog.mapper.video.VideoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.StopWatch;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -39,6 +41,9 @@ public class LogViewAspect {
     @Autowired
     private ArticleMapper articleMapper;
 
+    @Autowired
+    private VideoMapper videoMapper;
+
     @Pointcut("@annotation(com.luoyu.blog.common.aop.annotation.LogView)")
     public void logPointCut() {
 
@@ -66,20 +71,22 @@ public class LogViewAspect {
         Method method = signature.getMethod();
         com.luoyu.blog.entity.log.LogView viewLogEntity = new com.luoyu.blog.entity.log.LogView();
         LogView viewLog = method.getAnnotation(LogView.class);
-        //注解上的类型
-        String type = viewLog.type();
-        viewLogEntity.setType(type);
         //请求的参数
         Object[] args = joinPoint.getArgs();
         String id = JsonUtils.objectToJson(args[0]);
         // 根据注解类型增加数量
-        switch (type) {
-            case "article":
-                articleMapper.updateReadNum(Integer.parseInt(id));
-                break;
-            default:
-                break;
+        //注解上的类型
+        int type = viewLog.type();
+        viewLogEntity.setType("");
+        if (type == ModuleEnum.ARTICLE.getCode()){
+            viewLogEntity.setType(ModuleEnum.ARTICLE.getName());
+            articleMapper.updateReadNum(Integer.parseInt(id));
         }
+        if (type == ModuleEnum.VIDEO.getCode()){
+            viewLogEntity.setType(ModuleEnum.VIDEO.getName());
+            videoMapper.updateWatchNum(Integer.parseInt(id));
+        }
+
         viewLogEntity.setParams(id);
         // 请求的方法名
         String className = joinPoint.getTarget().getClass().getName();

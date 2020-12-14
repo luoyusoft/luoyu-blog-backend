@@ -15,27 +15,31 @@ import java.io.Serializable;
  */
 @Data
 @Configuration
-public class CloudStorageConfig implements Serializable {
+public class CloudStorageProperties implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Value("${oss.qiniu.domain}")
     private String qiniuDomain;
+
     /**
      * 七牛路径前缀
      */
     @Value("${oss.qiniu.prefix}")
     private String qiniuPrefix;
+
     /**
      * 七牛ACCESS_KEY
      */
     @Value("${oss.qiniu.accessKey}")
     private String qiniuAccessKey;
+
     /**
      * 七牛SECRET_KEY
      */
     @Value("${oss.qiniu.secretKey}")
     private String qiniuSecretKey;
+
     /**
      * 七牛空间名
      */

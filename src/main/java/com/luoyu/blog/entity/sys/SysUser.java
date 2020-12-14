@@ -53,7 +53,6 @@ public class SysUser extends BaseEntity implements Serializable {
     private String salt;
 
     @ApiModelProperty(value = "创建者id")
-    @NotNull(message="创建者id不能为空", groups = {AddGroup.class})
     private Integer createUserId;
 
     @ApiModelProperty(value = "用户状态（0：禁用，1：正常）")

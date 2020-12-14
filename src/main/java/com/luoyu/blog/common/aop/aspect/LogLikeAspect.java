@@ -1,11 +1,13 @@
 package com.luoyu.blog.common.aop.aspect;
 
 import com.luoyu.blog.common.aop.annotation.LogLike;
+import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.log.LogLikeMapper;
+import com.luoyu.blog.mapper.video.VideoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.StopWatch;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -39,6 +41,9 @@ public class LogLikeAspect {
     @Autowired
     private ArticleMapper articleMapper;
 
+    @Autowired
+    private VideoMapper videoMapper;
+
     @Pointcut("@annotation(com.luoyu.blog.common.aop.annotation.LogLike)")
     public void logPointCut() {
 
@@ -65,21 +70,23 @@ public class LogLikeAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         com.luoyu.blog.entity.log.LogLike logLikeEntity = new com.luoyu.blog.entity.log.LogLike();
-        LogLike viewLog = method.getAnnotation(LogLike.class);
-        //注解上的类型
-        String type = viewLog.type();
-        logLikeEntity.setType(type);
+        LogLike logLike = method.getAnnotation(LogLike.class);
         //请求的参数
         Object[] args = joinPoint.getArgs();
         String id = JsonUtils.objectToJson(args[0]);
         // 根据注解类型增加数量
-        switch (type) {
-            case "article":
-                articleMapper.updateLikeNum(Integer.parseInt(id));
-                break;
-            default:
-                break;
+        //注解上的类型
+        int type = logLike.type();
+        logLikeEntity.setType("");
+        if (type == ModuleEnum.ARTICLE.getCode()){
+            logLikeEntity.setType(ModuleEnum.ARTICLE.getName());
+            articleMapper.updateLikeNum(Integer.parseInt(id));
         }
+        if (type == ModuleEnum.VIDEO.getCode()){
+            logLikeEntity.setType(ModuleEnum.VIDEO.getName());
+            videoMapper.updateLikeNum(Integer.parseInt(id));
+        }
+
         logLikeEntity.setParams(id);
         //获取request
         HttpServletRequest request = HttpContextUtils.getHttpServletRequest();

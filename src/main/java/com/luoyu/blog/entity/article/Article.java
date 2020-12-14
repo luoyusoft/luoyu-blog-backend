@@ -21,7 +21,7 @@ import java.io.Serializable;
  * @since 2018-11-07
  */
 @Data
-@ApiModel(value="BlogArticle对象", description="文章")
+@ApiModel(value="Article对象", description="文章")
 @EqualsAndHashCode(callSuper = false)
 @TableName("article")
 public class Article extends BaseEntity implements Serializable {
@@ -58,7 +58,7 @@ public class Article extends BaseEntity implements Serializable {
     @NotNull(message="文章展示类别不能为空", groups = {AddGroup.class})
     private Integer coverType;
 
-    @ApiModelProperty(value = "文章分类类别")
+    @ApiModelProperty(value = "文章分类类别（存在多级分类，用逗号隔开）")
     @NotBlank(message="文章分类类别不能为空", groups = {AddGroup.class})
     private String categoryId;
 

@@ -64,6 +64,6 @@ public interface RecommendMapper extends BaseMapper<Recommend> {
      * 获取推荐列表
      * @return
      */
-    List<RecommendVO> listRecommendDTO();
+    List<RecommendVO> listRecommendDTO(Integer type);
 
 }

@@ -14,6 +14,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface LogLike {
 
-     String type();
+     // 0：article，1：video
+     int type();
 
 }

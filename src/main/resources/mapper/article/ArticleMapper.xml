@@ -25,11 +25,11 @@
     </resultMap>
 
     <sql id="homeArticleColumn">
-        id,title,description,author,read_num,like_num,cover,cover_type,create_time,update_time
+        id,title,description,author,read_num,like_num,comment_num,cover,cover_type,create_time,update_time
     </sql>
 
     <sql id="manageArticleColumn">
-       id,title,description,author,read_num,like_num,cover,cover_type,create_time,update_time,publish,category_id
+       id,title,description,author,read_num,like_num,comment_num,cover,cover_type,create_time,update_time,publish,category_id
     </sql>
 
     <select id="listArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">

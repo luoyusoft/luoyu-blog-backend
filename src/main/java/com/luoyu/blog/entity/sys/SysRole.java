@@ -38,7 +38,6 @@ public class SysRole extends BaseEntity implements Serializable {
     private String remark;
 
     @ApiModelProperty(value = "创建者id")
-    @NotNull(message = "创建者id不能为空", groups = {AddGroup.class})
     private Integer createUserId;
 
     @TableField(exist=false)

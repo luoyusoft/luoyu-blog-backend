@@ -12,8 +12,11 @@ import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.operation.Recommend;
 import com.luoyu.blog.entity.operation.vo.RecommendVO;
+import com.luoyu.blog.entity.video.Video;
+import com.luoyu.blog.entity.video.dto.VideoDTO;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.operation.RecommendMapper;
+import com.luoyu.blog.mapper.video.VideoMapper;
 import com.luoyu.blog.service.operation.RecommendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +44,9 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
     @Autowired
     private ArticleMapper articleMapper;
 
+    @Autowired
+    private VideoMapper videoMapper;
+
     /**
      * 分页查询
      * @param page
@@ -59,6 +65,12 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
                 Article article = articleMapper.selectById(recommendPageItem.getLinkId());
                 if (article != null){
                     recommendPageItem.setTitle(article.getTitle());
+                }
+            }
+            if (ModuleEnum.VIDEO.getCode() == recommendPageItem.getType()){
+                Video video = videoMapper.selectById(recommendPageItem.getLinkId());
+                if (video != null){
+                    recommendPageItem.setTitle(video.getTitle());
                 }
             }
         });
@@ -82,6 +94,19 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
                     RecommendVO recommendVO = new RecommendVO();
                     recommendVO.setTitle(articleListItem.getTitle());
                     recommendVO.setLinkId(articleListItem.getId());
+                    recommendVO.setType(type);
+                    recommendVOList.add(recommendVO);
+                });
+            }
+        }
+
+        if (ModuleEnum.VIDEO.getCode() == type){
+            List<Video> videoList = videoMapper.selectVideoListByTitle(title);
+            if (videoList != null && videoList.size() > 0){
+                videoList.forEach(videoListItem -> {
+                    RecommendVO recommendVO = new RecommendVO();
+                    recommendVO.setTitle(videoListItem.getTitle());
+                    recommendVO.setLinkId(videoListItem.getId());
                     recommendVO.setType(type);
                     recommendVOList.add(recommendVO);
                 });
@@ -128,13 +153,17 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
             }
         }
 
-        // todo 没时间写了
-        if (ModuleEnum.BOOK.getCode() == recommend.getType()){
-
-        }
-
-        if (ModuleEnum.BOOK_NOTE.getCode() == recommend.getType()){
-
+        if (ModuleEnum.VIDEO.getCode() == recommend.getType()){
+            Video video = videoMapper.selectById(recommend.getLinkId());
+            if(video == null) {
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "推荐内容不存在");
+            }
+            Recommend oldRecommend = baseMapper.selectRecommendByLinkIdAndType(recommend.getLinkId(), recommend.getType());
+            if(oldRecommend == null){
+                baseMapper.insert(recommend);
+            }else {
+                baseMapper.updateRecommendOrderNumByLinkIdAndType(recommend);
+            }
         }
     }
 
@@ -160,13 +189,17 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
             }
         }
 
-        // todo 没时间写了
-        if (ModuleEnum.BOOK.getCode() == recommend.getType()){
-
-        }
-
-        if (ModuleEnum.BOOK_NOTE.getCode() == recommend.getType()){
-
+        if (ModuleEnum.VIDEO.getCode() == recommend.getType()){
+            Video video = videoMapper.selectById(recommend.getLinkId());
+            if(video == null) {
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "推荐内容不存在");
+            }
+            Recommend oldRecommend = baseMapper.selectRecommendByLinkIdAndType(recommend.getLinkId(), recommend.getType());
+            if(oldRecommend == null){
+                baseMapper.insert(recommend);
+            }else {
+                baseMapper.updateRecommendOrderNumByLinkIdAndType(recommend);
+            }
         }
     }
 
@@ -224,8 +257,8 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
     /********************** portal ********************************/
 
     @Override
-    public List<RecommendVO> listRecommendVO() {
-        List<RecommendVO> recommendList =this.baseMapper.listRecommendDTO();
+    public List<RecommendVO> listRecommendVO(Integer type) {
+        List<RecommendVO> recommendList =this.baseMapper.listRecommendDTO(type);
         return genRecommendList(recommendList);
     }
 
@@ -234,7 +267,12 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
             if(ModuleEnum.ARTICLE.getCode() == recommendVO.getType()){
                 ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(recommendVO.getLinkId());
                 BeanUtils.copyProperties(simpleArticleDTO, recommendVO);
-                recommendVO.setUrlType("article");
+                recommendVO.setUrlType(ModuleEnum.ARTICLE.getName());
+            }
+            if(ModuleEnum.VIDEO.getCode() == recommendVO.getType()){
+                VideoDTO simpleVideoDTO = videoMapper.getSimpleVideoDTO(recommendVO.getLinkId());
+                BeanUtils.copyProperties(simpleVideoDTO, recommendVO);
+                recommendVO.setUrlType(ModuleEnum.VIDEO.getName());
             }
         });
         return recommendList;

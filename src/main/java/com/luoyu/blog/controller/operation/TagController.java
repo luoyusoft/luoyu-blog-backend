@@ -125,8 +125,11 @@ public class TagController extends AbstractController {
 
     @GetMapping("/operation/tags")
     @Cacheable
-    public Response listTag() {
-        List<TagVO> tagList = tagService.listTagDTO();
+    public Response listTag(@RequestParam("type") Integer type) {
+        if (type == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
+        }
+        List<TagVO> tagList = tagService.listTagDTO(type);
         return Response.success(tagList);
     }
 

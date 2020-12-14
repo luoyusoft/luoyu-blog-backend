@@ -76,6 +76,6 @@ public interface RecommendService extends IService<Recommend> {
 
     /********************** portal ********************************/
 
-    List<RecommendVO> listRecommendVO();
+    List<RecommendVO> listRecommendVO(Integer type);
 
 }

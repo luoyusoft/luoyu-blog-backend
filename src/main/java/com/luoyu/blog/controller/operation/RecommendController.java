@@ -130,9 +130,12 @@ public class RecommendController extends AbstractController {
     /********************** portal ********************************/
 
     @RequestMapping("/operation/recommends")
-    @Cacheable(key = "'RECOMMEND'")
-    public Response listRecommend() {
-        List<RecommendVO> recommendList = recommendService.listRecommendVO();
+    @Cacheable(key = "#type")
+    public Response listRecommend(@RequestParam("type") Integer type) {
+        if (type == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
+        }
+        List<RecommendVO> recommendList = recommendService.listRecommendVO(type);
         return Response.success(recommendList);
     }
 
