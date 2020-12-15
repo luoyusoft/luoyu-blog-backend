@@ -175,7 +175,7 @@
         <if test="params.like">
             order by like_num desc
         </if>
-        <if test="params.read">
+        <if test="params.watch">
             order by watch_num desc
         </if>
     </select>

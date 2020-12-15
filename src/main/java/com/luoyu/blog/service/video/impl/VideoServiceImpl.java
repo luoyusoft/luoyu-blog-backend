@@ -241,17 +241,17 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
      * @param latest
      * @param categoryId
      * @param like
-     * @param read
+     * @param watch
      * @return
      */
     @Override
-    public PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read) {
+    public PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean watch) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
         params.put("latest", latest);
         params.put("like", like);
-        params.put("read", read);
+        params.put("watch", watch);
         if (categoryId != null){
             params.put("categoryId", String.valueOf(categoryId));
         }

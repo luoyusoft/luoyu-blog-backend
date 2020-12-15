@@ -28,8 +28,8 @@ spring:
   servlet:
     multipart:
       #文件上传大小配置
-      max-file-size: 1024MB
-      max-request-size: 1024MB
+      max-file-size: 2048MB
+      max-request-size: 2048MB
   mvc:
     #restFul风格：当找不到页面时，正常抛出错误，不跳转页面
     throw-exception-if-no-handler-found: true

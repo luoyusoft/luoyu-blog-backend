@@ -135,8 +135,8 @@ public class VideoController {
     @Cacheable
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                          @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
-                         @RequestParam("like") Boolean like, @RequestParam("read") Boolean read) {
-        PageUtils queryPageCondition = videoService.queryPageCondition(page, limit, latest, categoryId, like, read);
+                         @RequestParam("like") Boolean like, @RequestParam("watch") Boolean watch) {
+        PageUtils queryPageCondition = videoService.queryPageCondition(page, limit, latest, categoryId, like, watch);
         return Response.success(queryPageCondition);
     }
 

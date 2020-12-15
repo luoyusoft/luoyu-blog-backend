@@ -68,10 +68,10 @@ public interface VideoService extends IService<Video> {
      * @param latest
      * @param categoryId
      * @param like
-     * @param read
+     * @param watch
      * @return
      */
-    PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read);
+    PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean watch);
 
     /**
      * 获取VideoDTO对象
