@@ -20,6 +20,8 @@ public class RecommendVO extends Recommend {
 
     private Long readNum;
 
+    private Long watchNum;
+
     private Long commentNum;
 
     private Long likeNum;
