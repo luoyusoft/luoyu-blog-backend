@@ -21,12 +21,40 @@
 
     <!-- *************************** portal ****************************** -->
 
-    <select id="listTagDTO" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.vo.TagVO">
-        select t.name ,sum(t.num) as linkNum from (
-          select distinct t.type, t.name, (select count(*) from tag_link tl2 where tl2.type = #{type} and tl2.tag_id = t.id) as num
-          from tag t
-          left join tag_link tl on t.id = tl.tag_id and t.type = tl.type where t.type = #{type}) t
-        group by t.name order by linkNum desc limit 15
+    <select id="listTagArticleDTO" resultType="com.luoyu.blog.entity.operation.vo.TagVO">
+        select t.name, sum(t.num) as linkNum
+        from (
+                 select distinct t.type,
+                                 t.name,
+                                 (select count(*)
+                                  from tag_link tl2
+                                           inner join article a on a.id = tl2.link_id
+                                  where a.publish = true
+                                    and tl2.type = #{type}
+                                    and tl2.tag_id = t.id) as num
+                 from tag t
+                          left join tag_link tl on t.id = tl.tag_id and t.type = tl.type
+                 where t.type = #{type}) t
+        group by t.name
+        order by linkNum desc
+    </select>
+
+    <select id="listTagVideoDTO" resultType="com.luoyu.blog.entity.operation.vo.TagVO">
+        select t.name, sum(t.num) as linkNum
+        from (
+                 select distinct t.type,
+                                 t.name,
+                                 (select count(*)
+                                  from tag_link tl2
+                                           inner join video a on a.id = tl2.link_id
+                                  where a.publish = true
+                                    and tl2.type = #{type}
+                                    and tl2.tag_id = t.id) as num
+                 from tag t
+                          left join tag_link tl on t.id = tl.tag_id and t.type = tl.type
+                 where t.type = #{type}) t
+        group by t.name
+        order by linkNum desc
     </select>
 
 </mapper>

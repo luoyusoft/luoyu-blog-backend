@@ -3,11 +3,13 @@ package com.luoyu.blog.service.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.operation.Tag;
 import com.luoyu.blog.entity.operation.TagLink;
 import com.luoyu.blog.entity.operation.vo.TagVO;
+import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.operation.TagLinkMapper;
 import com.luoyu.blog.mapper.operation.TagMapper;
 import com.luoyu.blog.service.operation.TagService;
@@ -16,10 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -35,6 +35,9 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Autowired
     private TagLinkMapper tagLinkMapper;
+
+    @Autowired
+    private ArticleMapper articleMapper;
 
     /**
      * 分页查询
@@ -106,7 +109,16 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      */
     @Override
     public List<TagVO> listTagDTO(Integer type) {
-        return baseMapper.listTagDTO(type);
+        List<TagVO> tagVOList = new ArrayList<>();
+        if(ModuleEnum.ARTICLE.getCode() == type){
+            tagVOList = baseMapper.listTagArticleDTO(type);
+            return tagVOList.stream().filter(tagVOListItem -> Integer.parseInt(tagVOListItem.getLinkNum()) > 0).collect(Collectors.toList());
+        }
+        if(ModuleEnum.VIDEO.getCode() == type){
+            tagVOList = baseMapper.listTagVideoDTO(type);
+            return tagVOList.stream().filter(tagVOListItem -> Integer.parseInt(tagVOListItem.getLinkNum()) > 0).collect(Collectors.toList());
+        }
+        return tagVOList;
     }
 
 }
