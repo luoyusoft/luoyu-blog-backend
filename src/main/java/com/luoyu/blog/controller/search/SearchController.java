@@ -2,7 +2,10 @@ package com.luoyu.blog.controller.search;
 
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.base.Response;
+import com.luoyu.blog.entity.search.vo.SearchListVO;
+import com.luoyu.blog.entity.video.dto.VideoDTO;
 import com.luoyu.blog.service.search.ArticleEsServer;
+import com.luoyu.blog.service.search.VideoEsServer;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +21,13 @@ import java.util.List;
  * @description
  */
 @RestController
-public class ArticleEsController {
+public class SearchController {
 
     @Resource
     private ArticleEsServer articleEsServer;
+
+    @Resource
+    private VideoEsServer videoEsServer;
 
     /********************** portal ********************************/
 
@@ -30,10 +36,14 @@ public class ArticleEsController {
      * @param keyword
      * @return
      */
-    @GetMapping("/articles/search")
-    public Response searchArticleList(@RequestParam("keyword") String keyword) throws Exception {
-        List<ArticleDTO> articleDTOList= articleEsServer.searchArticleList(keyword);
-        return Response.success(articleDTOList);
+    @GetMapping("/search")
+    public Response searchList(@RequestParam(value = "keyword", required = false) String keyword) throws Exception {
+        List<ArticleDTO> articleDTOList = articleEsServer.searchArticleList(keyword);
+        List<VideoDTO> videoDTOList = videoEsServer.searchVideoList(keyword);
+        SearchListVO searchListVO = new SearchListVO();
+        searchListVO.setVideoList(videoDTOList);
+        searchListVO.setArticleList(articleDTOList);
+        return Response.success(searchListVO);
     }
 
 }

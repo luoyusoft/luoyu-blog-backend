@@ -2,10 +2,10 @@
 server:
   tomcat:
     uri-encoding: UTF-8
-    max-connections: 5000
+    max-connections: 1000
     threads:
       #最大线程数
-      max: 1000
+      max: 500
       #连接超时时间
       min-spare: 30
   shutdown: graceful # 在web容器关闭时，web服务器将不再接收新请求，并将等待活动请求完成的缓冲期。
@@ -28,8 +28,8 @@ spring:
   servlet:
     multipart:
       #文件上传大小配置
-      max-file-size: 2048MB
-      max-request-size: 2048MB
+      max-file-size: 512MB
+      max-request-size: 512MB
   mvc:
     #restFul风格：当找不到页面时，正常抛出错误，不跳转页面
     throw-exception-if-no-handler-found: true

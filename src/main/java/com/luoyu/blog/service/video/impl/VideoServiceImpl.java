@@ -109,8 +109,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         initGitalkRequest.setId(videoVO.getId());
         initGitalkRequest.setTitle(videoVO.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_VIDEO);
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT, JsonUtils.objectToJson(initGitalkRequest));
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD, JsonUtils.objectToJson(videoVO));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
     }
 
     /**
@@ -147,7 +147,12 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             }
         }
         // 发送rabbitmq消息同步到es
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_UPDATE, JsonUtils.objectToJson(videoVO));
+        InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
+        initGitalkRequest.setId(videoVO.getId());
+        initGitalkRequest.setTitle(videoVO.getTitle());
+        initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_VIDEO);
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
     }
 
     /**
@@ -161,6 +166,12 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         if (videoVO.getPublish() != null){
             // 更新发布状态
             baseMapper.updateVideoById(videoVO);
+            if (videoVO.getPublish()){
+                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectVideoById(videoVO.getId())));
+            }else {
+                Integer[] ids = {videoVO.getId()};
+                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
+            }
         }
         if (videoVO.getRecommend() != null){
             // 更新推荐状态
@@ -182,7 +193,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 }
             }
         }
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_UPDATE, JsonUtils.objectToJson(this.getVideo(videoVO.getId())));
     }
 
     /**
@@ -228,7 +238,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
         recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(ids), ModuleEnum.VIDEO.getCode());
         // 发送rabbitmq消息同步到es
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_DELETE, JsonUtils.objectToJson(ids));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
     }
 
     /********************** portal ********************************/

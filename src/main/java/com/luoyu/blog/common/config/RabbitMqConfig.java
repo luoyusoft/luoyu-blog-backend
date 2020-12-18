@@ -25,13 +25,15 @@ public class RabbitMqConfig {
     @Autowired
     private CachingConnectionFactory connectionFactory;
 
+    /********************** article ********************************/
+
     /**
      *  声明交换机
      */
-    @Bean(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE)
-    public Exchange exchange(){
+    @Bean(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE)
+    public Exchange articleTopicExchange(){
         //durable(true) 持久化，mq重启之后交换机还在
-        return ExchangeBuilder.topicExchange(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE).durable(true).build();
+        return ExchangeBuilder.topicExchange(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE).durable(true).build();
     }
 
     /**
@@ -41,70 +43,146 @@ public class RabbitMqConfig {
      *  auto-delete 表示消息队列没有在使用时将被自动删除 默认是false
      *  exclusive  表示该消息队列是否只在当前connection生效,默认是false
      */
-    @Bean(RabbitMqConstants.LUOYUBLOG_ES_ADD_QUEUE)
-    public Queue esAddQueue() {
-        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_ADD_QUEUE);
+    @Bean(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_ADD_QUEUE)
+    public Queue esArticleAddQueue() {
+        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_ADD_QUEUE);
     }
 
     /**
      *  声明队列
      */
-    @Bean(RabbitMqConstants.LUOYUBLOG_ES_UPDATE_QUEUE)
-    public Queue esUpdateQueue() {
-        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_UPDATE_QUEUE);
+    @Bean(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_UPDATE_QUEUE)
+    public Queue esArticleUpdateQueue() {
+        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_UPDATE_QUEUE);
     }
 
     /**
      *  声明队列
      */
-    @Bean(RabbitMqConstants.LUOYUBLOG_ES_DELETE_QUEUE)
-    public Queue esDeleteQueue() {
-        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_DELETE_QUEUE);
-    }
-
-    /**
-     *  声明队列
-     */
-    @Bean(RabbitMqConstants.LUOYUBLOG_INIT_GITALK_QUEUE)
-    public Queue gitalkQueue() {
-        return new Queue(RabbitMqConstants.LUOYUBLOG_INIT_GITALK_QUEUE);
+    @Bean(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_DELETE_QUEUE)
+    public Queue esArticleDeleteQueue() {
+        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_DELETE_QUEUE);
     }
 
     /**
      *  REFRESH_ES_INDEX_QUEUE队列绑定交换机，指定routingKey
      */
     @Bean
-    public Binding bindingEsAdd(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_ADD_QUEUE) Queue queue,
-                             @Qualifier(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE) Exchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD).noargs();
+    public Binding bindingEsArticleAdd(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_ADD_QUEUE) Queue queue,
+                                       @Qualifier(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY).noargs();
     }
 
     /**
      *  REFRESH_ES_INDEX_QUEUE队列绑定交换机，指定routingKey
      */
     @Bean
-    public Binding bindingEsUpdate(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_UPDATE_QUEUE) Queue queue,
-                             @Qualifier(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE) Exchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_ROUTINGKEY_UPDATE).noargs();
+    public Binding bindingEsArticleUpdate(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_UPDATE_QUEUE) Queue queue,
+                                          @Qualifier(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY).noargs();
     }
 
     /**
      *  REFRESH_ES_INDEX_QUEUE队列绑定交换机，指定routingKey
      */
     @Bean
-    public Binding bindingEsDelete(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_DELETE_QUEUE) Queue queue,
-                             @Qualifier(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE) Exchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_ROUTINGKEY_DELETE).noargs();
+    public Binding bindingEsArticleDelete(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_DELETE_QUEUE) Queue queue,
+                                          @Qualifier(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY).noargs();
+    }
+
+    /********************** video ********************************/
+
+    /**
+     *  声明交换机
+     */
+    @Bean(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE)
+    public Exchange videoTopicExchange(){
+        //durable(true) 持久化，mq重启之后交换机还在
+        return ExchangeBuilder.topicExchange(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE).durable(true).build();
+    }
+
+    /**
+     *  声明队列
+     */
+    @Bean(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_ADD_QUEUE)
+    public Queue esVideoAddQueue() {
+        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_ADD_QUEUE);
+    }
+
+    /**
+     *  声明队列
+     */
+    @Bean(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_UPDATE_QUEUE)
+    public Queue esVideoUpdateQueue() {
+        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_UPDATE_QUEUE);
+    }
+
+    /**
+     *  声明队列
+     */
+    @Bean(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_DELETE_QUEUE)
+    public Queue esVideoDeleteQueue() {
+        return new Queue(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_DELETE_QUEUE);
+    }
+
+
+    /**
+     *  REFRESH_ES_INDEX_QUEUE队列绑定交换机，指定routingKey
+     */
+    @Bean
+    public Binding bindingEsVideoAdd(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_ADD_QUEUE) Queue queue,
+                                     @Qualifier(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY).noargs();
+    }
+
+    /**
+     *  REFRESH_ES_INDEX_QUEUE队列绑定交换机，指定routingKey
+     */
+    @Bean
+    public Binding bindingEsVideoUpdate(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_UPDATE_QUEUE) Queue queue,
+                                        @Qualifier(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_VIDEO_UPDATE_ROUTINGKEY).noargs();
+    }
+
+    /**
+     *  REFRESH_ES_INDEX_QUEUE队列绑定交换机，指定routingKey
+     */
+    @Bean
+    public Binding bindingEsVideoDelete(@Qualifier(RabbitMqConstants.LUOYUBLOG_ES_VIDEO_DELETE_QUEUE) Queue queue,
+                                        @Qualifier(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE) Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_ES_VIDEO_DELETE_ROUTINGKEY).noargs();
+    }
+
+
+    /********************** gitalk ********************************/
+
+    /**
+     *  声明交换机
+     */
+    @Bean(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE)
+    public Exchange gitalkTopicExchange(){
+        //durable(true) 持久化，mq重启之后交换机还在
+        return ExchangeBuilder.topicExchange(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE).durable(true).build();
+    }
+
+    /**
+     *  声明队列
+     */
+    @Bean(RabbitMqConstants.LUOYUBLOG_GITALK_INIT_QUEUE)
+    public Queue gitalkInitQueue() {
+        return new Queue(RabbitMqConstants.LUOYUBLOG_GITALK_INIT_QUEUE);
     }
 
     /**
      *  INIT_LUOYUBLOG_GITALK_QUEUE队列绑定交换机，指定routingKey
      */
     @Bean
-    public Binding bindingGitalk(@Qualifier(RabbitMqConstants.LUOYUBLOG_INIT_GITALK_QUEUE) Queue queue,
-                                 @Qualifier(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE) Exchange exchange) {
+    public Binding bindingGitalk(@Qualifier(RabbitMqConstants.LUOYUBLOG_GITALK_INIT_QUEUE) Queue queue,
+                                 @Qualifier(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE) Exchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY).noargs();
     }
+
 
     /**
      * 如果需要在生产者需要消息发送后的回调，

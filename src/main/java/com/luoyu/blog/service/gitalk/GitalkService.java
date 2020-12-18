@@ -16,4 +16,9 @@ public interface GitalkService {
      */
     boolean initArticleList();
 
+    /**
+     * @return
+     */
+    boolean initVideoList();
+
 }

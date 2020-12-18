@@ -16,6 +16,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,11 @@ import java.time.LocalDateTime;
 @Slf4j
 public class LogLikeAspect {
 
+    private static final String PROFILES_ACTIVE_PRO = "prod";
+
+    @Value("spring.profiles.active")
+    private String profilesActive;
+
     @Autowired
     private LogLikeMapper logLikeMapper;
 
@@ -52,18 +58,22 @@ public class LogLikeAspect {
     @Around("logPointCut()")
     @Transactional(rollbackFor = Exception.class)
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        // 耗时计算
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        if (profilesActive.equals(PROFILES_ACTIVE_PRO)){
+            // 耗时计算
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
 
-        //执行方法
-        Object result = point.proceed();
+            //执行方法
+            Object result = point.proceed();
 
-        stopWatch.stop();
-        //保存日志
-        this.saveLogLike(point, stopWatch.getTime());
+            stopWatch.stop();
+            //保存日志
+            this.saveLogLike(point, stopWatch.getTime());
 
-        return result;
+            return result;
+        }
+
+        return point.proceed();
     }
 
     private void saveLogLike(ProceedingJoinPoint joinPoint, long time) {

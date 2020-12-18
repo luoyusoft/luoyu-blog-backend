@@ -54,7 +54,7 @@
         select count(*) from article where category_id = #{categoryId}
     </select>
 
-    <select id="selectArticleList" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
+    <select id="selectArticleDTOList" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
         select <include refid="homeArticleColumn"/> from article where publish = true
     </select>
 

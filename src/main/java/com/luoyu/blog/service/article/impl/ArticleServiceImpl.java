@@ -109,8 +109,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         initGitalkRequest.setId(article.getId());
         initGitalkRequest.setTitle(article.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT, JsonUtils.objectToJson(initGitalkRequest));
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD, JsonUtils.objectToJson(article));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(article));
     }
 
     /**
@@ -147,7 +147,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             }
         }
         // 发送rabbitmq消息同步到es
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_UPDATE, JsonUtils.objectToJson(articleVO));
+        InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
+        initGitalkRequest.setId(articleVO.getId());
+        initGitalkRequest.setTitle(articleVO.getTitle());
+        initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
     }
 
     /**
@@ -161,6 +166,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (articleVO.getPublish() != null){
             // 更新发布状态
             baseMapper.updateArticleById(articleVO);
+            if (articleVO.getPublish()){
+                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectArticleById(articleVO.getId())));
+            }else {
+                Integer[] ids = {articleVO.getId()};
+                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
+            }
         }
         if (articleVO.getRecommend() != null){
             // 更新推荐状态
@@ -182,7 +193,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 }
             }
         }
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_UPDATE, JsonUtils.objectToJson(this.getArticle(articleVO.getId())));
     }
 
     /**
@@ -228,7 +238,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(ids), ModuleEnum.ARTICLE.getCode());
         // 发送rabbitmq消息同步到es
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_DELETE, JsonUtils.objectToJson(ids));
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
     }
 
     /********************** portal ********************************/

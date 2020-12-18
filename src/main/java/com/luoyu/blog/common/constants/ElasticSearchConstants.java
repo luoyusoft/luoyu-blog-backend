@@ -15,8 +15,13 @@ public class ElasticSearchConstants {
     public static final Integer ELASTIC_SEARCH_TIMEOUT = 60;
 
     /**
-     * 索引
+     * 文章索引
      */
-    public static final String LUOYUBLOG_SEARCH_INDEX = "luoyublog-search-index";
+    public static final String LUOYUBLOG_SEARCH_ARTICLE_INDEX = "luoyublog-search-article-index";
+
+    /**
+     * 视频索引
+     */
+    public static final String LUOYUBLOG_SEARCH_VIDEO_INDEX = "luoyublog-search-video-index";
 
 }

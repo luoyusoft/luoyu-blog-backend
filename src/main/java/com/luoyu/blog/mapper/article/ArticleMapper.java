@@ -52,7 +52,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * 查询所有文章列表
      * @return
      */
-    List<ArticleDTO> selectArticleList();
+    List<ArticleDTO> selectArticleDTOList();
 
     /**
      * 查询所有文章列表

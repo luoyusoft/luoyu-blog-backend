@@ -11,17 +11,20 @@ import com.luoyu.blog.entity.article.vo.ArticleVO;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.service.search.ArticleEsServer;
 import com.rabbitmq.client.Channel;
+import com.xxl.job.core.log.XxlJobLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,15 +42,17 @@ public class ArticleEsServerImpl implements ArticleEsServer {
     private ArticleMapper articleMapper;
 
     @Override
-    public boolean initArticle() throws Exception {
-        if(elasticSearchUtils.deleteIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)){
-            if(elasticSearchUtils.createIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)){
-                List<ArticleDTO> articleDTOList = articleMapper.selectArticleList();
-                if(articleDTOList != null && articleDTOList.size() > 0){
+    public boolean initArticleList() throws Exception {
+        if(elasticSearchUtils.deleteIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX)){
+            if(elasticSearchUtils.createIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX)){
+                List<ArticleDTO> articleDTOList = articleMapper.selectArticleDTOList();
+                XxlJobLogger.log("初始化es文章数据，查到个数：{}", articleDTOList.size());
+                log.info("初始化es文章数据，查到个数：{}", articleDTOList.size());
+                if(!CollectionUtils.isEmpty(articleDTOList)){
                     articleDTOList.forEach(x -> {
                         ArticleVO articleVO = new ArticleVO();
                         BeanUtils.copyProperties(x, articleVO);
-                        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ROUTINGKEY_ADD, JsonUtils.objectToJson(articleVO));
+                        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
                     });
                     return true;
                 }
@@ -60,14 +65,14 @@ public class ArticleEsServerImpl implements ArticleEsServer {
      * 新增文章，rabbitmq监听器，添加到es中
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_ADD_QUEUE)
+    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_ADD_QUEUE)
     public void addListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             if(message != null && message.getBody() != null){
                 Article article = JsonUtils.jsonToObject(new String(message.getBody()), Article.class);
-                elasticSearchUtils.addDocument(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, article.getId().toString(), JsonUtils.objectToJson(article));
+                elasticSearchUtils.addDocument(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX, article.getId().toString(), JsonUtils.objectToJson(article));
                 log.info("新增文章，rabbitmq监听器，添加到es中成功：id:" + new String(message.getBody()));
             }else {
                 log.info("新增文章，rabbitmq监听器，添加到es中失败：article:" + new String(message.getBody()));
@@ -82,14 +87,14 @@ public class ArticleEsServerImpl implements ArticleEsServer {
      * 更新文章，rabbitmq监听器，更新到es
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_UPDATE_QUEUE)
+    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_UPDATE_QUEUE)
     public void updateListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             if(message != null && message.getBody() != null){
                 Article article = JsonUtils.jsonToObject(new String(message.getBody()), Article.class);
-                elasticSearchUtils.updateDocument(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, article.getId().toString(), JsonUtils.objectToJson(article));
+                elasticSearchUtils.updateDocument(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX, article.getId().toString(), JsonUtils.objectToJson(article));
                 log.info("更新文章，rabbitmq监听器，更新到es成功：id:" + new String(message.getBody()));
             }else {
                 log.info("更新文章，rabbitmq监听器，更新到es失败：article:" + new String(message.getBody()));
@@ -104,7 +109,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
      * 删除文章，rabbitmq监听器，从es中删除
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_DELETE_QUEUE)
+    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_DELETE_QUEUE)
     public void deleteListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费
@@ -113,7 +118,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
             if(message != null && message.getBody() != null){
                 Integer[] articleIds = JsonUtils.jsonToObject(new String(message.getBody()), Integer[].class);
                 for (int i = 0; i < articleIds.length; i++) {
-                    elasticSearchUtils.deleteDocument(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, articleIds[i].toString());
+                    elasticSearchUtils.deleteDocument(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX, articleIds[i].toString());
                     articleIdsS.append(articleIds[i] + ",");
                 }
                 log.info("删除文章，rabbitmq监听器，从es中删除成功：id:" + articleIdsS);
@@ -133,7 +138,8 @@ public class ArticleEsServerImpl implements ArticleEsServer {
 
     @Override
     public List<ArticleDTO> searchArticleList(String keyword) throws Exception {
-        List<Map<String, Object>> searchRequests = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, keyword);
+        List<String> highlightBuilderList = Arrays.asList("title", "description");
+        List<Map<String, Object>> searchRequests = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX, keyword, highlightBuilderList, highlightBuilderList);
         List<ArticleDTO> articleDTOList = new ArrayList<>();
         for(Map<String, Object> x : searchRequests){
             ArticleDTO articleDTO = new ArticleDTO();
@@ -141,7 +147,9 @@ public class ArticleEsServerImpl implements ArticleEsServer {
             articleDTO.setCover(x.get("cover").toString());
             articleDTO.setCoverType(Integer.valueOf(x.get("coverType").toString()));
             articleDTO.setCreateTime(LocalDateTime.parse(x.get("createTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            articleDTO.setUpdateTime(LocalDateTime.parse(x.get("updateTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             articleDTO.setReadNum(Long.valueOf(x.get("readNum").toString()));
+            articleDTO.setCommentNum(Long.valueOf(x.get("commentNum").toString()));
             articleDTO.setTitle(x.get("title").toString());
             articleDTO.setAuthor(x.get("author").toString());
             articleDTO.setDescription(x.get("description").toString());

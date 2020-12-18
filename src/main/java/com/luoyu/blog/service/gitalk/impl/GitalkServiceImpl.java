@@ -6,9 +6,12 @@ import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.gitalk.InitGitalkRequest;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.entity.video.dto.VideoDTO;
 import com.luoyu.blog.mapper.article.ArticleMapper;
+import com.luoyu.blog.mapper.video.VideoMapper;
 import com.luoyu.blog.service.gitalk.GitalkService;
 import com.rabbitmq.client.Channel;
+import com.xxl.job.core.log.XxlJobLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -23,29 +26,41 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
 @Service
+@RefreshScope
 public class GitalkServiceImpl implements GitalkService {
 
     // 请求地址前缀
-    private static final String GITHUB_REPOS_URL = "https://api.github.com/repos/";
-    // git用戶名
-    private static final String USER_NAME = "luoyusoft";
-    // git博客的仓库名
-    private static final String REPO = "luoyublog-gitalk";
-    // blogUrl 博客首页地址
-    private static final String BLOG_URL = "https://luoyublog.com";
-    // 获取到的Token
-    private static final String TOKEN = "2c7850d3d307679ea0cdd79de41221e9fff64a91";
+    @Value("${gitalk.repos-url}")
+    private String GITHUB_REPOS_URL;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    // git用戶名
+    @Value("${gitalk.username}")
+    private String USERNAME;
+
+    // git博客的仓库名
+    @Value("${gitalk.repo}")
+    private String REPO;
+
+    // blogUrl 博客首页地址
+    @Value("${gitalk.blog-url}")
+    private String BLOG_URL;
+
+    // 获取到的Token
+    @Value("${gitalk.token}")
+    private String TOKEN;
 
     @Resource
     private RabbitMqUtils rabbitmqUtils;
@@ -53,12 +68,15 @@ public class GitalkServiceImpl implements GitalkService {
     @Autowired
     private ArticleMapper articleMapper;
 
+    @Autowired
+    private VideoMapper videoMapper;
+
     /**
      * @param initGitalkRequest
      * @return
      */
     public boolean initArticle(InitGitalkRequest initGitalkRequest) throws Exception {
-        String url = GITHUB_REPOS_URL + USER_NAME + "/" + REPO + "/issues";
+        String url = GITHUB_REPOS_URL + USERNAME + "/" + REPO + "/issues";
 
         String param = String.format("{\"title\":\"%s\",\"labels\":[\"%s\", \"%s\"],\"body\":\"%s%s\\n\\n\"}"
                 , initGitalkRequest.getTitle() + " | LuoYu Blog", initGitalkRequest.getId(),
@@ -108,23 +126,44 @@ public class GitalkServiceImpl implements GitalkService {
      * @return
      */
     public boolean initArticleList(){
-        List<ArticleDTO> articleDTOList = articleMapper.selectArticleList();
-        if (articleDTOList != null && articleDTOList.size() > 0){
+        List<ArticleDTO> articleDTOList = articleMapper.selectArticleDTOList();
+        XxlJobLogger.log("初始化gitalk文章数据，查到个数：{}", articleDTOList.size());
+        log.info("初始化gitalk文章数据，查到个数：{}", articleDTOList.size());
+        if (!CollectionUtils.isEmpty(articleDTOList)){
             articleDTOList.forEach(x -> {
                 InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
                 initGitalkRequest.setId(x.getId());
                 initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
                 initGitalkRequest.setTitle(x.getTitle());
-                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT, JsonUtils.objectToJson(initGitalkRequest));
+                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+            });
+        }
+        return true;
+    }
+
+    /**
+     * @return
+     */
+    public boolean initVideoList(){
+        List<VideoDTO> videoDTOList = videoMapper.selectVideoDTOList();
+        XxlJobLogger.log("初始化gitalk视频数据，查到个数：{}", videoDTOList.size());
+        log.info("初始化gitalk视频数据，查到个数：{}", videoDTOList.size());
+        if (!CollectionUtils.isEmpty(videoDTOList)){
+            videoDTOList.forEach(x -> {
+                InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
+                initGitalkRequest.setId(x.getId());
+                initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_VIDEO);
+                initGitalkRequest.setTitle(x.getTitle());
+                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
             });
         }
         return true;
     }
 
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(value = RabbitMqConstants.LUOYUBLOG_INIT_GITALK_QUEUE, durable = "true"),
+            value = @Queue(value = RabbitMqConstants.LUOYUBLOG_GITALK_INIT_QUEUE, durable = "true"),
             exchange = @Exchange(
-                    value = RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE,
+                    value = RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE,
                     ignoreDeclarationExceptions = "true",
                     type = ExchangeTypes.TOPIC
             ),
@@ -135,13 +174,13 @@ public class GitalkServiceImpl implements GitalkService {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             if (this.initArticle(initGitalkRequest)){
                 //手动确认消息已经被消费
-                log.info("新增文章，进行Gitalk初始化：" + message.toString() + "成功！");
+                log.info("新增或更新标题，进行Gitalk初始化：" + message.toString() + "成功！");
             }else {
-                log.info("新增文章，进行Gitalk初始化：" + message.toString() + "失败！");
+                log.info("新增或更新标题，进行Gitalk初始化：" + message.toString() + "失败！");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("新增文章，进行Gitalk初始化：" + message.toString() + "失败！");
+            log.info("新增或更新标题，进行Gitalk初始化：" + message.toString() + "失败！");
             log.info("手动确认Gitalk初始化消息已经被消费失败！");
         }
     }

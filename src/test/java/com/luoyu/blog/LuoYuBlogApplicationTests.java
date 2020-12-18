@@ -4,6 +4,7 @@ import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.service.search.ArticleEsServer;
+import com.luoyu.blog.service.search.VideoEsServer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,9 @@ class LuoYuBlogApplicationTests {
 
     @Autowired
     private ArticleEsServer articleEsServer;
+
+    @Autowired
+    private VideoEsServer videoEsServer;
 
     @Test
     void testEnumUtil() {
@@ -56,20 +60,20 @@ class LuoYuBlogApplicationTests {
 
     @Test
     void testESCreateIndex() throws Exception {
-        log.info(String.valueOf(elasticSearchUtils.createIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)));
+        log.info(String.valueOf(elasticSearchUtils.createIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX)));
     }
 
     @Test
     void testESSearchRequest() throws Exception {
-        List<Map<String, Object>> list = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, "落雨");
-        list.forEach(x -> {
-            log.info(x.toString());
-        });
+//        List<Map<String, Object>> list = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX, "落雨");
+//        list.forEach(x -> {
+//            log.info(x.toString());
+//        });
     }
 
     @Test
     void testESSearchAllRequest() throws Exception {
-        elasticSearchUtils.searchAllRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX).forEach(x -> log.info(x.toString()));
+        elasticSearchUtils.searchAllRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX).forEach(x -> log.info(x.toString()));
     }
 
     @Test
@@ -82,17 +86,18 @@ class LuoYuBlogApplicationTests {
             article.setContent("测试文章内容，哈哈哈" + i);
             libs.add(article);
         }
-        log.info(String.valueOf(elasticSearchUtils.bulkRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX, libs)));
+        log.info(String.valueOf(elasticSearchUtils.bulkRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX, libs)));
     }
 
     @Test
     void testESDeleteIndex() throws Exception {
-        log.info(String.valueOf(elasticSearchUtils.deleteIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_INDEX)));
+        log.info(String.valueOf(elasticSearchUtils.deleteIndex(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX)));
     }
 
     @Test
     void testESInitArticle() throws Exception {
-        articleEsServer.initArticle();
+        videoEsServer.initVideoList();
+        Thread.sleep(60000);
     }
 
     @BeforeEach

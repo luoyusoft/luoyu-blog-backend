@@ -33,12 +33,11 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * RabbitMqUtils
@@ -195,7 +194,10 @@ public class ElasticSearchUtils {
      * @param index
      * @param keyword
      */
-    public List<Map<String, Object>> searchRequest(String index, String keyword) throws Exception {
+    public List<Map<String, Object>> searchRequest(String index, String keyword, List<String> highlightBuilderList, List<String> searchList) throws Exception {
+        if (CollectionUtils.isEmpty(searchList)){
+            return Collections.emptyList();
+        }
         // 搜索请求
         SearchRequest searchRequest;
         if(StringUtils.isEmpty(index)){
@@ -208,26 +210,31 @@ public class ElasticSearchUtils {
         // 第几页
         searchSourceBuilder.from(0);
         // 每页多少条数据
-        searchSourceBuilder.size(1000);
+        searchSourceBuilder.size(10);
         // 配置高亮
-        HighlightBuilder highlightBuilder = new HighlightBuilder();
-        highlightBuilder.field("title").field("description");
-        highlightBuilder.preTags("<span style='color:red'>");
-        highlightBuilder.postTags("</span>");
-        //如果要多个字段高亮，这项要为false，未知效果
+        if (!CollectionUtils.isEmpty(highlightBuilderList)){
+            HighlightBuilder highlightBuilder = new HighlightBuilder();
+            highlightBuilderList.forEach(highlightBuilder::field);
+            highlightBuilder.preTags("<span style='color:red'>");
+            highlightBuilder.postTags("</span>");
+            //如果要多个字段高亮，这项要为false，未知效果
 //        highlightBuilder.requireFieldMatch(false);
-        //下面这两项,如果你要高亮如文字内容等有很多字的字段，必须配置，不然会导致高亮不全，文章内容缺失等
-        //最大高亮分片数
-        highlightBuilder.fragmentSize(800000);
-        //从第一个分片获取高亮片段
-        highlightBuilder.numOfFragments(0);
-        searchSourceBuilder.highlighter(highlightBuilder);
+            //下面这两项,如果你要高亮如文字内容等有很多字的字段，必须配置，不然会导致高亮不全，文章内容缺失等
+            //最大高亮分片数
+            highlightBuilder.fragmentSize(800000);
+            //从第一个分片获取高亮片段
+            highlightBuilder.numOfFragments(0);
+            searchSourceBuilder.highlighter(highlightBuilder);
+        }
         // 精确查询
 //        QueryBuilders.termQuery();
         // 匹配所有
 //        QueryBuilders.matchAllQuery();
         // 最细粒度划分：ik_max_word，最粗粒度划分：ik_smart
-        searchSourceBuilder.query(QueryBuilders.multiMatchQuery(keyword,"title", "description").analyzer("ik_max_word"));
+//        searchSourceBuilder.query(QueryBuilders.multiMatchQuery(keyword, searchList.toArray(new String[0])).analyzer("ik_max_word"));
+        if (!StringUtils.isEmpty(keyword)){
+            searchSourceBuilder.query(QueryBuilders.multiMatchQuery(keyword, searchList.toArray(new String[0])));
+        }
 //        searchSourceBuilder.query(QueryBuilders.matchQuery("content", keyWord));
 
         //根据查询相关度进行排序
@@ -243,28 +250,25 @@ public class ElasticSearchUtils {
 
         List<Map<String, Object>> results = new ArrayList<>();
         for (SearchHit searchHit : searchResponse.getHits().getHits()){
-            Map<String, HighlightField> highlightFieldMap = searchHit.getHighlightFields();
-            HighlightField title = highlightFieldMap.get("title");
-            HighlightField description = highlightFieldMap.get("description");
             // 原来的结果
             Map<String, Object> sourceMap = searchHit.getSourceAsMap();
-            // 解析高亮字段，替换掉原来的字段
-            if (title != null){
-                Text[] fragments = title.getFragments();
-                StringBuilder n_title = new StringBuilder();
-                for (Text text : fragments){
-                    n_title.append(text);
-                }
-                sourceMap.put("title", n_title.toString());
+            // 高亮结果
+            if (!CollectionUtils.isEmpty(highlightBuilderList)){
+                Map<String, HighlightField> highlightFieldMap = searchHit.getHighlightFields();
+                highlightBuilderList.forEach(highlightBuilderListItem -> {
+                    HighlightField title = highlightFieldMap.get(highlightBuilderListItem);
+                    // 解析高亮字段，替换掉原来的字段
+                    if (title != null){
+                        Text[] fragments = title.getFragments();
+                        StringBuilder n_title = new StringBuilder();
+                        for (Text text : fragments){
+                            n_title.append(text);
+                        }
+                        sourceMap.put(highlightBuilderListItem, n_title.toString());
+                    }
+                });
             }
-            if (description != null){
-                Text[] fragments = description.getFragments();
-                StringBuilder n_description = new StringBuilder();
-                for (Text text : fragments){
-                    n_description.append(text);
-                }
-                sourceMap.put("description", n_description.toString());
-            }
+
             results.add(sourceMap);
         }
         return results;

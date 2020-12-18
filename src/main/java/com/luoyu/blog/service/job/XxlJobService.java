@@ -3,6 +3,7 @@ package com.luoyu.blog.service.job;
 import com.luoyu.blog.common.util.RedisUtils;
 import com.luoyu.blog.service.gitalk.GitalkService;
 import com.luoyu.blog.service.search.ArticleEsServer;
+import com.luoyu.blog.service.search.VideoEsServer;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.XxlJob;
@@ -39,10 +40,10 @@ public class XxlJobService {
     private ArticleEsServer articleEsServer;
 
     @Autowired
-    private GitalkService gitalkService;
+    private VideoEsServer videoEsServer;
 
-    @Resource
-    private RedisUtils redisUtils;
+    @Autowired
+    private GitalkService gitalkService;
 
     /**
      * 更新热读榜
@@ -54,19 +55,35 @@ public class XxlJobService {
     }
 
     /**
-     * 初始化es文章数据job
+     * 初始化es文章数据
      */
     @XxlJob("initESArticleJobHandler")
     public ReturnT<String> initESArticleJobHandler(String param) throws Exception {
-        return articleEsServer.initArticle() ? ReturnT.SUCCESS: ReturnT.FAIL;
+        return articleEsServer.initArticleList() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
     /**
-     * 初始化gitalk文章数据job
+     * 初始化es视频数据
+     */
+    @XxlJob("initESVideoJobHandler")
+    public ReturnT<String> initESVideoJobHandler(String param) throws Exception {
+        return videoEsServer.initVideoList() ? ReturnT.SUCCESS: ReturnT.FAIL;
+    }
+
+    /**
+     * 初始化gitalk文章数据
      */
     @XxlJob("initGitalkArticleJobHandler")
     public ReturnT<String> initGitalkArticleJobHandler(String param) throws Exception {
         return gitalkService.initArticleList() ? ReturnT.SUCCESS: ReturnT.FAIL;
+    }
+
+    /**
+     * 初始化gitalk视频数据
+     */
+    @XxlJob("initGitalkVideoJobHandler")
+    public ReturnT<String> initGitalkVideoJobHandler(String param) throws Exception {
+        return gitalkService.initVideoList() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
     /**

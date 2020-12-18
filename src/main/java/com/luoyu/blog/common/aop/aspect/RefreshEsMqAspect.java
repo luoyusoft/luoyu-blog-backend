@@ -40,8 +40,8 @@ public class RefreshEsMqAspect {
         Method method = signature.getMethod();
         RefreshEsMqSender senderAnnotation = method.getAnnotation(RefreshEsMqSender.class);
         // 发送刷新信息
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_TOPIC_EXCHANGE,
-                RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY_INIT,
+        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE,
+                RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY,
                 senderAnnotation.id() + "," + senderAnnotation.content() + "," + senderAnnotation.operation());
         return result;
     }

@@ -64,7 +64,7 @@
         select count(*) from video where category_id = #{categoryId}
     </select>
 
-    <select id="selectVideoList" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
+    <select id="selectVideoDTOList" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
         select <include refid="homeVideoColumn"/> from video where publish = true
     </select>
 

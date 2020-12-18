@@ -13,6 +13,4 @@ public class GitalkConstants {
 
     public static final String GITALK_TYPE_VIDEO = "video";
 
-    public static final String GITALK_TYPE_BOOKNOTE = "bookNote";
-
 }
