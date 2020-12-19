@@ -14,7 +14,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, type, params, time, ip, create_time
+        id, type, params, time, ip, create_time, country, region, city
     </sql>
 
 </mapper>

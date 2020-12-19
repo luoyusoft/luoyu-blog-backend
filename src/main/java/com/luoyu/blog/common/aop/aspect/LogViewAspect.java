@@ -1,10 +1,14 @@
 package com.luoyu.blog.common.aop.aspect;
 
 import com.luoyu.blog.common.aop.annotation.LogView;
+import com.luoyu.blog.common.api.IPApi;
 import com.luoyu.blog.common.enums.ModuleEnum;
+import com.luoyu.blog.common.enums.ResponseEnums;
+import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
+import com.luoyu.blog.entity.sys.IPInfo;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.log.LogViewMapper;
 import com.luoyu.blog.mapper.video.VideoMapper;
@@ -40,6 +44,9 @@ public class LogViewAspect {
 
     @Value("spring.profiles.active")
     private String profilesActive;
+
+    @Autowired
+    private IPApi ipApi;
 
     @Autowired
     private LogViewMapper logViewMapper;
@@ -105,7 +112,16 @@ public class LogViewAspect {
         //获取request
         HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
         //设置IP地址
-        viewLogEntity.setIp(IPUtils.getIpAddr(request));
+        String ip = IPUtils.getIpAddr(request);
+        if (ip != null){
+            viewLogEntity.setIp(ip);
+            IPInfo ipInfo = ipApi.getIpInfo(ip);
+            if (ipInfo != null){
+                viewLogEntity.setCountry(ipInfo.getCountry());
+                viewLogEntity.setRegion(ipInfo.getRegionName());
+                viewLogEntity.setCity(ipInfo.getCity());
+            }
+        }
         viewLogEntity.setTime(time);
         viewLogEntity.setCreateTime(LocalDateTime.now());
         logViewMapper.insert(viewLogEntity);

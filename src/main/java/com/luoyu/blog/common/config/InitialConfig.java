@@ -1,6 +1,6 @@
 package com.luoyu.blog.common.config;
 
-import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.common.util.RabbitMQUtils;
 import org.elasticsearch.client.ElasticsearchClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 public class InitialConfig {
 
     @Resource
-    private RabbitMqUtils rabbitmqUtils;
+    private RabbitMQUtils rabbitmqUtils;
 
     /**
      * 项目启动时重新导入索引

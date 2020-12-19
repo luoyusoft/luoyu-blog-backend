@@ -4,7 +4,7 @@ import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.constants.RabbitMqConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
-import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.common.util.RabbitMQUtils;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
@@ -36,7 +36,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
     private ElasticSearchUtils elasticSearchUtils;
 
     @Resource
-    private RabbitMqUtils rabbitmqUtils;
+    private RabbitMQUtils rabbitmqUtils;
 
     @Autowired
     private ArticleMapper articleMapper;

@@ -4,7 +4,7 @@ import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.constants.RabbitMqConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
-import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.common.util.RabbitMQUtils;
 import com.luoyu.blog.entity.video.Video;
 import com.luoyu.blog.entity.video.dto.VideoDTO;
 import com.luoyu.blog.entity.video.vo.VideoVO;
@@ -36,7 +36,7 @@ public class VideoEsServerImpl implements VideoEsServer {
     private ElasticSearchUtils elasticSearchUtils;
 
     @Resource
-    private RabbitMqUtils rabbitmqUtils;
+    private RabbitMQUtils rabbitmqUtils;
 
     @Autowired
     private VideoMapper videoMapper;

@@ -46,15 +46,6 @@ public class XxlJobService {
     private GitalkService gitalkService;
 
     /**
-     * 更新热读榜
-     */
-    @XxlJob("testJobHandler")
-    public ReturnT<String> testJobHandler(String param) throws Exception {
-        XxlJobLogger.log("time：" + DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()) + "，param：" + param);
-        return ReturnT.SUCCESS;
-    }
-
-    /**
      * 初始化es文章数据
      */
     @XxlJob("initESArticleJobHandler")

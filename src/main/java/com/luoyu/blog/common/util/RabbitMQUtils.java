@@ -17,13 +17,13 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
-public class RabbitMqUtils implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback{
+public class RabbitMQUtils implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback{
 
     private RabbitTemplate rabbitTemplate;
 
     //构造方法注入
     @Autowired
-    public RabbitMqUtils(RabbitTemplate rabbitTemplate) {
+    public RabbitMQUtils(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
         //这是是设置回调能收到发送到响应
         rabbitTemplate.setConfirmCallback(this);

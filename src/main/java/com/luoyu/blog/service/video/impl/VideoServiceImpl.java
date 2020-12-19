@@ -9,7 +9,7 @@ import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
-import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.common.util.RabbitMQUtils;
 import com.luoyu.blog.entity.gitalk.InitGitalkRequest;
 import com.luoyu.blog.entity.operation.Category;
 import com.luoyu.blog.entity.operation.Recommend;
@@ -50,7 +50,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     private RecommendService recommendService;
 
     @Resource
-    private RabbitMqUtils rabbitmqUtils;
+    private RabbitMQUtils rabbitmqUtils;
 
     /**
      * 分页查询文章列表

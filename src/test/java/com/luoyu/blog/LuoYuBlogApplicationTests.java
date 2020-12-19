@@ -1,8 +1,10 @@
 package com.luoyu.blog;
 
+import com.luoyu.blog.common.api.IPApi;
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.entity.article.Article;
+import com.luoyu.blog.entity.sys.IPInfo;
 import com.luoyu.blog.service.search.ArticleEsServer;
 import com.luoyu.blog.service.search.VideoEsServer;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,9 @@ class LuoYuBlogApplicationTests {
 
     @Autowired
     private VideoEsServer videoEsServer;
+
+    @Autowired
+    private IPApi ipApi;
 
     @Test
     void testEnumUtil() {
@@ -98,6 +103,12 @@ class LuoYuBlogApplicationTests {
     void testESInitArticle() throws Exception {
         videoEsServer.initVideoList();
         Thread.sleep(60000);
+    }
+
+    @Test
+    void testIPApi() throws Exception {
+        IPInfo ipInfo = ipApi.getIpInfo("183.15.182.152");
+        log.info(ipInfo.toString());
     }
 
     @BeforeEach

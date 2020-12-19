@@ -1,10 +1,12 @@
 package com.luoyu.blog.common.aop.aspect;
 
 import com.luoyu.blog.common.aop.annotation.LogLike;
+import com.luoyu.blog.common.api.IPApi;
 import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
+import com.luoyu.blog.entity.sys.IPInfo;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.log.LogLikeMapper;
 import com.luoyu.blog.mapper.video.VideoMapper;
@@ -40,6 +42,9 @@ public class LogLikeAspect {
 
     @Value("spring.profiles.active")
     private String profilesActive;
+
+    @Autowired
+    private IPApi ipApi;
 
     @Autowired
     private LogLikeMapper logLikeMapper;
@@ -101,7 +106,16 @@ public class LogLikeAspect {
         //获取request
         HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
         //设置IP地址
-        logLikeEntity.setIp(IPUtils.getIpAddr(request));
+        String ip = IPUtils.getIpAddr(request);
+        if (ip != null){
+            logLikeEntity.setIp(ip);
+            IPInfo ipInfo = ipApi.getIpInfo(ip);
+            if (ipInfo != null){
+                logLikeEntity.setCountry(ipInfo.getCountry());
+                logLikeEntity.setRegion(ipInfo.getRegionName());
+                logLikeEntity.setCity(ipInfo.getCity());
+            }
+        }
         logLikeEntity.setTime(time);
         logLikeEntity.setCreateTime(LocalDateTime.now());
         logLikeMapper.insert(logLikeEntity);

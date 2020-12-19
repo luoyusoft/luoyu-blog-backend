@@ -2,7 +2,7 @@ package com.luoyu.blog.common.aop.aspect;
 
 import com.luoyu.blog.common.aop.annotation.RefreshEsMqSender;
 import com.luoyu.blog.common.constants.RabbitMqConstants;
-import com.luoyu.blog.common.util.RabbitMqUtils;
+import com.luoyu.blog.common.util.RabbitMQUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 public class RefreshEsMqAspect {
 
     @Resource
-    private RabbitMqUtils rabbitmqUtils;
+    private RabbitMQUtils rabbitmqUtils;
 
     @Pointcut("@annotation(com.luoyu.blog.common.aop.annotation.RefreshEsMqSender)")
     public void pointCut() {

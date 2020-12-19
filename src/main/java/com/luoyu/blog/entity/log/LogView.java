@@ -56,8 +56,16 @@ public class LogView implements Serializable {
     private Long time;
 
     @ApiModelProperty(value = "ip地址")
-    @NotBlank(message = "ip地址不能为空", groups = {AddGroup.class})
     private String ip;
+
+    @ApiModelProperty(value = "国家")
+    private String country;
+
+    @ApiModelProperty(value = "省份")
+    private String region;
+
+    @ApiModelProperty(value = "城市")
+    private String city;
 
     @ApiModelProperty(value = "创建时间")
     @Field(type = FieldType.Date, format = DateFormat.none)
