@@ -48,32 +48,32 @@ public class XxlJobService {
     /**
      * 初始化es文章数据
      */
-    @XxlJob("initESArticleJobHandler")
-    public ReturnT<String> initESArticleJobHandler(String param) throws Exception {
+    @XxlJob("initESArticle")
+    public ReturnT<String> initESArticle(String param) throws Exception {
         return articleEsServer.initArticleList() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
     /**
      * 初始化es视频数据
      */
-    @XxlJob("initESVideoJobHandler")
-    public ReturnT<String> initESVideoJobHandler(String param) throws Exception {
+    @XxlJob("initESVideo")
+    public ReturnT<String> initESVideo(String param) throws Exception {
         return videoEsServer.initVideoList() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
     /**
      * 初始化gitalk文章数据
      */
-    @XxlJob("initGitalkArticleJobHandler")
-    public ReturnT<String> initGitalkArticleJobHandler(String param) throws Exception {
+    @XxlJob("initGitalkArticle")
+    public ReturnT<String> initGitalkArticle(String param) throws Exception {
         return gitalkService.initArticleList() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
     /**
      * 初始化gitalk视频数据
      */
-    @XxlJob("initGitalkVideoJobHandler")
-    public ReturnT<String> initGitalkVideoJobHandler(String param) throws Exception {
+    @XxlJob("initGitalkVideo")
+    public ReturnT<String> initGitalkVideo(String param) throws Exception {
         return gitalkService.initVideoList() ? ReturnT.SUCCESS: ReturnT.FAIL;
     }
 
