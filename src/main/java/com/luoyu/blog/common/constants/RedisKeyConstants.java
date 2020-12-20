@@ -24,4 +24,31 @@ public class RedisKeyConstants {
      */
     public final static String HOST_READ_LIST = "host:read:list:";
 
+    /**
+     * 用户数据 Key前缀标识
+     */
+    public final static String CHAT_USER_PREFIX = "luoyublog:chat:user:";
+
+    /**
+     * 群发消息Session Key前缀标识
+     */
+    public final static String CHAT_COMMON_PREFIX = "luoyublog:chat:common:";
+
+    /**
+     * 推送至指定用户消息
+     *      推送方Session Key前缀标识
+     */
+    public final static String CHAT_FROM_PREFIX = "luoyublog:chat:from:";
+
+    /**
+     * 推送至指定用户消息
+     *      接收方Session Key前缀标识
+     */
+    public final static String CHAT_TO_PREFIX = "luoyublog:chat:to:";
+
+    /**
+     * RedisTemplate 根据Key模糊匹配查询前缀
+     */
+    public final static String REDIS_MATCH_PREFIX = "*";
+
 }

@@ -53,6 +53,11 @@ public enum ResponseEnums {
     //Zxing错误
     ZXING_CREATE_ERROR(10070,"生成二维码失败"),
 
+    //Chat错误
+    CHAT_USER_REPEAT(10080,"该用户名已存在"),
+    CHAT_USER_OFF_LINE(10081,"该用户未上线"),
+    CHAT_WINDOW_ERROR(10082,"推送失败，找不到该窗口"),
+
     //参数
     PARAM_ERROR(20001,"参数错误"),
     SAVE_FAIL(20002,"保存数据失败"),

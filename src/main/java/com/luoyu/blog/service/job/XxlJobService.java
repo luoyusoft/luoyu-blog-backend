@@ -1,6 +1,6 @@
 package com.luoyu.blog.service.job;
 
-import com.luoyu.blog.common.util.RedisUtils;
+import com.luoyu.blog.service.chat.ChatService;
 import com.luoyu.blog.service.gitalk.GitalkService;
 import com.luoyu.blog.service.search.ArticleEsServer;
 import com.luoyu.blog.service.search.VideoEsServer;
@@ -13,14 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * XxlJob开发示例（Bean模式）
@@ -44,6 +41,9 @@ public class XxlJobService {
 
     @Autowired
     private GitalkService gitalkService;
+
+    @Autowired
+    private ChatService chatService;
 
     /**
      * 初始化es文章数据
@@ -75,6 +75,15 @@ public class XxlJobService {
     @XxlJob("initGitalkVideoJobHandler")
     public ReturnT<String> initGitalkVideoJobHandler(String param) throws Exception {
         return gitalkService.initVideoList() ? ReturnT.SUCCESS: ReturnT.FAIL;
+    }
+
+    /**
+     * 清除注册时间超过30分钟的账户
+     */
+    @XxlJob("clearChatUser")
+    public ReturnT<String> clearChatUser(String param) throws Exception {
+        chatService.clearUser();
+        return ReturnT.SUCCESS;
     }
 
     /**
