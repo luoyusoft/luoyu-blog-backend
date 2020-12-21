@@ -313,8 +313,8 @@
                         </jvmFlags>
                         <!-- springboot项目的入口类 -->
                         <mainClass>com.luoyu.blog.LuoYuBlogApplication</mainClass>
-                        <!-- 对准机器时差 -->
-                        <!--                        <useCurrentTimestamp>true</useCurrentTimestamp>-->
+                        <!--修改镜像默认时间，否则会导致镜像内时区问题-->
+                        <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                         <args>
                             <arg>--spring.profiles.active=prod</arg>
                             <arg>--spring.cloud.nacos.config.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
