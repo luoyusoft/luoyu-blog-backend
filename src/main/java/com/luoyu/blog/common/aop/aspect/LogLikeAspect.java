@@ -40,7 +40,7 @@ public class LogLikeAspect {
 
     private static final String PROFILES_ACTIVE_PRO = "prod";
 
-    @Value("spring.profiles.active")
+    @Value("${spring.profiles.active}")
     private String profilesActive;
 
     @Autowired
