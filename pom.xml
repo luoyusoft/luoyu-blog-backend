@@ -308,6 +308,7 @@
                         <jvmFlags>
                             <jvmFlag>-Xms256m</jvmFlag>
                             <jvmFlag>-Xmx256m</jvmFlag>
+                            <jvmFlag>-Duser.timezone=Asia/Shanghai</jvmFlag>
                             <!--                            <jvmFlag>-Xdebug</jvmFlag>-->
                             <!--                            <jvmFlag>-Xmy:flag=jib-rules</jvmFlag>-->
                         </jvmFlags>
