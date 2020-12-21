@@ -6,13 +6,13 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: nacos.luoyublog.com:80
+        server-addr: 39.108.255.214:8848
         namespace: f22549fc-d57f-4844-9387-1d8383035df5
         group: group-1
         prefix: luoyublog-backend
         file-extension: yml
       discovery:
-        server-addr: nacos.luoyublog.com:80
+        server-addr: 39.108.255.214:8848
         namespace: f22549fc-d57f-4844-9387-1d8383035df5
         group: group-1
         service: luoyublog-backend
