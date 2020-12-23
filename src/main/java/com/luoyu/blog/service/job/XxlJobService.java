@@ -2,6 +2,8 @@ package com.luoyu.blog.service.job;
 
 import com.luoyu.blog.service.chat.ChatService;
 import com.luoyu.blog.service.gitalk.GitalkService;
+import com.luoyu.blog.service.log.LogLikeService;
+import com.luoyu.blog.service.log.LogViewService;
 import com.luoyu.blog.service.search.ArticleEsServer;
 import com.luoyu.blog.service.search.VideoEsServer;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -45,6 +47,12 @@ public class XxlJobService {
     @Autowired
     private ChatService chatService;
 
+    @Autowired
+    private LogViewService logViewService;
+
+    @Autowired
+    private LogLikeService logLikeService;
+
     /**
      * 初始化es文章数据
      */
@@ -83,6 +91,16 @@ public class XxlJobService {
     @XxlJob("clearChatUser")
     public ReturnT<String> clearChatUser(String param) throws Exception {
         chatService.clearUser();
+        return ReturnT.SUCCESS;
+    }
+
+    /**
+     * 清洗城市信息
+     */
+    @XxlJob("cleanCityInfo")
+    public ReturnT<String> cleanCityInfo(String param) throws Exception {
+        logViewService.cleanCityInfo();
+        logLikeService.cleanCityInfo();
         return ReturnT.SUCCESS;
     }
 

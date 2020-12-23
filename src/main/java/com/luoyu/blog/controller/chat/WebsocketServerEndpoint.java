@@ -2,6 +2,7 @@ package com.luoyu.blog.controller.chat;
 
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
+import com.luoyu.blog.common.util.DateUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.chat.Message;
@@ -15,8 +16,6 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -57,23 +56,23 @@ public class WebsocketServerEndpoint {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("id") String id) {
-        log.info("onOpen >> 链接成功");
+        log.info("Websocket链接成功：{}", id);
         this.session = session;
 
         //将当前websocket对象存入到Set集合中
         websocketServerEndpoints.add(this);
 
         //在线人数+1
-        addOnlineCount();
+        this.addOnlineCount();
 
-        log.info("有新窗口开始监听：" + id + ", 当前在线人数为：" + getOnlineCount());
+        log.info("Websocket有新窗口开始监听：" + id + "，当前在线人数为：" + this.getOnlineCount());
 
         this.fromId = id;
         try {
             User user = chatService.findById(fromId);
             //群发消息
             Map<String, Object> map = new HashMap<>();
-            map.put("msg", "用户 " + user.getName() + " 已上线");
+            map.put("msg", "用户\"" + user.getName() + "\"已上线");
             this.sendMore(JsonUtils.objectToJson(map));
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,15 +84,15 @@ public class WebsocketServerEndpoint {
      */
     @OnClose
     public void onClose() {
-        log.info("onClose >> 链接关闭");
+        log.info("Websocket链接成功关闭");
 
         //移除当前Websocket对象
         websocketServerEndpoints.remove(this);
 
         //在内线人数-1
-        subOnLineCount();
+        this.subOnLineCount();
 
-        log.info("链接关闭，当前在线人数：" + getOnlineCount());
+        log.info("Websocket链接关闭，当前在线人数：" + this.getOnlineCount());
     }
 
     /**
@@ -103,7 +102,7 @@ public class WebsocketServerEndpoint {
      */
     @OnMessage
     public void onMessage(String message) throws IOException {
-        log.info("接收到窗口：" + fromId + " 的信息：" + message);
+        log.info("Websocket接收到窗口：" + fromId + "的信息：" + message);
 
         chatService.pushMessage(fromId, null, message);
 
@@ -136,17 +135,10 @@ public class WebsocketServerEndpoint {
     private String getData(String toId, String message) {
         Message entity = new Message();
         entity.setMessage(message);
-        entity.setTime(this.getNowTime());
+        entity.setCreateTime(DateUtils.getNowTimeString());
         entity.setFrom(chatService.findById(fromId));
         entity.setTo(chatService.findById(toId));
         return JsonUtils.objectToJson(Response.success(entity));
-    }
-
-    /**
-     * 获取当前时间
-     */
-    private String getNowTime() {
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
     }
 
     /**
@@ -171,7 +163,7 @@ public class WebsocketServerEndpoint {
      * @param toId   接收方ID
      */
     public void sendTo(String toId, Message entity) {
-        fromId = entity.getFrom().getId().toString();
+        fromId = entity.getFrom().getId();
         if (websocketServerEndpoints.size() <= 1) {
             throw new MyException(ResponseEnums.CHAT_USER_OFF_LINE);
         }
@@ -180,19 +172,34 @@ public class WebsocketServerEndpoint {
             try {
                 if (endpoint.fromId.equals(toId)) {
                     flag = true;
-                    log.info(entity.getFrom().getId() + " 推送消息到窗口：" + toId + " ，推送内容：" + entity.getMessage());
+                    log.info("Websocket：" + entity.getFrom().getId() + "推送消息到窗口：" + toId + " ，推送内容：" + entity.getMessage());
 
                     endpoint.sendMessage(this.getData(toId, entity.getMessage()));
                     chatService.pushMessage(fromId, toId, entity.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                continue;
+                throw new MyException(ResponseEnums.CHAT_SEND_ERROR);
             }
         }
         if (!flag) {
-            throw new MyException(ResponseEnums.CHAT_WINDOW_ERROR);
+            throw new MyException(ResponseEnums.CHAT_USER_OFF_LINE);
         }
+    }
+
+    /**
+     * 是否在线
+     */
+    public Boolean isOnline(String id) {
+        if (websocketServerEndpoints.size() < 1) {
+            return false;
+        }
+        for (WebsocketServerEndpoint endpoint : websocketServerEndpoints) {
+            if (endpoint.fromId.equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void subOnLineCount() {

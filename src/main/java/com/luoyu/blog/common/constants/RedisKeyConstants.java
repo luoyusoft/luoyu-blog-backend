@@ -30,6 +30,11 @@ public class RedisKeyConstants {
     public final static String CHAT_USER_PREFIX = "luoyublog:chat:user:";
 
     /**
+     * 用户名集合 Key
+     */
+    public final static String CHAT_NAME = "luoyublog:chat:name";
+
+    /**
      * 群发消息Session Key前缀标识
      */
     public final static String CHAT_COMMON_PREFIX = "luoyublog:chat:common:";

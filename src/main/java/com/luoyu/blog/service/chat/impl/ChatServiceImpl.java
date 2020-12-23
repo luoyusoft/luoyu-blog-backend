@@ -1,18 +1,19 @@
 package com.luoyu.blog.service.chat.impl;
 
 import com.luoyu.blog.common.constants.RedisKeyConstants;
+import com.luoyu.blog.common.util.DateUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.entity.chat.Message;
 import com.luoyu.blog.entity.chat.User;
+import com.luoyu.blog.entity.chat.vo.UserVO;
 import com.luoyu.blog.service.chat.ChatService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -23,7 +24,7 @@ import java.util.*;
 @Service
 public class ChatServiceImpl implements ChatService {
 
-    private static final Long MINUTE_30 = 1000 * 60 * 30L;
+    private static final Long EXPIRES_TIME = 1000 * 60 * 60 * 24 * 30L;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -49,16 +50,16 @@ public class ChatServiceImpl implements ChatService {
         Message entity = new Message();
         entity.setMessage(message);
         entity.setFrom(this.findById(fromId));
-        entity.setTime(this.getNowTime());
+        entity.setCreateTime(DateUtils.getNowTimeString());
         if (toId != null) {
             //查询接收方信息
             entity.setTo(this.findById(toId));
             //单个用户推送
-            push(entity, RedisKeyConstants.CHAT_FROM_PREFIX + fromId + RedisKeyConstants.CHAT_TO_PREFIX + toId);
+            this.push(entity, RedisKeyConstants.CHAT_FROM_PREFIX + fromId + RedisKeyConstants.CHAT_TO_PREFIX + toId);
         } else {
             //公共消息 -- 群组
             entity.setTo(null);
-            push(entity, RedisKeyConstants.CHAT_COMMON_PREFIX + fromId);
+            this.push(entity, RedisKeyConstants.CHAT_COMMON_PREFIX + fromId);
         }
     }
 
@@ -85,12 +86,14 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<User> onlineList() {
-        List<User> list = new ArrayList<>();
+    public List<UserVO> onlineList() {
+        List<UserVO> list = new ArrayList<>();
         Set<String> keys = redisTemplate.keys(RedisKeyConstants.CHAT_USER_PREFIX + RedisKeyConstants.REDIS_MATCH_PREFIX);
         if (keys != null && keys.size() > 0) {
             keys.forEach(key -> {
-                list.add(this.findById(key));
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(this.findById(key), userVO);
+                list.add(userVO);
             });
         }
         return list;
@@ -147,11 +150,11 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void clearUser() {
-        log.info("定时任务 >>>>>>>>>> 清除注册时间超过30分钟的账户，以及其会话信息");
-        List<User> userList = this.onlineList();
-        userList.forEach(user -> {
-            if ((new Date().getTime() - user.getId()) >= MINUTE_30) {
-                this.delete(user.getId().toString());
+        log.info("清除注册时间超过30分钟的账户，以及其会话信息");
+        List<UserVO> userVOList = this.onlineList();
+        userVOList.forEach(user -> {
+            if ((DateUtils.getNowTimeLong() - DateUtils.convertTimeToLong(user.getCreateTime())) >= EXPIRES_TIME) {
+                this.delete(user.getId());
                 if (redisTemplate.boundValueOps(RedisKeyConstants.CHAT_COMMON_PREFIX + user.getId()).get() != null) {
                     redisTemplate.delete(RedisKeyConstants.CHAT_COMMON_PREFIX + user.getId());
                 }
@@ -168,14 +171,7 @@ public class ChatServiceImpl implements ChatService {
      * @param list List<Message>
      */
     private void sort(List<Message> list) {
-        list.sort(Comparator.comparing(Message::getTime));
-    }
-
-    /**
-     * 获取当前时间
-     */
-    private String getNowTime() {
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
+        list.sort(Comparator.comparing(Message::getCreateTime));
     }
 
 }

@@ -40,6 +40,10 @@
         <freemarker.version>2.3.29</freemarker.version>
         <knife4j.spring.boot.starter.version>2.0.4</knife4j.spring.boot.starter.version>
         <xxl.job.core.version>2.2.0</xxl.job.core.version>
+        <io.minio.version>3.0.10</io.minio.version>
+        <com.google.zxing.version>3.2.0</com.google.zxing.version>
+        <eu.bitwalker.version>1.21</eu.bitwalker.version>
+        <org.mindrot.version>0.4</org.mindrot.version>
     </properties>
 
     <dependencies>
@@ -228,25 +232,39 @@
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
-            <version>3.0.10</version>
+            <version>${io.minio.version}</version>
         </dependency>
 
         <!-- 二维码支持包 -->
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.2.0</version>
+            <version>${com.google.zxing.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>3.2.0</version>
+            <version>${com.google.zxing.version}</version>
         </dependency>
 
         <!-- websocket -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <!-- UserAgentUtils -->
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>${eu.bitwalker.version}</version>
+        </dependency>
+
+        <!-- Bcrypt加密 -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>${org.mindrot.version}</version>
         </dependency>
 
     </dependencies>

@@ -2,6 +2,7 @@ package com.luoyu.blog.service.chat;
 
 import com.luoyu.blog.entity.chat.Message;
 import com.luoyu.blog.entity.chat.User;
+import com.luoyu.blog.entity.chat.vo.UserVO;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface ChatService {
      *
      * @return
      */
-    List<User> onlineList();
+    List<UserVO> onlineList();
 
     /**
      * 获取公共消息内容 -- 群组

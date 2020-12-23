@@ -8,6 +8,7 @@ import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
+import com.luoyu.blog.common.util.UserAgentUtils;
 import com.luoyu.blog.entity.sys.IPInfo;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.log.LogViewMapper;
@@ -111,6 +112,13 @@ public class LogViewAspect {
         viewLogEntity.setMethod(className + "." + methodName + "()");
         //获取request
         HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
+
+        viewLogEntity.setBorderName(UserAgentUtils.getBorderName(request));
+        viewLogEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
+        viewLogEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
+        viewLogEntity.setDeviceType(UserAgentUtils.getDeviceType(request));
+        viewLogEntity.setOsVersion(UserAgentUtils.getOsVersion(request));
+
         //设置IP地址
         String ip = IPUtils.getIpAddr(request);
         if (ip != null){

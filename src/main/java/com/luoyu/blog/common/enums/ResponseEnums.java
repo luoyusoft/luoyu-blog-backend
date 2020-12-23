@@ -54,9 +54,14 @@ public enum ResponseEnums {
     ZXING_CREATE_ERROR(10070,"生成二维码失败"),
 
     //Chat错误
-    CHAT_USER_REPEAT(10080,"该用户名已存在"),
-    CHAT_USER_OFF_LINE(10081,"该用户未上线"),
-    CHAT_WINDOW_ERROR(10082,"推送失败，找不到该窗口"),
+    CHAT_USER_REPEAT(10080,"该用户已登录"),
+    CHAT_NAME_REPEAT(10081,"该用户名已存在"),
+    CHAT_USER_OFF_LINE(10082,"该用户未上线"),
+    CHAT_SEND_ERROR(10083,"推送失败"),
+    CHAT_PARAM_ERROR(10084,"名称，头像为空"),
+    CHAT_NO_AUTH(10085,"您没有权限修改该用户信息"),
+    CHAT_USER_NOT_EXIST(10085,"该用户不存在"),
+    CHAT_INITT_SUCCESS(10086,"初始化成功"),
 
     //参数
     PARAM_ERROR(20001,"参数错误"),

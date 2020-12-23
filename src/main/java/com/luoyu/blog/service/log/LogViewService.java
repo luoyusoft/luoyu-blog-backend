@@ -25,4 +25,10 @@ public interface LogViewService extends IService<LogView> {
      */
     PageUtils queryPage(Integer page, Integer limit, Integer type);
 
+    /**
+     * 清洗城市信息
+     * @return
+     */
+    void cleanCityInfo();
+
 }

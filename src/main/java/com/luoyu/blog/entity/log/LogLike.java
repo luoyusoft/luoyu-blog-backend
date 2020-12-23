@@ -63,6 +63,21 @@ public class LogLike implements Serializable {
     @ApiModelProperty(value = "城市")
     private String city;
 
+    @ApiModelProperty(value = "浏览器名字")
+    private String borderName;
+
+    @ApiModelProperty(value = "浏览器版本")
+    private String borderVersion;
+
+    @ApiModelProperty(value = "设备生产厂商")
+    private String deviceManufacturer;
+
+    @ApiModelProperty(value = "设备类型")
+    private String deviceType;
+
+    @ApiModelProperty(value = "操作系统的版本号")
+    private String osVersion;
+
     @ApiModelProperty(value = "创建时间")
     @Field(type = FieldType.Date, format = DateFormat.none)
     @TableField(fill = FieldFill.INSERT)

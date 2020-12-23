@@ -18,4 +18,33 @@
         id, type, method, params, time, ip, create_time, country, region, city
     </sql>
 
+    <select id="selectMaxId" resultType="java.lang.Integer">
+        select id
+        from log_view
+        order by id desc limit 1
+    </select>
+
+    <update id="updateLogViewById" parameterType="com.luoyu.blog.entity.log.LogView">
+        update log_view
+        <set>
+            <if test="country != null and country != ''">
+                country = #{country},
+            </if>
+            <if test="region != null and region != ''">
+                region = #{region},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            id = #{id}
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectLogViewsByPage" resultType="com.luoyu.blog.entity.log.LogView" parameterType="java.lang.Integer">
+        select *
+        from log_view
+        where id &gt;= #{start} and id &lt; #{end} and city is not null
+    </select>
+
 </mapper>

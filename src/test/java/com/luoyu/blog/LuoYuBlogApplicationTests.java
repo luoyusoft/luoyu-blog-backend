@@ -5,6 +5,7 @@ import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.sys.IPInfo;
+import com.luoyu.blog.service.log.LogViewService;
 import com.luoyu.blog.service.search.ArticleEsServer;
 import com.luoyu.blog.service.search.VideoEsServer;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,9 @@ class LuoYuBlogApplicationTests {
 
     @Autowired
     private IPApi ipApi;
+
+    @Autowired
+    private LogViewService logViewService;
 
     @Test
     void testEnumUtil() {
@@ -74,6 +78,11 @@ class LuoYuBlogApplicationTests {
 //        list.forEach(x -> {
 //            log.info(x.toString());
 //        });
+    }
+
+    @Test
+    void testCleanCityInfo() throws Exception {
+        logViewService.cleanCityInfo();
     }
 
     @Test

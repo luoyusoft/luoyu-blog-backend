@@ -6,6 +6,7 @@ import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
+import com.luoyu.blog.common.util.UserAgentUtils;
 import com.luoyu.blog.entity.sys.IPInfo;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.log.LogLikeMapper;
@@ -105,6 +106,13 @@ public class LogLikeAspect {
         logLikeEntity.setParams(id);
         //获取request
         HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
+
+        logLikeEntity.setBorderName(UserAgentUtils.getBorderName(request));
+        logLikeEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
+        logLikeEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
+        logLikeEntity.setDeviceType(UserAgentUtils.getDeviceType(request));
+        logLikeEntity.setOsVersion(UserAgentUtils.getOsVersion(request));
+
         //设置IP地址
         String ip = IPUtils.getIpAddr(request);
         if (ip != null){

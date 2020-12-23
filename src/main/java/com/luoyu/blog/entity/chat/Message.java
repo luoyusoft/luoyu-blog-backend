@@ -40,7 +40,7 @@ public class Message implements Serializable {
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
-    private String time;
+    private String createTime;
 
     public void setMessage(String message) {
         this.message = message == null ? "" : message.replaceAll("\r\n|\r|\n", "");
