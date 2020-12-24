@@ -121,11 +121,15 @@ public class LogViewAspect {
         String ip = IPUtils.getIpAddr(request);
         if (ip != null){
             viewLogEntity.setIp(ip);
-            IPInfo ipInfo = ipApi.getIpInfo(ip);
-            if (ipInfo != null){
-                viewLogEntity.setCountry(ipInfo.getCountry());
-                viewLogEntity.setRegion(ipInfo.getRegionName());
-                viewLogEntity.setCity(ipInfo.getCity());
+            try {
+                IPInfo ipInfo = ipApi.getIpInfo(ip);
+                if (ipInfo != null){
+                    viewLogEntity.setCountry(ipInfo.getCountry());
+                    viewLogEntity.setRegion(ipInfo.getRegionName());
+                    viewLogEntity.setCity(ipInfo.getCity());
+                }
+            }catch (Exception e){
+                log.error("请求查询ip信息接口失败：{}", e.getMessage());
             }
         }
         viewLogEntity.setTime(time);

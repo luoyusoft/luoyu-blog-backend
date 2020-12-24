@@ -117,11 +117,15 @@ public class LogLikeAspect {
         String ip = IPUtils.getIpAddr(request);
         if (ip != null){
             logLikeEntity.setIp(ip);
-            IPInfo ipInfo = ipApi.getIpInfo(ip);
-            if (ipInfo != null){
-                logLikeEntity.setCountry(ipInfo.getCountry());
-                logLikeEntity.setRegion(ipInfo.getRegionName());
-                logLikeEntity.setCity(ipInfo.getCity());
+            try {
+                IPInfo ipInfo = ipApi.getIpInfo(ip);
+                if (ipInfo != null){
+                    logLikeEntity.setCountry(ipInfo.getCountry());
+                    logLikeEntity.setRegion(ipInfo.getRegionName());
+                    logLikeEntity.setCity(ipInfo.getCity());
+                }
+            }catch (Exception e){
+                log.error("请求查询ip信息接口失败：{}", e.getMessage());
             }
         }
         logLikeEntity.setTime(time);
