@@ -125,7 +125,9 @@ public class LogLikeAspect {
             }
         }
         logLikeEntity.setTime(time);
-        logLikeEntity.setCreateTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        logLikeEntity.setCreateTime(now);
+        logLikeEntity.setUpdateTime(now);
         logLikeMapper.insert(logLikeEntity);
     }
 

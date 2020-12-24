@@ -1,7 +1,7 @@
 package com.luoyu.blog.common.aop.aspect;
 
 import com.luoyu.blog.common.aop.annotation.RefreshEsMqSender;
-import com.luoyu.blog.common.constants.RabbitMqConstants;
+import com.luoyu.blog.common.constants.RabbitMQConstants;
 import com.luoyu.blog.common.util.RabbitMQUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -40,8 +40,8 @@ public class RefreshEsMqAspect {
         Method method = signature.getMethod();
         RefreshEsMqSender senderAnnotation = method.getAnnotation(RefreshEsMqSender.class);
         // 发送刷新信息
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE,
-                RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY,
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE,
+                RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY,
                 senderAnnotation.id() + "," + senderAnnotation.content() + "," + senderAnnotation.operation());
         return result;
     }

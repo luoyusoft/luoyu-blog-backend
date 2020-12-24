@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,6 +42,7 @@ public class LogLikeServiceImpl extends ServiceImpl<LogLikeMapper, LogLike> impl
                     logLikesItem.setCountry(ipInfo.getCountry());
                     logLikesItem.setRegion(ipInfo.getRegionName());
                     logLikesItem.setCity(ipInfo.getCity());
+                    logLikesItem.setUpdateTime(LocalDateTime.now());
                     baseMapper.updateLogLikeById(logLikesItem);
                     log.info("清洗成功：{}", logLikesItem);
                 }catch (Exception e){

@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,7 @@ public class LogViewServiceImpl extends ServiceImpl<LogViewMapper, LogView> impl
                     logViewsItem.setCountry(ipInfo.getCountry());
                     logViewsItem.setRegion(ipInfo.getRegionName());
                     logViewsItem.setCity(ipInfo.getCity());
+                    logViewsItem.setUpdateTime(LocalDateTime.now());
                     baseMapper.updateLogViewById(logViewsItem);
                     log.info("清洗成功：{}", logViewsItem);
                 }catch (Exception e){

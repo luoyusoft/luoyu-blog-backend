@@ -3,8 +3,6 @@ package com.luoyu.blog.common.aop.aspect;
 import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.api.IPApi;
 import com.luoyu.blog.common.enums.ModuleEnum;
-import com.luoyu.blog.common.enums.ResponseEnums;
-import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
@@ -131,7 +129,9 @@ public class LogViewAspect {
             }
         }
         viewLogEntity.setTime(time);
-        viewLogEntity.setCreateTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        viewLogEntity.setCreateTime(now);
+        viewLogEntity.setUpdateTime(now);
         logViewMapper.insert(viewLogEntity);
     }
 

@@ -1,7 +1,7 @@
 package com.luoyu.blog.service.search.impl;
 
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
-import com.luoyu.blog.common.constants.RabbitMqConstants;
+import com.luoyu.blog.common.constants.RabbitMQConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMQUtils;
@@ -52,7 +52,7 @@ public class VideoEsServerImpl implements VideoEsServer {
                     videoDTOList.forEach(x -> {
                         VideoVO videoVO = new VideoVO();
                         BeanUtils.copyProperties(x, videoVO);
-                        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
+                        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
                     });
                     return true;
                 }
@@ -65,7 +65,7 @@ public class VideoEsServerImpl implements VideoEsServer {
      * 新增视频，rabbitmq监听器，添加到es中
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_VIDEO_ADD_QUEUE)
+    @RabbitListener(queues = RabbitMQConstants.LUOYUBLOG_ES_VIDEO_ADD_QUEUE)
     public void addListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费
@@ -89,7 +89,7 @@ public class VideoEsServerImpl implements VideoEsServer {
      * 更新视频，rabbitmq监听器，更新到es
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_VIDEO_UPDATE_QUEUE)
+    @RabbitListener(queues = RabbitMQConstants.LUOYUBLOG_ES_VIDEO_UPDATE_QUEUE)
     public void updateListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费
@@ -113,7 +113,7 @@ public class VideoEsServerImpl implements VideoEsServer {
      * 删除视频，rabbitmq监听器，从es中删除
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_VIDEO_DELETE_QUEUE)
+    @RabbitListener(queues = RabbitMQConstants.LUOYUBLOG_ES_VIDEO_DELETE_QUEUE)
     public void deleteListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费

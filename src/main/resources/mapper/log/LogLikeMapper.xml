@@ -35,7 +35,7 @@
             <if test="city != null and city != ''">
                 city = #{city},
             </if>
-            id = #{id}
+            update_time = #{updateTime}
         </set>
         where id = #{id}
     </update>

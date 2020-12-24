@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.constants.GitalkConstants;
-import com.luoyu.blog.common.constants.RabbitMqConstants;
+import com.luoyu.blog.common.constants.RabbitMQConstants;
 import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.PageUtils;
@@ -109,8 +109,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         initGitalkRequest.setId(article.getId());
         initGitalkRequest.setTitle(article.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(article));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(article));
     }
 
     /**
@@ -151,8 +151,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         initGitalkRequest.setId(articleVO.getId());
         initGitalkRequest.setTitle(articleVO.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
     }
 
     /**
@@ -167,10 +167,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             // 更新发布状态
             baseMapper.updateArticleById(articleVO);
             if (articleVO.getPublish()){
-                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectArticleById(articleVO.getId())));
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectArticleById(articleVO.getId())));
             }else {
                 Integer[] ids = {articleVO.getId()};
-                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
             }
         }
         if (articleVO.getRecommend() != null){
@@ -238,7 +238,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(ids), ModuleEnum.ARTICLE.getCode());
         // 发送rabbitmq消息同步到es
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
     }
 
     /********************** portal ********************************/

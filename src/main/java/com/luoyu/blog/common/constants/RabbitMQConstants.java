@@ -7,7 +7,7 @@ package com.luoyu.blog.common.constants;
  * @date 2019/03/16 22:12
  * @description
  */
-public class RabbitMqConstants {
+public class RabbitMQConstants {
 
     /********************** rabbitmq-exchange ********************************/
 

@@ -2,7 +2,7 @@ package com.luoyu.blog.service.gitalk.impl;
 
 import com.luoyu.blog.common.api.GitalkApi;
 import com.luoyu.blog.common.constants.GitalkConstants;
-import com.luoyu.blog.common.constants.RabbitMqConstants;
+import com.luoyu.blog.common.constants.RabbitMQConstants;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMQUtils;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
@@ -57,7 +57,7 @@ public class GitalkServiceImpl implements GitalkService {
                 initGitalkRequest.setId(x.getId());
                 initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
                 initGitalkRequest.setTitle(x.getTitle());
-                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
             });
         }
         return true;
@@ -77,20 +77,20 @@ public class GitalkServiceImpl implements GitalkService {
                 initGitalkRequest.setId(x.getId());
                 initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_VIDEO);
                 initGitalkRequest.setTitle(x.getTitle());
-                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
             });
         }
         return true;
     }
 
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(value = RabbitMqConstants.LUOYUBLOG_GITALK_INIT_QUEUE, durable = "true"),
+            value = @Queue(value = RabbitMQConstants.LUOYUBLOG_GITALK_INIT_QUEUE, durable = "true"),
             exchange = @Exchange(
-                    value = RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE,
+                    value = RabbitMQConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE,
                     ignoreDeclarationExceptions = "true",
                     type = ExchangeTypes.TOPIC
             ),
-            key = {RabbitMqConstants.TOPIC_GITALK_ROUTINGKEY}))
+            key = {RabbitMQConstants.TOPIC_GITALK_ROUTINGKEY}))
     public void initGitalkConsumer(Message message, Channel channel){
         try {
             InitGitalkRequest initGitalkRequest = JsonUtils.jsonToObject(new String(message.getBody()), InitGitalkRequest.class);

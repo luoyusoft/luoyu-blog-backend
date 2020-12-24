@@ -1,7 +1,7 @@
 package com.luoyu.blog.service.search.impl;
 
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
-import com.luoyu.blog.common.constants.RabbitMqConstants;
+import com.luoyu.blog.common.constants.RabbitMQConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMQUtils;
@@ -52,7 +52,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
                     articleDTOList.forEach(x -> {
                         ArticleVO articleVO = new ArticleVO();
                         BeanUtils.copyProperties(x, articleVO);
-                        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
+                        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
                     });
                     return true;
                 }
@@ -65,7 +65,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
      * 新增文章，rabbitmq监听器，添加到es中
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_ADD_QUEUE)
+    @RabbitListener(queues = RabbitMQConstants.LUOYUBLOG_ES_ARTICLE_ADD_QUEUE)
     public void addListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费
@@ -87,7 +87,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
      * 更新文章，rabbitmq监听器，更新到es
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_UPDATE_QUEUE)
+    @RabbitListener(queues = RabbitMQConstants.LUOYUBLOG_ES_ARTICLE_UPDATE_QUEUE)
     public void updateListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费
@@ -109,7 +109,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
      * 删除文章，rabbitmq监听器，从es中删除
      * @return
      */
-    @RabbitListener(queues = RabbitMqConstants.LUOYUBLOG_ES_ARTICLE_DELETE_QUEUE)
+    @RabbitListener(queues = RabbitMQConstants.LUOYUBLOG_ES_ARTICLE_DELETE_QUEUE)
     public void deleteListener(Message message, Channel channel){
         try {
             //手动确认消息已经被消费

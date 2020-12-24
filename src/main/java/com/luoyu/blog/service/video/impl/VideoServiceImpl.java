@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.constants.GitalkConstants;
-import com.luoyu.blog.common.constants.RabbitMqConstants;
+import com.luoyu.blog.common.constants.RabbitMQConstants;
 import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.PageUtils;
@@ -109,8 +109,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         initGitalkRequest.setId(videoVO.getId());
         initGitalkRequest.setTitle(videoVO.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_VIDEO);
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
     }
 
     /**
@@ -151,8 +151,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         initGitalkRequest.setId(videoVO.getId());
         initGitalkRequest.setTitle(videoVO.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_VIDEO);
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_VIDEO_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
     }
 
     /**
@@ -167,10 +167,10 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             // 更新发布状态
             baseMapper.updateVideoById(videoVO);
             if (videoVO.getPublish()){
-                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectVideoById(videoVO.getId())));
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectVideoById(videoVO.getId())));
             }else {
                 Integer[] ids = {videoVO.getId()};
-                rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_VIDEO_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
             }
         }
         if (videoVO.getRecommend() != null){
@@ -238,7 +238,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
         recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(ids), ModuleEnum.VIDEO.getCode());
         // 发送rabbitmq消息同步到es
-        rabbitmqUtils.sendByRoutingKey(RabbitMqConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMqConstants.TOPIC_ES_VIDEO_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
+        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.LUOYUBLOG_VIDEO_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_VIDEO_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
     }
 
     /********************** portal ********************************/
