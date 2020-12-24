@@ -1,5 +1,5 @@
-[![maven](https://img.shields.io/badge/个人博客-在线地址-red.svg)](https://luoyublog.com)
-[![maven](https://img.shields.io/badge/后台管理系统-在线地址-red.svg)](https://luoyublog.com/manage)
+[![](https://img.shields.io/badge/个人博客-在线地址-green.svg)](https://luoyublog.com)
+[![](https://img.shields.io/badge/后台管理系统-在线地址-blue.svg)](https://luoyublog.com/manage)
 
 # LuoYu Blog
 
