@@ -1,4 +1,4 @@
-package com.luoyu.blog.controller.chat;
+package com.luoyu.blog.service.chat;
 
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
@@ -7,7 +7,6 @@ import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.chat.Message;
 import com.luoyu.blog.entity.chat.User;
-import com.luoyu.blog.service.chat.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -4,6 +4,7 @@ import com.luoyu.blog.entity.chat.Message;
 import com.luoyu.blog.entity.chat.User;
 import com.luoyu.blog.entity.chat.vo.UserVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -11,6 +12,32 @@ import java.util.List;
  * @date 2019-06-14
  */
 public interface ChatService {
+
+    /**
+     * 初始化
+     *
+     * @param request
+     * @return UserVO对象
+     */
+    UserVO init(HttpServletRequest request) throws Exception;
+
+    /**
+     * 登录
+     *
+     * @param request
+     * @param user
+     * @return UserVO对象
+     */
+    UserVO login(HttpServletRequest request, User user) throws Exception;
+
+    /**
+     * 修改
+     *
+     * @param request
+     * @param user
+     * @return UserVO对象
+     */
+    UserVO change(HttpServletRequest request, User user) throws Exception;
 
     /**
      * 根据ID从Redis中查询数据
@@ -60,7 +87,8 @@ public interface ChatService {
     void delete(String id);
 
     /**
-     * 清除注册时间超过30分钟的账户
+     * 清除注册时间超过30天的账户
      */
     void clearUser();
+
 }

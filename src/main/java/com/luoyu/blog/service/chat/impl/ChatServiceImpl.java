@@ -1,8 +1,10 @@
 package com.luoyu.blog.service.chat.impl;
 
 import com.luoyu.blog.common.constants.RedisKeyConstants;
-import com.luoyu.blog.common.util.DateUtils;
-import com.luoyu.blog.common.util.JsonUtils;
+import com.luoyu.blog.common.enums.ResponseEnums;
+import com.luoyu.blog.common.exception.MyException;
+import com.luoyu.blog.common.util.*;
+import com.luoyu.blog.service.chat.WebsocketServerEndpoint;
 import com.luoyu.blog.entity.chat.Message;
 import com.luoyu.blog.entity.chat.User;
 import com.luoyu.blog.entity.chat.vo.UserVO;
@@ -14,6 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -28,6 +31,168 @@ public class ChatServiceImpl implements ChatService {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    private WebsocketServerEndpoint websocketServerEndpoint;
+
+    @Override
+    public UserVO init(HttpServletRequest request) throws Exception {
+        String ip = IPUtils.getIpAddr(request);
+        String borderName = UserAgentUtils.getBorderName(request);
+        String browserVersion = UserAgentUtils.getBrowserVersion(request);
+        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
+        String devicetype = UserAgentUtils.getDeviceType(request);
+        String osVersion = UserAgentUtils.getOsVersion(request);
+
+        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
+
+        if (websocketServerEndpoint.isOnline(id)){
+            throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
+        }
+
+        User oldUserentity = this.findById(RedisKeyConstants.CHAT_USER_PREFIX + id);
+        if (oldUserentity != null) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(oldUserentity, userVO);
+            return userVO;
+        }
+
+        throw new MyException(ResponseEnums.CHAT_INITT_SUCCESS);
+    }
+
+    @Override
+    public UserVO login(HttpServletRequest request, User user) throws Exception {
+        String ip = IPUtils.getIpAddr(request);
+        String borderName = UserAgentUtils.getBorderName(request);
+        String browserVersion = UserAgentUtils.getBrowserVersion(request);
+        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
+        String devicetype = UserAgentUtils.getDeviceType(request);
+        String osVersion = UserAgentUtils.getOsVersion(request);
+
+        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
+
+        if (websocketServerEndpoint.isOnline(id)){
+            throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
+        }
+
+        user.setId(id);
+        user.setIp(ip);
+        user.setCreateTime(DateUtils.getNowTimeString());
+        user.setBorderName(borderName);
+        user.setBorderVersion(browserVersion);
+        user.setDeviceManufacturer(deviceManufacturer);
+        user.setDeviceType(devicetype);
+        user.setOsVersion(osVersion);
+
+        User oldUserentity = this.findById(id);
+        if (oldUserentity != null) {
+            String oldName = oldUserentity.getName();
+            boolean isChangeName = false;
+
+            if (!oldName.equals(user.getName())) {
+                Set<String> names = redisTemplate.opsForSet().members(RedisKeyConstants.CHAT_NAME);
+                if (!CollectionUtils.isEmpty(names)) {
+                    names.forEach(namesItem -> {
+                        if (namesItem.equals(user.getName())) {
+                            throw new MyException(ResponseEnums.CHAT_NAME_REPEAT);
+                        }
+                    });
+                }
+                isChangeName = true;
+            }
+
+            UserVO userVO = new UserVO();
+            oldUserentity.setName(user.getName());
+            oldUserentity.setAvatar(user.getAvatar());
+            BeanUtils.copyProperties(oldUserentity, userVO);
+
+            redisTemplate.boundValueOps(RedisKeyConstants.CHAT_USER_PREFIX + oldUserentity.getId()).set(JsonUtils.objectToJson(oldUserentity));
+
+            if (isChangeName){
+                redisTemplate.opsForSet().add(RedisKeyConstants.CHAT_NAME, user.getName());
+                redisTemplate.opsForSet().remove(RedisKeyConstants.CHAT_NAME, oldName);
+            }
+
+            return userVO;
+        }
+
+        Set<String> names = redisTemplate.opsForSet().members(RedisKeyConstants.CHAT_NAME);
+        if (!CollectionUtils.isEmpty(names)){
+            names.forEach(namesItem -> {
+                if (namesItem.equals(user.getName())){
+                    throw new MyException(ResponseEnums.CHAT_NAME_REPEAT);
+                }
+            });
+        }
+
+        redisTemplate.boundValueOps(RedisKeyConstants.CHAT_USER_PREFIX + user.getId()).set(JsonUtils.objectToJson(user));
+        redisTemplate.opsForSet().add(RedisKeyConstants.CHAT_NAME, user.getName());
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        return userVO;
+    }
+
+    @Override
+    public UserVO change(HttpServletRequest request, User user) throws Exception {
+        String ip = IPUtils.getIpAddr(request);
+        String borderName = UserAgentUtils.getBorderName(request);
+        String browserVersion = UserAgentUtils.getBrowserVersion(request);
+        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
+        String devicetype = UserAgentUtils.getDeviceType(request);
+        String osVersion = UserAgentUtils.getOsVersion(request);
+
+        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
+
+        if (!id.equals(user.getId())){
+            throw new MyException(ResponseEnums.CHAT_NO_AUTH);
+        }
+
+        if (!websocketServerEndpoint.isOnline(id)){
+            throw new MyException(ResponseEnums.CHAT_USER_OFF_LINE);
+        }
+
+        user.setId(id);
+        user.setIp(ip);
+        user.setCreateTime(DateUtils.getNowTimeString());
+        user.setBorderName(borderName);
+        user.setBorderVersion(browserVersion);
+        user.setDeviceManufacturer(deviceManufacturer);
+        user.setDeviceType(devicetype);
+        user.setOsVersion(osVersion);
+
+        User oldUserentity = this.findById(id);
+        if (oldUserentity != null) {
+            String oldName = oldUserentity.getName();
+            boolean isChangeName = false;
+
+            if (!oldName.equals(user.getName())){
+                Set<String> names = redisTemplate.opsForSet().members(RedisKeyConstants.CHAT_NAME);
+                if (!CollectionUtils.isEmpty(names)){
+                    names.forEach(namesItem -> {
+                        if (namesItem.equals(user.getName())){
+                            throw new MyException(ResponseEnums.CHAT_NAME_REPEAT);
+                        }
+                    });
+                }
+                isChangeName = true;
+            }
+
+            UserVO userVO = new UserVO();
+            oldUserentity.setName(user.getName());
+            oldUserentity.setAvatar(user.getAvatar());
+            BeanUtils.copyProperties(oldUserentity, userVO);
+
+            redisTemplate.boundValueOps(RedisKeyConstants.CHAT_USER_PREFIX + oldUserentity.getId()).set(JsonUtils.objectToJson(oldUserentity));
+            if (isChangeName){
+                redisTemplate.opsForSet().add(RedisKeyConstants.CHAT_NAME, user.getName());
+                redisTemplate.opsForSet().remove(RedisKeyConstants.CHAT_NAME, oldName);
+            }
+
+            return userVO;
+        }
+
+        throw new MyException(ResponseEnums.CHAT_USER_NOT_EXIST);
+    }
 
     @Override
     public User findById(String id) {
@@ -91,9 +256,11 @@ public class ChatServiceImpl implements ChatService {
         Set<String> keys = redisTemplate.keys(RedisKeyConstants.CHAT_USER_PREFIX + RedisKeyConstants.REDIS_MATCH_PREFIX);
         if (keys != null && keys.size() > 0) {
             keys.forEach(key -> {
-                UserVO userVO = new UserVO();
-                BeanUtils.copyProperties(this.findById(key), userVO);
-                list.add(userVO);
+                if (websocketServerEndpoint.isOnline(key)){
+                    UserVO userVO = new UserVO();
+                    BeanUtils.copyProperties(this.findById(key), userVO);
+                    list.add(userVO);
+                }
             });
         }
         return list;
@@ -150,7 +317,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void clearUser() {
-        log.info("清除注册时间超过30分钟的账户，以及其会话信息");
+        log.info("清除注册时间超过30天的账户，以及其会话信息");
         List<UserVO> userVOList = this.onlineList();
         userVOList.forEach(user -> {
             if ((DateUtils.getNowTimeLong() - DateUtils.convertTimeToLong(user.getCreateTime())) >= EXPIRES_TIME) {

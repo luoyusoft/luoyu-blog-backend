@@ -86,7 +86,7 @@ public class XxlJobService {
     }
 
     /**
-     * 清除注册时间超过30分钟的账户
+     * 清除注册时间超过30天的账户
      */
     @XxlJob("clearChatUser")
     public ReturnT<String> clearChatUser(String param) throws Exception {
