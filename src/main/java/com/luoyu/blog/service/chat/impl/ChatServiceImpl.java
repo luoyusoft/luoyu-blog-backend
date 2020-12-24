@@ -256,7 +256,7 @@ public class ChatServiceImpl implements ChatService {
         Set<String> keys = redisTemplate.keys(RedisKeyConstants.CHAT_USER_PREFIX + RedisKeyConstants.REDIS_MATCH_PREFIX);
         if (keys != null && keys.size() > 0) {
             keys.forEach(key -> {
-                if (websocketServerEndpoint.isOnline(key)){
+                if (websocketServerEndpoint.isOnline(key.substring(key.lastIndexOf(":") + 1))){
                     UserVO userVO = new UserVO();
                     BeanUtils.copyProperties(this.findById(key), userVO);
                     list.add(userVO);

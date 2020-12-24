@@ -2,6 +2,7 @@ package com.luoyu.blog;
 
 import com.luoyu.blog.common.api.IPApi;
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.sys.IPInfo;
@@ -83,6 +84,14 @@ class LuoYuBlogApplicationTests {
     @Test
     void testCleanCityInfo() throws Exception {
         logViewService.cleanCityInfo();
+    }
+
+    @Test
+    void testString() throws Exception {
+        String str = RedisKeyConstants.CHAT_USER_PREFIX + "123";
+        int pos = str.lastIndexOf(":");
+        String str2 = str.substring(pos+1);
+        log.info(str2);
     }
 
     @Test
