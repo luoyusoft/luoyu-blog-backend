@@ -16,28 +16,26 @@ public interface ChatService {
     /**
      * 初始化
      *
-     * @param request
+     * @param id
      * @return UserVO对象
      */
-    UserVO init(HttpServletRequest request) throws Exception;
+    UserVO init(String id);
 
     /**
      * 登录
      *
-     * @param request
      * @param user
      * @return UserVO对象
      */
-    UserVO login(HttpServletRequest request, User user) throws Exception;
+    UserVO login(User user);
 
     /**
      * 修改
      *
-     * @param request
      * @param user
      * @return UserVO对象
      */
-    UserVO change(HttpServletRequest request, User user) throws Exception;
+    UserVO change(User user);
 
     /**
      * 根据ID从Redis中查询数据

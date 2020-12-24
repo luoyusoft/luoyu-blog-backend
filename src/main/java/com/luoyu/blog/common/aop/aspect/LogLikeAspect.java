@@ -20,9 +20,11 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
@@ -56,6 +58,9 @@ public class LogLikeAspect {
     @Autowired
     private VideoMapper videoMapper;
 
+    @Resource(name = "taskExecutor")
+    private ThreadPoolTaskExecutor taskExecutor;
+
     @Pointcut("@annotation(com.luoyu.blog.common.aop.annotation.LogLike)")
     public void logPointCut() {
 
@@ -73,8 +78,10 @@ public class LogLikeAspect {
             Object result = point.proceed();
 
             stopWatch.stop();
-            //保存日志
-            this.saveLogLike(point, stopWatch.getTime());
+            taskExecutor.execute(() ->{
+                //保存日志
+                this.saveLogLike(point, stopWatch.getTime());
+            });
 
             return result;
         }

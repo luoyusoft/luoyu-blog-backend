@@ -35,17 +35,14 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     private WebsocketServerEndpoint websocketServerEndpoint;
 
+    /**
+     * 初始化
+     *
+     * @param id
+     * @return UserVO对象
+     */
     @Override
-    public UserVO init(HttpServletRequest request) throws Exception {
-        String ip = IPUtils.getIpAddr(request);
-        String borderName = UserAgentUtils.getBorderName(request);
-        String browserVersion = UserAgentUtils.getBrowserVersion(request);
-        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
-        String devicetype = UserAgentUtils.getDeviceType(request);
-        String osVersion = UserAgentUtils.getOsVersion(request);
-
-        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
-
+    public UserVO init(String id){
         if (websocketServerEndpoint.isOnline(id)){
             throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
         }
@@ -60,31 +57,15 @@ public class ChatServiceImpl implements ChatService {
         throw new MyException(ResponseEnums.CHAT_INITT_SUCCESS);
     }
 
+    /**
+     * 登录
+     *
+     * @param user
+     * @return UserVO对象
+     */
     @Override
-    public UserVO login(HttpServletRequest request, User user) throws Exception {
-        String ip = IPUtils.getIpAddr(request);
-        String borderName = UserAgentUtils.getBorderName(request);
-        String browserVersion = UserAgentUtils.getBrowserVersion(request);
-        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
-        String devicetype = UserAgentUtils.getDeviceType(request);
-        String osVersion = UserAgentUtils.getOsVersion(request);
-
-        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
-
-        if (websocketServerEndpoint.isOnline(id)){
-            throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
-        }
-
-        user.setId(id);
-        user.setIp(ip);
-        user.setCreateTime(DateUtils.getNowTimeString());
-        user.setBorderName(borderName);
-        user.setBorderVersion(browserVersion);
-        user.setDeviceManufacturer(deviceManufacturer);
-        user.setDeviceType(devicetype);
-        user.setOsVersion(osVersion);
-
-        User oldUserentity = this.findById(id);
+    public UserVO login(User user){
+        User oldUserentity = this.findById(user.getId());
         if (oldUserentity != null) {
             String oldName = oldUserentity.getName();
             boolean isChangeName = false;
@@ -132,35 +113,15 @@ public class ChatServiceImpl implements ChatService {
         return userVO;
     }
 
+    /**
+     * 修改
+     *
+     * @param user
+     * @return UserVO对象
+     */
     @Override
-    public UserVO change(HttpServletRequest request, User user) throws Exception {
-        String ip = IPUtils.getIpAddr(request);
-        String borderName = UserAgentUtils.getBorderName(request);
-        String browserVersion = UserAgentUtils.getBrowserVersion(request);
-        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
-        String devicetype = UserAgentUtils.getDeviceType(request);
-        String osVersion = UserAgentUtils.getOsVersion(request);
-
-        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
-
-        if (!id.equals(user.getId())){
-            throw new MyException(ResponseEnums.CHAT_NO_AUTH);
-        }
-
-        if (!websocketServerEndpoint.isOnline(id)){
-            throw new MyException(ResponseEnums.CHAT_USER_OFF_LINE);
-        }
-
-        user.setId(id);
-        user.setIp(ip);
-        user.setCreateTime(DateUtils.getNowTimeString());
-        user.setBorderName(borderName);
-        user.setBorderVersion(browserVersion);
-        user.setDeviceManufacturer(deviceManufacturer);
-        user.setDeviceType(devicetype);
-        user.setOsVersion(osVersion);
-
-        User oldUserentity = this.findById(id);
+    public UserVO change(User user){
+        User oldUserentity = this.findById(user.getId());
         if (oldUserentity != null) {
             String oldName = oldUserentity.getName();
             boolean isChangeName = false;

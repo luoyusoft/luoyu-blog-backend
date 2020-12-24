@@ -23,8 +23,7 @@ public class UserAgentUtils {
      * @return
      */
     public static String getUserAgent(HttpServletRequest request) {
-        String userAgent=request.getHeader("User-Agent");
-        return userAgent;
+        return request.getHeader("User-Agent");
     }
 
     /**
@@ -34,6 +33,10 @@ public class UserAgentUtils {
      */
     public static String getOsVersion(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)) {
+            return null;
+        }
+
         return getOsVersion(userAgent);
     }
 
@@ -43,17 +46,15 @@ public class UserAgentUtils {
      * @return
      */
     public static String getOsVersion(String userAgent) {
-        String osVersion = "";
-        if(StringUtils.isBlank(userAgent))
-            return osVersion;
-        String[] strArr = userAgent.substring(userAgent.indexOf("(")+1,
-                userAgent.indexOf(")")).split(";");
-        if(null == strArr || strArr.length == 0)
-            return osVersion;
+        if(StringUtils.isBlank(userAgent)){
+            return null;
+        }
+        String[] strArr = userAgent.substring(userAgent.indexOf("(")+1, userAgent.indexOf(")")).split(";");
+        if(strArr.length == 0){
+            return null;
+        }
 
-        osVersion = strArr[1];
-        log.info("osVersion is:{}", osVersion);
-        return osVersion;
+        return strArr[1];
     }
 
     /**
@@ -62,12 +63,8 @@ public class UserAgentUtils {
      * @return
      */
     private static OperatingSystem getOperatingSystem(String userAgent) {
-        UserAgent agent = UserAgent.parseUserAgentString(userAgent);
-        OperatingSystem operatingSystem = agent.getOperatingSystem();
-        return operatingSystem;
+        return UserAgent.parseUserAgentString(userAgent).getOperatingSystem();
     }
-
-
 
     /**
      * 获取os：Windows/ios/Android
@@ -76,6 +73,10 @@ public class UserAgentUtils {
      */
     public static String getOs(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getOs(userAgent);
     }
 
@@ -85,12 +86,13 @@ public class UserAgentUtils {
      * @return
      */
     public static String getOs(String userAgent) {
-        OperatingSystem operatingSystem =  getOperatingSystem(userAgent);
-        String os = operatingSystem.getGroup().getName();
-        log.info("os is:{}", os);
-        return os;
-    }
+        OperatingSystem operatingSystem = getOperatingSystem(userAgent);
+        if (operatingSystem == null){
+            return null;
+        }
 
+        return operatingSystem.getGroup().getName();
+    }
 
     /**
      * 获取deviceType
@@ -99,6 +101,10 @@ public class UserAgentUtils {
      */
     public static String getDeviceType(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getDeviceType(userAgent);
     }
 
@@ -108,10 +114,12 @@ public class UserAgentUtils {
      * @return
      */
     public static String getDeviceType(String userAgent) {
-        OperatingSystem operatingSystem =  getOperatingSystem(userAgent);
-        String deviceType = operatingSystem.getDeviceType().toString();
-        log.info("deviceType is:{}", deviceType);
-        return deviceType;
+        OperatingSystem operatingSystem = getOperatingSystem(userAgent);
+        if (operatingSystem == null){
+            return null;
+        }
+
+        return operatingSystem.getDeviceType().toString();
     }
 
     /**
@@ -121,6 +129,10 @@ public class UserAgentUtils {
      */
     public static String getOsName(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getOsName(userAgent);
     }
 
@@ -130,12 +142,13 @@ public class UserAgentUtils {
      * @return
      */
     public static String getOsName(String userAgent) {
-        OperatingSystem operatingSystem =  getOperatingSystem(userAgent);
-        String osName = operatingSystem.getName();
-        log.info("osName is:{}", osName);
-        return osName;
-    }
+        OperatingSystem operatingSystem = getOperatingSystem(userAgent);
+        if (operatingSystem == null){
+            return null;
+        }
 
+        return operatingSystem.getName();
+    }
 
     /**
      * 获取device的生产厂家
@@ -143,6 +156,10 @@ public class UserAgentUtils {
      */
     public static String getDeviceManufacturer(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getDeviceManufacturer(userAgent);
     }
 
@@ -151,10 +168,12 @@ public class UserAgentUtils {
      * @param userAgent
      */
     public static String getDeviceManufacturer(String userAgent) {
-        OperatingSystem operatingSystem =  getOperatingSystem(userAgent);
-        String deviceManufacturer = operatingSystem.getManufacturer().toString();
-        log.info("deviceManufacturer is:{}", deviceManufacturer);
-        return deviceManufacturer;
+        OperatingSystem operatingSystem = getOperatingSystem(userAgent);
+        if (operatingSystem == null){
+            return null;
+        }
+
+        return operatingSystem.getManufacturer().toString();
     }
 
     /**
@@ -163,11 +182,8 @@ public class UserAgentUtils {
      * @return
      */
     public static Browser getBrowser(String agent) {
-        UserAgent userAgent = UserAgent.parseUserAgentString(agent);
-        Browser browser = userAgent.getBrowser();
-        return browser;
+        return UserAgent.parseUserAgentString(agent).getBrowser();
     }
-
 
     /**
      * 获取browser name
@@ -176,6 +192,10 @@ public class UserAgentUtils {
      */
     public static String getBorderName(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getBorderName(userAgent);
     }
 
@@ -185,12 +205,13 @@ public class UserAgentUtils {
      * @return
      */
     public static String getBorderName(String userAgent) {
-        Browser browser =  getBrowser(userAgent);
-        String borderName = browser.getName();
-        log.info("borderName is:{}", borderName);
-        return borderName;
-    }
+        Browser browser = getBrowser(userAgent);
+        if (browser == null){
+            return null;
+        }
 
+        return browser.getName();
+    }
 
     /**
      * 获取浏览器的类型
@@ -199,6 +220,10 @@ public class UserAgentUtils {
      */
     public static String getBorderType(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getBorderType(userAgent);
     }
 
@@ -208,10 +233,12 @@ public class UserAgentUtils {
      * @return
      */
     public static String getBorderType(String userAgent) {
-        Browser browser =  getBrowser(userAgent);
-        String borderType = browser.getBrowserType().getName();
-        log.info("borderType is:{}", borderType);
-        return borderType;
+        Browser browser = getBrowser(userAgent);
+        if (browser == null){
+            return null;
+        }
+
+        return browser.getBrowserType().getName();
     }
 
     /**
@@ -221,6 +248,10 @@ public class UserAgentUtils {
      */
     public static String getBorderGroup(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getBorderGroup(userAgent);
     }
 
@@ -230,10 +261,12 @@ public class UserAgentUtils {
      * @return
      */
     public static String getBorderGroup(String userAgent) {
-        Browser browser =  getBrowser(userAgent);
-        String browerGroup = browser.getGroup().getName();
-        log.info("browerGroup is:{}", browerGroup);
-        return browerGroup;
+        Browser browser = getBrowser(userAgent);
+        if (browser == null){
+            return null;
+        }
+
+        return browser.getGroup().getName();
     }
 
     /**
@@ -243,9 +276,12 @@ public class UserAgentUtils {
      */
     public static String getBrowserManufacturer(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getBrowserManufacturer(userAgent);
     }
-
 
     /**
      * 获取浏览器的生产厂商
@@ -253,12 +289,13 @@ public class UserAgentUtils {
      * @return
      */
     public static String getBrowserManufacturer(String userAgent) {
-        Browser browser =  getBrowser(userAgent);
-        String browserManufacturer = browser.getManufacturer().getName();
-        log.info("browserManufacturer is:{}", browserManufacturer);
-        return browserManufacturer;
-    }
+        Browser browser = getBrowser(userAgent);
+        if (browser == null){
+            return null;
+        }
 
+        return browser.getManufacturer().getName();
+    }
 
     /**
      * 获取浏览器使用的渲染引擎
@@ -267,6 +304,10 @@ public class UserAgentUtils {
      */
     public static String getBorderRenderingEngine(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getBorderRenderingEngine(userAgent);
     }
 
@@ -276,12 +317,13 @@ public class UserAgentUtils {
      * @return
      */
     public static String getBorderRenderingEngine(String userAgent) {
-        Browser browser =  getBrowser(userAgent);
-        String renderingEngine = browser.getRenderingEngine().name();
-        log.info("renderingEngine is:{}", renderingEngine);
-        return renderingEngine;
-    }
+        Browser browser = getBrowser(userAgent);
+        if (browser == null){
+            return null;
+        }
 
+        return browser.getRenderingEngine().name();
+    }
 
     /**
      * 获取浏览器版本
@@ -290,6 +332,10 @@ public class UserAgentUtils {
      */
     public static String getBrowserVersion(HttpServletRequest request) {
         String userAgent = getUserAgent(request);
+        if (StringUtils.isBlank(userAgent)){
+            return null;
+        }
+
         return getBrowserVersion(userAgent);
     }
 
@@ -299,16 +345,18 @@ public class UserAgentUtils {
      * @return
      */
     public static String getBrowserVersion(String userAgent) {
-        Browser browser =  getBrowser(userAgent);
-        String borderVersion = browser.getVersion( userAgent).toString();
-        log.info("borderVersion is:{}", borderVersion);
-        return borderVersion;
+        Browser browser = getBrowser(userAgent);
+        if (browser == null){
+            return null;
+        }
+
+        return browser.getVersion( userAgent).toString();
     }
 
 
     public static void main(String[] args) {
-//		String androidUserAgent = "Mozilla/5.0 (Linux; Android 8.0; LON-AL00 Build/HUAWEILON-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.132 MQQBrowser/6.2 TBS/044204 Mobile Safari/537.36 V1_AND_SQ_7.7.8_908_YYB_D QQ/7.7.8.3705 NetType/WIFI WebP/0.3.0 Pixel/1440";
-//		String iosUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16A366 QQ/7.7.8.421 V1_IPH_SQ_7.7.8_1_APP_A Pixel/750 Core/UIWebView Device/Apple(iPhone 6s) NetType/WIFI QBWebViewType/1";
+		String androidUserAgent = "Mozilla/5.0 (Linux; Android 8.0; LON-AL00 Build/HUAWEILON-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.132 MQQBrowser/6.2 TBS/044204 Mobile Safari/537.36 V1_AND_SQ_7.7.8_908_YYB_D QQ/7.7.8.3705 NetType/WIFI WebP/0.3.0 Pixel/1440";
+		String iosUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16A366 QQ/7.7.8.421 V1_IPH_SQ_7.7.8_1_APP_A Pixel/750 Core/UIWebView Device/Apple(iPhone 6s) NetType/WIFI QBWebViewType/1";
         String winUserAgent = "\"Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
 
         System.out.println("浏览器组：" + getBorderGroup(winUserAgent));

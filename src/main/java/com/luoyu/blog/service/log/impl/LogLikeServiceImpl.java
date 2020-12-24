@@ -45,6 +45,7 @@ public class LogLikeServiceImpl extends ServiceImpl<LogLikeMapper, LogLike> impl
                     logLikesItem.setUpdateTime(LocalDateTime.now());
                     baseMapper.updateLogLikeById(logLikesItem);
                     log.info("清洗成功：{}", logLikesItem);
+                    Thread.sleep(1000);
                 }catch (Exception e){
                     e.getStackTrace();
                 }

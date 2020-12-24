@@ -85,6 +85,7 @@ public class LogViewServiceImpl extends ServiceImpl<LogViewMapper, LogView> impl
                     logViewsItem.setUpdateTime(LocalDateTime.now());
                     baseMapper.updateLogViewById(logViewsItem);
                     log.info("清洗成功：{}", logViewsItem);
+                    Thread.sleep(1000);
                 }catch (Exception e){
                     e.getStackTrace();
                 }

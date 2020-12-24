@@ -2,6 +2,10 @@ package com.luoyu.blog.controller.chat;
 
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
+import com.luoyu.blog.common.util.DateUtils;
+import com.luoyu.blog.common.util.EncodeUtils;
+import com.luoyu.blog.common.util.IPUtils;
+import com.luoyu.blog.common.util.UserAgentUtils;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.chat.Message;
 import com.luoyu.blog.entity.chat.User;
@@ -29,6 +33,9 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
+    @Autowired
+    private WebsocketServerEndpoint websocketServerEndpoint;
+
     /**
      * 初始化接口
      *
@@ -36,7 +43,16 @@ public class ChatController {
      */
     @PostMapping("/init")
     public Response init(HttpServletRequest request) throws Exception {
-        return Response.success(chatService.init(request));
+        String ip = IPUtils.getIpAddr(request);
+        String borderName = UserAgentUtils.getBorderName(request);
+        String browserVersion = UserAgentUtils.getBrowserVersion(request);
+        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
+        String devicetype = UserAgentUtils.getDeviceType(request);
+        String osVersion = UserAgentUtils.getOsVersion(request);
+
+        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
+
+        return Response.success(chatService.init(id));
     }
 
     /**
@@ -51,7 +67,29 @@ public class ChatController {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "名称，头像不能为空");
         }
 
-        return Response.success(chatService.login(request, user));
+        String ip = IPUtils.getIpAddr(request);
+        String borderName = UserAgentUtils.getBorderName(request);
+        String browserVersion = UserAgentUtils.getBrowserVersion(request);
+        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
+        String devicetype = UserAgentUtils.getDeviceType(request);
+        String osVersion = UserAgentUtils.getOsVersion(request);
+
+        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
+
+        if (websocketServerEndpoint.isOnline(id)){
+            throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
+        }
+
+        user.setId(id);
+        user.setIp(ip);
+        user.setCreateTime(DateUtils.getNowTimeString());
+        user.setBorderName(borderName);
+        user.setBorderVersion(browserVersion);
+        user.setDeviceManufacturer(deviceManufacturer);
+        user.setDeviceType(devicetype);
+        user.setOsVersion(osVersion);
+
+        return Response.success(chatService.login(user));
     }
 
     /**
@@ -67,7 +105,33 @@ public class ChatController {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，名称，头像不能为空");
         }
 
-        return Response.success(chatService.change(request, user));
+        String ip = IPUtils.getIpAddr(request);
+        String borderName = UserAgentUtils.getBorderName(request);
+        String browserVersion = UserAgentUtils.getBrowserVersion(request);
+        String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
+        String devicetype = UserAgentUtils.getDeviceType(request);
+        String osVersion = UserAgentUtils.getOsVersion(request);
+
+        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
+
+        if (!id.equals(user.getId())){
+            throw new MyException(ResponseEnums.CHAT_NO_AUTH);
+        }
+
+        if (!websocketServerEndpoint.isOnline(id)){
+            throw new MyException(ResponseEnums.CHAT_USER_OFF_LINE);
+        }
+
+        user.setId(id);
+        user.setIp(ip);
+        user.setCreateTime(DateUtils.getNowTimeString());
+        user.setBorderName(borderName);
+        user.setBorderVersion(browserVersion);
+        user.setDeviceManufacturer(deviceManufacturer);
+        user.setDeviceType(devicetype);
+        user.setOsVersion(osVersion);
+
+        return Response.success(chatService.change(user));
     }
 
     /**
@@ -129,18 +193,6 @@ public class ChatController {
     public Response selfList(@PathVariable("fromId") String fromId, @PathVariable("toId") String toId) {
         List<Message> list = chatService.selfList(fromId, toId);
         return Response.success(list);
-    }
-
-    /**
-     * 退出登录
-     *
-     * @param id 用户ID
-     * @return
-     */
-    @DeleteMapping("/{id}")
-    public Response logout(@PathVariable("id") String id) {
-        chatService.delete(id);
-        return Response.success();
     }
 
 }
