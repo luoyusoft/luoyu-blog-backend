@@ -43,7 +43,7 @@
     <select id="selectLogLikesByPage" resultType="com.luoyu.blog.entity.log.LogLike" parameterType="java.lang.Integer">
         select *
         from log_like
-        where id &gt;= #{start} and id &lt; #{end} and city is not null
+        where id &gt;= #{start} and id &lt; #{end} and city is null
     </select>
 
 </mapper>
