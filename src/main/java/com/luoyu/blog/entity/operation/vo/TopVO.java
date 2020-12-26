@@ -1,15 +1,9 @@
 package com.luoyu.blog.entity.operation.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.luoyu.blog.entity.operation.Tag;
 import com.luoyu.blog.entity.operation.Top;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,6 +20,8 @@ public class TopVO extends Top {
 
     private Long readNum;
 
+    private Long watchNum;
+
     private Long commentNum;
 
     private Long likeNum;
@@ -33,11 +29,6 @@ public class TopVO extends Top {
     private String urlType;
 
     private String cover;
-
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
 
     private List<Tag> tagList;
 

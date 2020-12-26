@@ -210,7 +210,7 @@ public class ElasticSearchUtils {
         // 第几页
         searchSourceBuilder.from(0);
         // 每页多少条数据
-        searchSourceBuilder.size(10);
+        searchSourceBuilder.size(100);
         // 配置高亮
         if (!CollectionUtils.isEmpty(highlightBuilderList)){
             HighlightBuilder highlightBuilder = new HighlightBuilder();

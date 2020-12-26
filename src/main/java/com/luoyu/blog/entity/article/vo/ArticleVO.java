@@ -31,4 +31,9 @@ public class ArticleVO extends Article {
      */
     private Boolean recommend;
 
+    /**
+     * 置顶
+     */
+    private Boolean top;
+
 }

@@ -173,7 +173,8 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
      */
     @Override
     public void updateRecommend(Recommend recommend) {
-        if (baseMapper.selectRecommendByOrderNum(recommend.getOrderNum()) != null){
+        Recommend existRecommend = baseMapper.selectRecommendByOrderNum(recommend.getOrderNum());
+        if (existRecommend != null && !existRecommend.getId().equals(recommend.getId())){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该顺序已被占用");
         }
         if (ModuleEnum.ARTICLE.getCode() == recommend.getType()){

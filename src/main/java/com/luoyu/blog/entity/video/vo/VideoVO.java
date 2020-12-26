@@ -31,4 +31,9 @@ public class VideoVO extends Video {
      */
     private Boolean recommend;
 
+    /**
+     * 置顶
+     */
+    private Boolean top;
+
 }

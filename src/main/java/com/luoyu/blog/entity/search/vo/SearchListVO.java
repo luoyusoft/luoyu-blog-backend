@@ -1,7 +1,7 @@
 package com.luoyu.blog.entity.search.vo;
 
-import com.luoyu.blog.entity.article.dto.ArticleDTO;
-import com.luoyu.blog.entity.video.dto.VideoDTO;
+import com.luoyu.blog.entity.article.vo.ArticleVO;
+import com.luoyu.blog.entity.video.vo.VideoVO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,8 +20,8 @@ public class SearchListVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private List<VideoDTO> videoList;
+    private List<VideoVO> videoList;
 
-    private List<ArticleDTO> articleList;
+    private List<ArticleVO> articleList;
 
 }

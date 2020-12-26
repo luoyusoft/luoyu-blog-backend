@@ -2,6 +2,7 @@ package com.luoyu.blog.service.search.impl;
 
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.constants.RabbitMQConstants;
+import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMQUtils;
@@ -9,6 +10,7 @@ import com.luoyu.blog.entity.video.Video;
 import com.luoyu.blog.entity.video.dto.VideoDTO;
 import com.luoyu.blog.entity.video.vo.VideoVO;
 import com.luoyu.blog.mapper.video.VideoMapper;
+import com.luoyu.blog.service.operation.TagService;
 import com.luoyu.blog.service.search.VideoEsServer;
 import com.rabbitmq.client.Channel;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -40,6 +42,9 @@ public class VideoEsServerImpl implements VideoEsServer {
 
     @Autowired
     private VideoMapper videoMapper;
+
+    @Autowired
+    private TagService tagService;
 
     @Override
     public boolean initVideoList() throws Exception {
@@ -141,28 +146,30 @@ public class VideoEsServerImpl implements VideoEsServer {
     }
 
     @Override
-    public List<VideoDTO> searchVideoList(String keyword) throws Exception {
+    public List<VideoVO> searchVideoList(String keyword) throws Exception {
         List<String> highlightBuilderList = Arrays.asList("title", "alternateName");
         List<Map<String, Object>> searchRequests = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_VIDEO_INDEX, keyword, highlightBuilderList, highlightBuilderList);
-        List<VideoDTO> videoDTOList = new ArrayList<>();
+        List<VideoVO> videoVOList = new ArrayList<>();
         for(Map<String, Object> x : searchRequests){
-            VideoDTO videoDTO = new VideoDTO();
-            videoDTO.setId(Integer.valueOf(x.get("id").toString()));
-            videoDTO.setCover(x.get("cover").toString());
-            videoDTO.setVideoUrl(x.get("videoUrl").toString());
-            videoDTO.setAlternateName(x.get("alternateName").toString());
-            videoDTO.setScore(x.get("score").toString());
-            videoDTO.setCreateTime(LocalDateTime.parse(x.get("createTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            videoDTO.setUpdateTime(LocalDateTime.parse(x.get("updateTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            videoDTO.setWatchNum(Long.valueOf(x.get("watchNum").toString()));
-            videoDTO.setCommentNum(Long.valueOf(x.get("commentNum").toString()));
-            videoDTO.setTitle(x.get("title").toString());
-            videoDTO.setAuthor(x.get("author").toString());
-            videoDTO.setSynopsis(x.get("synopsis").toString());
-            videoDTO.setLikeNum(Long.valueOf(x.get("likeNum").toString()));
-            videoDTOList.add(videoDTO);
+            VideoVO videoVO = new VideoVO();
+            videoVO.setId(Integer.valueOf(x.get("id").toString()));
+            videoVO.setCover(x.get("cover").toString());
+            videoVO.setVideoUrl(x.get("videoUrl").toString());
+            videoVO.setAlternateName(x.get("alternateName").toString());
+            videoVO.setScore(x.get("score").toString());
+            videoVO.setCreateTime(LocalDateTime.parse(x.get("createTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            videoVO.setUpdateTime(LocalDateTime.parse(x.get("updateTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            videoVO.setWatchNum(Long.valueOf(x.get("watchNum").toString()));
+            videoVO.setCommentNum(Long.valueOf(x.get("commentNum").toString()));
+            videoVO.setTitle(x.get("title").toString());
+            videoVO.setAuthor(x.get("author").toString());
+            videoVO.setSynopsis(x.get("synopsis").toString());
+            videoVO.setLikeNum(Long.valueOf(x.get("likeNum").toString()));
+            videoVO.setTop(false);
+            videoVO.setTagList(tagService.listByLinkId(videoVO.getId(), ModuleEnum.VIDEO.getCode()));
+            videoVOList.add(videoVO);
         }
-        return videoDTOList;
+        return videoVOList;
     }
 
 }

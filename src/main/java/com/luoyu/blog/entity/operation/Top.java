@@ -29,6 +29,8 @@ public class Top extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final Integer ORDER_NUM_TOP = 1;
+
     @ApiModelProperty(value = "置顶链接id")
     @NotNull(message="置顶链接id不能为空", groups = {AddGroup.class})
     private Integer linkId;
@@ -41,7 +43,7 @@ public class Top extends BaseEntity implements Serializable {
     @NotNull(message="置顶顺序不能为空", groups = {AddGroup.class})
     private Integer orderNum;
 
-    @ApiModelProperty(value = "标题")
+    @ApiModelProperty(value = "置顶标题")
     @TableField(exist = false)
     private String title;
 

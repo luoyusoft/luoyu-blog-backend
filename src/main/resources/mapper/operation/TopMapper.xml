@@ -4,21 +4,49 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, link_id, type, order_num, title,create_time,update_time
+        id, link_id, type, order_num,create_time,update_time
     </sql>
 
     <select id="selectTopByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Top">
-      select * from top where type = #{type} and link_id = #{linkId}
+        select * from top where type = #{type} and link_id = #{linkId}
     </select>
 
-    <update id="updateTopByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Top">
-      update top
-      <set>
-          <if test="orderNum!=null">
-              order_num = #{orderNum},
-          </if>
-      </set>
-      where type = #{type} and link_id = #{linkId}
+    <select id="selectTopByOrderNum" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Top">
+        select * from top where order_num = #{orderNum}
+    </select>
+
+    <select id="selectTops" resultType="com.luoyu.blog.entity.operation.Top">
+        select * from top order by order_num desc
+    </select>
+
+    <update id="updateTopsOrderNumById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update top
+            set order_num = #{item.orderNum}
+            where id = #{item.id}
+        </foreach>
     </update>
+
+    <update id="updateTopOrderNumByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Top">
+        update top
+        set order_num = #{orderNum}
+        where type = #{type} and link_id = #{linkId}
+    </update>
+
+    <update id="updateTopOrderNumById" parameterType="java.lang.Integer">
+        update top
+        set order_num = #{orderNum}
+        where id = #{id}
+    </update>
+
+    <select id="selectTopMaxOrderNum" resultType="java.lang.Integer">
+        select order_num from top order by order_num desc limit 1
+    </select>
+
+    <!-- *************************** portal ****************************** -->
+
+    <select id="listTopDTO" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.vo.TopVO">
+        select <include refid="Base_Column_List"/> from top where type = #{type} order by order_num asc limit 10
+    </select>
 
 </mapper>

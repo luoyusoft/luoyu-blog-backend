@@ -2,8 +2,8 @@ package com.luoyu.blog.service.operation;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
-import com.luoyu.blog.entity.operation.Recommend;
-import com.luoyu.blog.entity.operation.vo.RecommendVO;
+import com.luoyu.blog.entity.operation.Top;
+import com.luoyu.blog.entity.operation.vo.TopVO;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @author luoyu
  * @since 2019-02-22
  */
-public interface RecommendService extends IService<Recommend> {
+public interface TopService extends IService<Top> {
 
     /**
      * 分页查询
@@ -29,53 +29,53 @@ public interface RecommendService extends IService<Recommend> {
      * 获取推荐列表
      * @return
      */
-    List<RecommendVO> select(Integer type, String title);
+    List<TopVO> select(Integer type, String title);
 
     /**
      * 批量删除
      * @param linkIds
      * @param type
      */
-    void deleteRecommendsByLinkIdsAndType(List<Integer> linkIds, int type);
+    void deleteTopsByLinkIdsAndType(List<Integer> linkIds, int type);
 
     /**
      * 新增
-     * @param recommend
+     * @param top
      */
-    void insertRecommend(Recommend recommend);
+    void insertTop(Top top);
 
     /**
      * 更新
-     * @param recommend
+     * @param top
      */
-    void updateRecommend(Recommend recommend);
+    void updateTop(Top top);
 
     /**
-     * 推荐置顶
+     * 置顶
      * @param id
      */
-    void updateRecommendTop(Integer id);
+    void updateTopTop(Integer id);
 
     /**
      * 删除
      * @param ids
      */
-    void deleteRecommendsByIds(List<Integer> ids);
+    void deleteTopsByIds(List<Integer> ids);
 
     /**
      * 查找
      * @param linkId
      * @param type
      */
-    Recommend selectRecommendByLinkIdAndType(Integer linkId, Integer type);
+    Top selectTopByLinkIdAndType(Integer linkId, Integer type);
 
     /**
      * 查找最大顺序
      */
-    Integer selectRecommendMaxOrderNum();
+    Integer selectTopMaxOrderNum();
 
     /********************** portal ********************************/
 
-    List<RecommendVO> listRecommendVO(Integer type);
+    List<TopVO> listTopVO(Integer type);
 
 }

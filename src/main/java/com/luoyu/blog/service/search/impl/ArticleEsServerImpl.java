@@ -2,6 +2,7 @@ package com.luoyu.blog.service.search.impl;
 
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.constants.RabbitMQConstants;
+import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMQUtils;
@@ -9,6 +10,7 @@ import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
 import com.luoyu.blog.mapper.article.ArticleMapper;
+import com.luoyu.blog.service.operation.TagService;
 import com.luoyu.blog.service.search.ArticleEsServer;
 import com.rabbitmq.client.Channel;
 import com.xxl.job.core.log.XxlJobLogger;
@@ -23,10 +25,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -40,6 +39,9 @@ public class ArticleEsServerImpl implements ArticleEsServer {
 
     @Autowired
     private ArticleMapper articleMapper;
+
+    @Autowired
+    private TagService tagService;
 
     @Override
     public boolean initArticleList() throws Exception {
@@ -137,26 +139,28 @@ public class ArticleEsServerImpl implements ArticleEsServer {
     }
 
     @Override
-    public List<ArticleDTO> searchArticleList(String keyword) throws Exception {
+    public List<ArticleVO> searchArticleList(String keyword) throws Exception {
         List<String> highlightBuilderList = Arrays.asList("title", "description");
         List<Map<String, Object>> searchRequests = elasticSearchUtils.searchRequest(ElasticSearchConstants.LUOYUBLOG_SEARCH_ARTICLE_INDEX, keyword, highlightBuilderList, highlightBuilderList);
-        List<ArticleDTO> articleDTOList = new ArrayList<>();
+        List<ArticleVO> articleVOList = new ArrayList<>();
         for(Map<String, Object> x : searchRequests){
-            ArticleDTO articleDTO = new ArticleDTO();
-            articleDTO.setId(Integer.valueOf(x.get("id").toString()));
-            articleDTO.setCover(x.get("cover").toString());
-            articleDTO.setCoverType(Integer.valueOf(x.get("coverType").toString()));
-            articleDTO.setCreateTime(LocalDateTime.parse(x.get("createTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            articleDTO.setUpdateTime(LocalDateTime.parse(x.get("updateTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            articleDTO.setReadNum(Long.valueOf(x.get("readNum").toString()));
-            articleDTO.setCommentNum(Long.valueOf(x.get("commentNum").toString()));
-            articleDTO.setTitle(x.get("title").toString());
-            articleDTO.setAuthor(x.get("author").toString());
-            articleDTO.setDescription(x.get("description").toString());
-            articleDTO.setLikeNum(Long.valueOf(x.get("likeNum").toString()));
-            articleDTOList.add(articleDTO);
+            ArticleVO articleVO = new ArticleVO();
+            articleVO.setId(Integer.valueOf(x.get("id").toString()));
+            articleVO.setCover(x.get("cover").toString());
+            articleVO.setCoverType(Integer.valueOf(x.get("coverType").toString()));
+            articleVO.setCreateTime(LocalDateTime.parse(x.get("createTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            articleVO.setUpdateTime(LocalDateTime.parse(x.get("updateTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            articleVO.setReadNum(Long.valueOf(x.get("readNum").toString()));
+            articleVO.setCommentNum(Long.valueOf(x.get("commentNum").toString()));
+            articleVO.setTitle(x.get("title").toString());
+            articleVO.setAuthor(x.get("author").toString());
+            articleVO.setDescription(x.get("description").toString());
+            articleVO.setLikeNum(Long.valueOf(x.get("likeNum").toString()));
+            articleVO.setTop(false);
+            articleVO.setTagList(tagService.listByLinkId(articleVO.getId(), ModuleEnum.ARTICLE.getCode()));
+            articleVOList.add(articleVO);
         }
-        return articleDTOList;
+        return articleVOList;
     }
 
 }
