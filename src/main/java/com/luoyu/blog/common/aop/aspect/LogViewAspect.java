@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -69,7 +70,7 @@ public class LogViewAspect {
     @Around("logPointCut()")
     @Transactional(rollbackFor = Exception.class)
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        if (profilesActive.equals(PROFILES_ACTIVE_PRO)){
+        if (true){
             // 耗时计算
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
@@ -78,11 +79,22 @@ public class LogViewAspect {
             Object result = point.proceed();
 
             stopWatch.stop();
+
+            com.luoyu.blog.entity.log.LogView viewLogEntity = new com.luoyu.blog.entity.log.LogView();
             //获取request
             HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
+            //获取request
+            viewLogEntity.setBorderName(UserAgentUtils.getBorderName(request));
+            viewLogEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
+            viewLogEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
+            viewLogEntity.setDeviceType(UserAgentUtils.getDeviceType(request));
+            viewLogEntity.setOsVersion(UserAgentUtils.getOsVersion(request));
+
+            //设置IP地址
+            viewLogEntity.setIp(IPUtils.getIpAddr(request));
             taskExecutor.execute(() ->{
                 //保存日志
-                this.saveViewLog(request, point, stopWatch.getTime());
+                this.saveViewLog(viewLogEntity, point, stopWatch.getTime());
             });
 
             return result;
@@ -91,10 +103,9 @@ public class LogViewAspect {
         return point.proceed();
     }
 
-    private void saveViewLog(HttpServletRequest request, ProceedingJoinPoint joinPoint, long time) {
+    private void saveViewLog(com.luoyu.blog.entity.log.LogView viewLogEntity, ProceedingJoinPoint joinPoint, long time) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        com.luoyu.blog.entity.log.LogView viewLogEntity = new com.luoyu.blog.entity.log.LogView();
         LogView viewLog = method.getAnnotation(LogView.class);
         //请求的参数
         Object[] args = joinPoint.getArgs();
@@ -117,19 +128,11 @@ public class LogViewAspect {
         String className = joinPoint.getTarget().getClass().getName();
         String methodName = signature.getName();
         viewLogEntity.setMethod(className + "." + methodName + "()");
-        //获取request
-        viewLogEntity.setBorderName(UserAgentUtils.getBorderName(request));
-        viewLogEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
-        viewLogEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
-        viewLogEntity.setDeviceType(UserAgentUtils.getDeviceType(request));
-        viewLogEntity.setOsVersion(UserAgentUtils.getOsVersion(request));
 
-        //设置IP地址
-        String ip = IPUtils.getIpAddr(request);
-        if (ip != null){
-            viewLogEntity.setIp(ip);
+        //设置IP地址信息
+        if (!StringUtils.isEmpty(viewLogEntity.getIp())){
             try {
-                IPInfo ipInfo = ipApi.getIpInfo(ip);
+                IPInfo ipInfo = ipApi.getIpInfo(viewLogEntity.getIp());
                 if (ipInfo != null){
                     viewLogEntity.setCountry(ipInfo.getCountry());
                     viewLogEntity.setRegion(ipInfo.getRegionName());
@@ -139,6 +142,7 @@ public class LogViewAspect {
                 log.error("请求查询ip信息接口失败：{}", e.getMessage());
             }
         }
+
         viewLogEntity.setTime(time);
         LocalDateTime now = LocalDateTime.now();
         viewLogEntity.setCreateTime(now);

@@ -12,6 +12,7 @@ import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.log.LogLikeMapper;
 import com.luoyu.blog.mapper.video.VideoMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.StopWatch;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -78,9 +79,22 @@ public class LogLikeAspect {
             Object result = point.proceed();
 
             stopWatch.stop();
+
+            com.luoyu.blog.entity.log.LogLike logLikeEntity = new com.luoyu.blog.entity.log.LogLike();
+            //获取request
+            HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
+
+            logLikeEntity.setBorderName(UserAgentUtils.getBorderName(request));
+            logLikeEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
+            logLikeEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
+            logLikeEntity.setDeviceType(UserAgentUtils.getDeviceType(request));
+            logLikeEntity.setOsVersion(UserAgentUtils.getOsVersion(request));
+
+            //设置IP地址
+            logLikeEntity.setIp(IPUtils.getIpAddr(request));
             taskExecutor.execute(() ->{
                 //保存日志
-                this.saveLogLike(point, stopWatch.getTime());
+                this.saveLogLike(logLikeEntity, point, stopWatch.getTime());
             });
 
             return result;
@@ -89,10 +103,9 @@ public class LogLikeAspect {
         return point.proceed();
     }
 
-    private void saveLogLike(ProceedingJoinPoint joinPoint, long time) {
+    private void saveLogLike(com.luoyu.blog.entity.log.LogLike logLikeEntity, ProceedingJoinPoint joinPoint, long time) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        com.luoyu.blog.entity.log.LogLike logLikeEntity = new com.luoyu.blog.entity.log.LogLike();
         LogLike logLike = method.getAnnotation(LogLike.class);
         //请求的参数
         Object[] args = joinPoint.getArgs();
@@ -111,21 +124,11 @@ public class LogLikeAspect {
         }
 
         logLikeEntity.setParams(id);
-        //获取request
-        HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
 
-        logLikeEntity.setBorderName(UserAgentUtils.getBorderName(request));
-        logLikeEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
-        logLikeEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
-        logLikeEntity.setDeviceType(UserAgentUtils.getDeviceType(request));
-        logLikeEntity.setOsVersion(UserAgentUtils.getOsVersion(request));
-
-        //设置IP地址
-        String ip = IPUtils.getIpAddr(request);
-        if (ip != null){
-            logLikeEntity.setIp(ip);
+        //设置IP地址信息
+        if (!StringUtils.isEmpty(logLikeEntity.getIp())){
             try {
-                IPInfo ipInfo = ipApi.getIpInfo(ip);
+                IPInfo ipInfo = ipApi.getIpInfo(logLikeEntity.getIp());
                 if (ipInfo != null){
                     logLikeEntity.setCountry(ipInfo.getCountry());
                     logLikeEntity.setRegion(ipInfo.getRegionName());
@@ -135,6 +138,7 @@ public class LogLikeAspect {
                 log.error("请求查询ip信息接口失败：{}", e.getMessage());
             }
         }
+
         logLikeEntity.setTime(time);
         LocalDateTime now = LocalDateTime.now();
         logLikeEntity.setCreateTime(now);
