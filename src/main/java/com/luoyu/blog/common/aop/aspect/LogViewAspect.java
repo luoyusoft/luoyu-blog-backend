@@ -78,9 +78,11 @@ public class LogViewAspect {
             Object result = point.proceed();
 
             stopWatch.stop();
+            //获取request
+            HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
             taskExecutor.execute(() ->{
                 //保存日志
-                this.saveViewLog(point, stopWatch.getTime());
+                this.saveViewLog(request, point, stopWatch.getTime());
             });
 
             return result;
@@ -89,7 +91,7 @@ public class LogViewAspect {
         return point.proceed();
     }
 
-    private void saveViewLog(ProceedingJoinPoint joinPoint, long time) {
+    private void saveViewLog(HttpServletRequest request, ProceedingJoinPoint joinPoint, long time) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         com.luoyu.blog.entity.log.LogView viewLogEntity = new com.luoyu.blog.entity.log.LogView();
@@ -116,8 +118,6 @@ public class LogViewAspect {
         String methodName = signature.getName();
         viewLogEntity.setMethod(className + "." + methodName + "()");
         //获取request
-        HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
-
         viewLogEntity.setBorderName(UserAgentUtils.getBorderName(request));
         viewLogEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
         viewLogEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
