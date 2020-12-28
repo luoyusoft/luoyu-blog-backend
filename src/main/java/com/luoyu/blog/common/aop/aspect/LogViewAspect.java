@@ -70,7 +70,7 @@ public class LogViewAspect {
     @Around("logPointCut()")
     @Transactional(rollbackFor = Exception.class)
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        if (true){
+        if (profilesActive.equals(PROFILES_ACTIVE_PRO)){
             // 耗时计算
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
