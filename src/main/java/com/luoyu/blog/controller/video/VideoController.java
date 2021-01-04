@@ -1,9 +1,7 @@
 package com.luoyu.blog.controller.video;
 
-import com.luoyu.blog.common.aop.annotation.LogLike;
 import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.constants.RedisCacheNames;
-import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
@@ -119,20 +117,21 @@ public class VideoController {
     /********************** portal ********************************/
 
     @GetMapping("/video/{videoId}")
-    @LogView(type = 1)
+    @LogView(module = 1)
     public Response getVideo(@PathVariable Integer videoId){
         VideoDTO videoDTO = videoService.getVideoDTOById(videoId);
         return Response.success(videoDTO);
     }
 
     @PutMapping("/video/like/{id}")
-    @LogLike(type = 1)
+    @LogView(module = 1)
     public Response likeVideo(@PathVariable Integer id) {
-        return Response.success();
+        return Response.success(videoService.likeVideo(id));
     }
 
     @GetMapping("/videos")
     @Cacheable
+    @LogView(module = 1)
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                          @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
                          @RequestParam("like") Boolean like, @RequestParam("watch") Boolean watch) {
@@ -142,6 +141,7 @@ public class VideoController {
 
     @GetMapping("/videos/hotwatch")
     @Cacheable
+    @LogView(module = 1)
     public Response getHotWatchList(){
         return Response.success(videoService.getHotWatchList());
     }

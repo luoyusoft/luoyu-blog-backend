@@ -291,6 +291,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         VideoDTO videoDTO = new VideoDTO();
         BeanUtils.copyProperties(video, videoDTO);
         videoDTO.setTagList(tagService.listByLinkId(videoId, ModuleEnum.VIDEO.getCode()));
+        // 观看数量
+        baseMapper.updateWatchNum(videoId);
         return videoDTO;
     }
 
@@ -323,6 +325,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             videoVOList.add(videoVO);
         });
         return videoVOList;
+    }
+
+    @Override
+    public Boolean likeVideo(Integer id) {
+        return baseMapper.updateLikeNum(id);
     }
 
 }

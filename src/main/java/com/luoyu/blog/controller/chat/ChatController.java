@@ -1,5 +1,6 @@
 package com.luoyu.blog.controller.chat;
 
+import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.DateUtils;
@@ -62,6 +63,7 @@ public class ChatController {
      * @return
      */
     @PostMapping("/login")
+    @LogView(module = 2)
     public Response login(HttpServletRequest request, @RequestBody User user) throws Exception {
         if (user == null || StringUtils.isEmpty(user.getName()) || StringUtils.isEmpty(user.getAvatar())){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "名称，头像不能为空");

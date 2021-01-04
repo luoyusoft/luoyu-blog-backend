@@ -1,6 +1,5 @@
 package com.luoyu.blog.controller.article;
 
-import com.luoyu.blog.common.aop.annotation.LogLike;
 import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.constants.RedisCacheNames;
 import com.luoyu.blog.common.util.PageUtils;
@@ -18,7 +17,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -64,6 +62,7 @@ public class ArticleController {
     @PostMapping("/manage/article/save")
     @RequiresPermissions("article:save")
     @CacheEvict(allEntries = true)
+    @LogView(module = 0)
     public Response saveArticle(@RequestBody ArticleVO article){
         ValidatorUtils.validateEntity(article, AddGroup.class);
         articleService.saveArticle(article);
@@ -119,20 +118,21 @@ public class ArticleController {
     /********************** portal ********************************/
 
     @GetMapping("/article/{articleId}")
-    @LogView(type = 0)
+    @LogView(module = 0)
     public Response getArticle(@PathVariable Integer articleId){
         ArticleDTO article = articleService.getArticleDTOById(articleId);
         return Response.success(article);
     }
 
     @PutMapping("/article/like/{id}")
-    @LogLike(type = 0)
+    @LogView(module = 0)
     public Response likeArticle(@PathVariable Integer id) {
-        return Response.success();
+        return Response.success(articleService.likeArticle(id));
     }
 
     @GetMapping("/articles")
     @Cacheable
+    @LogView(module = 0)
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                          @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
                          @RequestParam("like") Boolean like, @RequestParam("read") Boolean read) {
@@ -142,6 +142,7 @@ public class ArticleController {
 
     @GetMapping("/articles/hotread")
     @Cacheable
+    @LogView(module = 0)
     public Response getHotReadList(){
         return Response.success(articleService.getHotReadList());
     }

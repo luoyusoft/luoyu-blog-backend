@@ -93,4 +93,10 @@ public interface VideoService extends IService<Video> {
      */
     List<VideoVO> getHotWatchList();
 
+    /**
+     * 更新点赞
+     * @return
+     */
+    Boolean likeVideo(Integer id);
+
 }

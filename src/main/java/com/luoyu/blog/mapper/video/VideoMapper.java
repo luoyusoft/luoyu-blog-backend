@@ -32,13 +32,13 @@ public interface VideoMapper extends BaseMapper<Video> {
      * 更新观看记录
      * @param id
      */
-    void updateWatchNum(Integer id);
+    Boolean updateWatchNum(Integer id);
 
     /**
-     * 更新评分
+     * 更新点赞
      * @param id
      */
-    void updateLikeNum(int id);
+    Boolean updateLikeNum(Integer id);
 
     /**
      * 判断类别下是否有文章

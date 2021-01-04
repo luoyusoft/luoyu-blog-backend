@@ -2,7 +2,6 @@ package com.luoyu.blog.common.aop.aspect;
 
 import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.api.IPApi;
-import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
@@ -27,6 +26,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
@@ -81,6 +81,7 @@ public class LogViewAspect {
             stopWatch.stop();
 
             com.luoyu.blog.entity.log.LogView viewLogEntity = new com.luoyu.blog.entity.log.LogView();
+            viewLogEntity.setResponse(JsonUtils.objectToJson(result));
             //获取request
             HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
             //获取request
@@ -89,6 +90,19 @@ public class LogViewAspect {
             viewLogEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
             viewLogEntity.setDeviceType(UserAgentUtils.getDeviceType(request));
             viewLogEntity.setOsVersion(UserAgentUtils.getOsVersion(request));
+
+            viewLogEntity.setRequestType(request.getMethod());
+            viewLogEntity.setUri(request.getRequestURI());
+            viewLogEntity.setHeadrParams(request.getQueryString());
+
+            StringBuilder data = new StringBuilder();
+            String line = null;
+            BufferedReader reader = null;
+            reader = request.getReader();
+            while (null != (line = reader.readLine())){
+                data.append(line);
+            }
+            viewLogEntity.setBodyParams(data.toString());
 
             //设置IP地址
             viewLogEntity.setIp(IPUtils.getIpAddr(request));
@@ -107,23 +121,10 @@ public class LogViewAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         LogView viewLog = method.getAnnotation(LogView.class);
-        //请求的参数
-        Object[] args = joinPoint.getArgs();
-        String id = JsonUtils.objectToJson(args[0]);
-        // 根据注解类型增加数量
-        //注解上的类型
-        int type = viewLog.type();
-        viewLogEntity.setType("");
-        if (type == ModuleEnum.ARTICLE.getCode()){
-            viewLogEntity.setType(ModuleEnum.ARTICLE.getName());
-            articleMapper.updateReadNum(Integer.parseInt(id));
-        }
-        if (type == ModuleEnum.VIDEO.getCode()){
-            viewLogEntity.setType(ModuleEnum.VIDEO.getName());
-            videoMapper.updateWatchNum(Integer.parseInt(id));
-        }
 
-        viewLogEntity.setParams(id);
+        //注解上的类型
+        viewLogEntity.setModule(viewLog.module());
+
         // 请求的方法名
         String className = joinPoint.getTarget().getClass().getName();
         String methodName = signature.getName();

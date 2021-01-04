@@ -1,14 +1,12 @@
 package com.luoyu.blog.service.article;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
-import com.luoyu.blog.common.util.PageUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * ArticleService
@@ -94,5 +92,11 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     List<ArticleVO> getHotReadList();
+
+    /**
+     * 更新点赞
+     * @return
+     */
+    Boolean likeArticle(Integer id);
 
 }

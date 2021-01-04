@@ -4,6 +4,7 @@ import com.luoyu.blog.common.api.IPApi;
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
+import com.luoyu.blog.common.util.SnowFlakeUtil;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.sys.IPInfo;
 import com.luoyu.blog.service.log.LogViewService;
@@ -40,6 +41,9 @@ class LuoYuBlogApplicationTests {
 
     @Autowired
     private LogViewService logViewService;
+
+    @Autowired
+    private SnowFlakeUtil snowFlakeUtil;
 
     @Test
     void testEnumUtil() {
@@ -92,6 +96,14 @@ class LuoYuBlogApplicationTests {
         int pos = str.lastIndexOf(":");
         String str2 = str.substring(pos+1);
         log.info(str2);
+    }
+
+    @Test
+    void testId() throws Exception {
+        long s = snowFlakeUtil.snowflakeId(1, 1);
+        long s1 = snowFlakeUtil.snowflakeId();
+        System.out.println(s);
+        System.out.println(s1);
     }
 
     @Test

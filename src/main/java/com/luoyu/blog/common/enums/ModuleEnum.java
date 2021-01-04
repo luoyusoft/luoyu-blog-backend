@@ -21,7 +21,12 @@ public enum ModuleEnum {
     /**
      * 视频模块
      */
-    VIDEO(1, "video");
+    VIDEO(1, "video"),
+    /**
+     * 聊天室模块
+     */
+    CHAT(2, "chat");
+
 
     private int code;
     private String name;

@@ -291,6 +291,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         ArticleDTO articleDTO = new ArticleDTO();
         BeanUtils.copyProperties(article,articleDTO);
         articleDTO.setTagList(tagService.listByLinkId(articleId, ModuleEnum.ARTICLE.getCode()));
+        // 浏览数量
+        baseMapper.updateReadNum(articleId);
         return articleDTO;
     }
 
@@ -323,6 +325,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             articleVOList.add(articleVO);
         });
         return articleVOList;
+    }
+
+    @Override
+    public Boolean likeArticle(Integer id) {
+        return baseMapper.updateLikeNum(id);
     }
 
 }

@@ -44,6 +44,7 @@
         <com.google.zxing.version>3.2.0</com.google.zxing.version>
         <eu.bitwalker.version>1.21</eu.bitwalker.version>
         <org.mindrot.version>0.4</org.mindrot.version>
+        <cn.hutool.version>5.5.6</cn.hutool.version>
     </properties>
 
     <dependencies>
@@ -265,6 +266,13 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${org.mindrot.version}</version>
+        </dependency>
+
+        <!-- 文件、流、加密解密、转码、正则、线程、XML等JDK方法工具 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${cn.hutool.version}</version>
         </dependency>
 
     </dependencies>

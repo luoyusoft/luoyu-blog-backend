@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 阅读日志
+ * 访问日志
  * </p>
  *
  * @author luoyu
@@ -23,14 +23,14 @@ public class LogView extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "浏览类型")
-    private String type;
+    @ApiModelProperty(value = "浏览模块")
+    private Integer module;
 
     @ApiModelProperty(value = "请求方法")
     private String method;
 
-    @ApiModelProperty(value = "请求参数")
-    private String params;
+    @ApiModelProperty(value = "请求头参数")
+    private String headrParams;
 
     @ApiModelProperty(value = "执行时长(毫秒)")
     private Long time;
@@ -61,5 +61,17 @@ public class LogView extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "操作系统的版本号")
     private String osVersion;
+
+    @ApiModelProperty(value = "请求uri")
+    private String uri;
+
+    @ApiModelProperty(value = "请求类型（GET，POST，DELETE等）")
+    private String requestType;
+
+    @ApiModelProperty(value = "请求体参数")
+    private String bodyParams;
+
+    @ApiModelProperty(value = "响应结果")
+    private String response;
 
 }

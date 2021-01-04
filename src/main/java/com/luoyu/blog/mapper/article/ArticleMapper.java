@@ -32,13 +32,13 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * 更新阅读记录
      * @param id
      */
-    void updateReadNum(Integer id);
+    Boolean updateReadNum(Integer id);
 
     /**
      * 更新点赞记录
      * @param id
      */
-    void updateLikeNum(int id);
+    Boolean updateLikeNum(Integer id);
 
     /**
      * 判断类别下是否有文章

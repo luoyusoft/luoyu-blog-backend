@@ -49,7 +49,13 @@ public class UserAgentUtils {
         if(StringUtils.isBlank(userAgent)){
             return null;
         }
-        String[] strArr = userAgent.substring(userAgent.indexOf("(")+1, userAgent.indexOf(")")).split(";");
+
+        int start = userAgent.indexOf("(");
+        int end = userAgent.indexOf(")");
+        if (start < 0 || end < 0){
+            return null;
+        }
+        String[] strArr = userAgent.substring(start + 1, end).split(";");
         if(strArr.length == 0){
             return null;
         }
@@ -119,7 +125,11 @@ public class UserAgentUtils {
             return null;
         }
 
-        return operatingSystem.getDeviceType().toString();
+        if (operatingSystem.getDeviceType() != null){
+            return operatingSystem.getDeviceType().toString();
+        }
+
+        return null;
     }
 
     /**
@@ -173,7 +183,11 @@ public class UserAgentUtils {
             return null;
         }
 
-        return operatingSystem.getManufacturer().toString();
+        if (operatingSystem.getManufacturer() != null){
+            return operatingSystem.getManufacturer().toString();
+        }
+
+        return null;
     }
 
     /**
@@ -350,7 +364,11 @@ public class UserAgentUtils {
             return null;
         }
 
-        return browser.getVersion( userAgent).toString();
+        if (browser.getVersion(userAgent) != null){
+            return browser.getVersion( userAgent).toString();
+        }
+
+        return null;
     }
 
 

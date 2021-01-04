@@ -4,11 +4,10 @@ import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.service.log.LogViewService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 /**
  * TimeLineController
@@ -20,7 +19,7 @@ import javax.annotation.Resource;
 @RestController
 public class LogViewController {
 
-    @Resource
+    @Autowired
     private LogViewService logViewService;
 
     @GetMapping("/manage/log/list")
