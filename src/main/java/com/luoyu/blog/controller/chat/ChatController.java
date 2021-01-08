@@ -76,7 +76,7 @@ public class ChatController {
         String devicetype = UserAgentUtils.getDeviceType(request);
         String osVersion = UserAgentUtils.getOsVersion(request);
 
-        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
+        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion).replaceAll("/", "");
 
         if (websocketServerEndpoint.isOnline(id)){
             throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
