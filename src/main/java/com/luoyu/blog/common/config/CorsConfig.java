@@ -17,10 +17,11 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("*") // 允许任何域名使用
+                .allowedHeaders("*") // 允许任何头
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowCredentials(true)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .maxAge(3600);
+                .maxAge(3600L); // 解决跨域请求两次，预检请求的有效期，单位为秒
     }
 
 }

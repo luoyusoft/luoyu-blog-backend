@@ -1,4 +1,4 @@
-package com.luoyu.blog.common.xss;
+package com.luoyu.blog.common.config.xss;
 
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.enums.ResponseEnums;

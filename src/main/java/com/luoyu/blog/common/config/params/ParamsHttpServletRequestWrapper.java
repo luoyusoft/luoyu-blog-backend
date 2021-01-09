@@ -1,4 +1,4 @@
-package com.luoyu.blog.common.config;
+package com.luoyu.blog.common.config.params;
 
 import com.luoyu.blog.common.util.RequestReadUtils;
 
@@ -11,11 +11,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class MyRequestWrapper extends HttpServletRequestWrapper {
+public class ParamsHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private final String body;
 
-    public MyRequestWrapper(HttpServletRequest request) throws IOException {
+    public ParamsHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
         this.body = RequestReadUtils.read(request);
     }
@@ -24,11 +24,11 @@ public class MyRequestWrapper extends HttpServletRequestWrapper {
         return body;
     }
 
-
-
     @Override
     public ServletInputStream getInputStream()  {
+
         final ByteArrayInputStream bais = new ByteArrayInputStream(body.getBytes());
+
         return new ServletInputStream() {
 
             @Override
@@ -42,14 +42,13 @@ public class MyRequestWrapper extends HttpServletRequestWrapper {
             }
 
             @Override
-            public void setReadListener(ReadListener readListener) {
-
-            }
+            public void setReadListener(ReadListener readListener) {}
 
             @Override
             public int read(){
                 return bais.read();
             }
+
         };
     }
 
@@ -57,6 +56,5 @@ public class MyRequestWrapper extends HttpServletRequestWrapper {
     public BufferedReader getReader(){
         return new BufferedReader(new InputStreamReader(this.getInputStream()));
     }
-
 
 }

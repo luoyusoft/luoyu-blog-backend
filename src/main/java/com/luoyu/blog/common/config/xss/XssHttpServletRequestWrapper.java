@@ -1,4 +1,4 @@
-package com.luoyu.blog.common.xss;
+package com.luoyu.blog.common.config.xss;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;

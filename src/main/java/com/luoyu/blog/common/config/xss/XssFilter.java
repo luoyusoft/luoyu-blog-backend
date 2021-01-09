@@ -1,4 +1,4 @@
-package com.luoyu.blog.common.xss;
+package com.luoyu.blog.common.config.xss;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

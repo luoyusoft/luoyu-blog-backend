@@ -62,7 +62,6 @@ public class ArticleController {
     @PostMapping("/manage/article/save")
     @RequiresPermissions("article:save")
     @CacheEvict(allEntries = true)
-    @LogView(module = 0)
     public Response saveArticle(@RequestBody ArticleVO article){
         ValidatorUtils.validateEntity(article, AddGroup.class);
         articleService.saveArticle(article);

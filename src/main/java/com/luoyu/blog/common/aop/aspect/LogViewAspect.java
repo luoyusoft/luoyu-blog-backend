@@ -2,6 +2,7 @@ package com.luoyu.blog.common.aop.aspect;
 
 import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.api.IPApi;
+import com.luoyu.blog.common.config.params.ParamsHttpServletRequestWrapper;
 import com.luoyu.blog.common.util.HttpContextUtils;
 import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
@@ -25,8 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
@@ -83,7 +82,7 @@ public class LogViewAspect {
             com.luoyu.blog.entity.log.LogView viewLogEntity = new com.luoyu.blog.entity.log.LogView();
             viewLogEntity.setResponse(JsonUtils.objectToJson(result));
             //获取request
-            HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
+            ParamsHttpServletRequestWrapper request = HttpContextUtils.getHttpServletRequest();
             //获取request
             viewLogEntity.setBorderName(UserAgentUtils.getBorderName(request));
             viewLogEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
@@ -95,14 +94,7 @@ public class LogViewAspect {
             viewLogEntity.setUri(request.getRequestURI());
             viewLogEntity.setHeadrParams(request.getQueryString());
 
-            StringBuilder data = new StringBuilder();
-            String line = null;
-            BufferedReader reader = null;
-            reader = request.getReader();
-            while (null != (line = reader.readLine())){
-                data.append(line);
-            }
-            viewLogEntity.setBodyParams(data.toString());
+            viewLogEntity.setBodyParams(request.getBody());
 
             //设置IP地址
             viewLogEntity.setIp(IPUtils.getIpAddr(request));
