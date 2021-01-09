@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -36,17 +35,17 @@ public class TagLink extends BaseEntity implements Serializable {
     @NotNull(message="标签id不能为空", groups = {AddGroup.class})
     private Integer tagId;
 
-    @ApiModelProperty(value = "标签所属类型：0文章，1阅读")
-    @NotNull(message="所属类型不能为空", groups = {AddGroup.class})
-    private Integer type;
+    @ApiModelProperty(value = "标签所属模块：0文章，1阅读")
+    @NotNull(message="所属模块不能为空", groups = {AddGroup.class})
+    private Integer module;
 
     public TagLink() {
     }
 
-    public TagLink(Integer linkId, Integer tagId, Integer type) {
+    public TagLink(Integer linkId, Integer tagId, Integer module) {
         this.linkId =  linkId;
         this.tagId = tagId;
-        this.type = type;
+        this.module = module;
     }
 
 }

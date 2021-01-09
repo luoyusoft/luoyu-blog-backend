@@ -21,7 +21,7 @@ public interface TopMapper extends BaseMapper<Top> {
      * 获取
      * @return
      */
-    Top selectTopByLinkIdAndType(Integer linkId, Integer type);
+    Top selectTopByLinkIdAndType(Integer linkId, Integer module);
 
     /**
      * 获取
@@ -64,6 +64,6 @@ public interface TopMapper extends BaseMapper<Top> {
      * 获取推荐列表
      * @return
      */
-    List<TopVO> listTopDTO(Integer type);
+    List<TopVO> listTopDTO(Integer module);
 
 }

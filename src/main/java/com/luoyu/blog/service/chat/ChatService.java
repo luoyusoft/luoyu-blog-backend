@@ -1,10 +1,10 @@
 package com.luoyu.blog.service.chat;
 
+import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.chat.Message;
 import com.luoyu.blog.entity.chat.User;
 import com.luoyu.blog.entity.chat.vo.UserVO;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ public interface ChatService {
      * @param id
      * @return UserVO对象
      */
-    UserVO init(String id);
+    Response init(String id);
 
     /**
      * 登录

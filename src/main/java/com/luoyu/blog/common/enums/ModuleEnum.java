@@ -17,15 +17,15 @@ public enum ModuleEnum {
     /**
      * 文章模块
      */
-    ARTICLE(0, "article"),
+    ARTICLE(0, "文章模块"),
     /**
      * 视频模块
      */
-    VIDEO(1, "video"),
+    VIDEO(1, "视频模块"),
     /**
      * 聊天室模块
      */
-    CHAT(2, "chat");
+    CHAT(2, "聊天室模块");
 
 
     private int code;

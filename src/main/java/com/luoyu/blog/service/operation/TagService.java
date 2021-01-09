@@ -32,26 +32,26 @@ public interface TagService extends IService<Tag> {
      * 根据关联Id获取列表
      *
      * @param linkId
-     * @param type
+     * @param module
      * @return
      */
-    List<Tag> listByLinkId(Integer linkId, Integer type);
+    List<Tag> listByLinkId(Integer linkId, Integer module);
 
     /**
      * 添加所属标签，包含新增标签
      *
      * @param tagList
      * @param linkId
-     * @param type
+     * @param module
      */
-    void saveTagAndNew(List<Tag> tagList, Integer linkId, Integer type);
+    void saveTagAndNew(List<Tag> tagList, Integer linkId, Integer module);
 
     /**
      * 删除tagLink关联
      * @param linkId
-     * @param type
+     * @param module
      */
-    void deleteTagLink(Integer linkId, Integer type);
+    void deleteTagLink(Integer linkId, Integer module);
 
     /********************** portal ********************************/
 
@@ -59,6 +59,6 @@ public interface TagService extends IService<Tag> {
      * 获取tagVoList
      * @return
      */
-    List<TagVO> listTagDTO(Integer type);
+    List<TagVO> listTagDTO(Integer module);
 
 }

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -173,8 +172,11 @@ public class CategoryController extends AbstractController {
 
     @GetMapping("/operation/categories")
     @Cacheable
-    public Response listCategory(@RequestParam Map<String, Object> params) {
-        List<Category> categoryList = categoryService.listCategory(params);
+    public Response listCategory(@RequestParam("module") String module) {
+        if (module == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
+        }
+        List<Category> categoryList = categoryService.listCategory(module);
         return Response.success(categoryList);
     }
 

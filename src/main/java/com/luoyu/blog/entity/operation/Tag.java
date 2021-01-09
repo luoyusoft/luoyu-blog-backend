@@ -2,7 +2,6 @@ package com.luoyu.blog.entity.operation;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.luoyu.blog.common.validator.group.AddGroup;
-import com.luoyu.blog.common.validator.group.UpdateGroup;
 import com.luoyu.blog.entity.base.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,8 +32,8 @@ public class Tag extends BaseEntity implements Serializable {
     @NotBlank(message="标签名字不能为空", groups = {AddGroup.class})
     private String name;
 
-    @ApiModelProperty(value = "标签所属类型：0文章，1阅读")
-    @NotNull(message="标签所属类型不能为空", groups = {AddGroup.class})
-    private Integer type;
+    @ApiModelProperty(value = "标签所属模块：0文章，1视频")
+    @NotNull(message="标签所属模块不能为空", groups = {AddGroup.class})
+    private Integer module;
 
 }

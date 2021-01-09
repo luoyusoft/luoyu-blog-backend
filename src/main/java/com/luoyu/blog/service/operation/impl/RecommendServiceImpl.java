@@ -269,12 +269,10 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
             if(ModuleEnum.ARTICLE.getCode() == recommendVO.getModule()){
                 ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(recommendVO.getLinkId());
                 BeanUtils.copyProperties(simpleArticleDTO, recommendVO);
-                recommendVO.setUrlType(ModuleEnum.ARTICLE.getName());
             }
             if(ModuleEnum.VIDEO.getCode() == recommendVO.getModule()){
                 VideoDTO simpleVideoDTO = videoMapper.getSimpleVideoDTO(recommendVO.getLinkId());
                 BeanUtils.copyProperties(simpleVideoDTO, recommendVO);
-                recommendVO.setUrlType(ModuleEnum.VIDEO.getName());
             }
         });
         return recommendList;

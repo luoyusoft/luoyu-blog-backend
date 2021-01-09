@@ -21,7 +21,7 @@
     </resultMap>
 
     <resultMap id="WithTagList" type="com.luoyu.blog.entity.article.vo.ArticleVO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id, type=type}" select="com.luoyu.blog.mapper.operation.TagMapper.listByLinkId"/>
+        <association property="tagList" column="{linkId=id, module=module}" select="com.luoyu.blog.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <sql id="homeArticleColumn">
@@ -131,7 +131,7 @@
     </select>
 
     <select id="queryPageCondition" resultMap="WithTagList">
-        select <include refid="homeArticleColumn"/> , 0 as `type` from article
+        select <include refid="homeArticleColumn"/> , 0 as `module` from article
         <where>
             publish = true
             <if test="params.categoryId !=null and params.categoryId != ''">

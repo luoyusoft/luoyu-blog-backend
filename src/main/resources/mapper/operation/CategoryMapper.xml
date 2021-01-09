@@ -14,7 +14,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, type, rank, parent_id,create_time,update_time
+        id, name, module, rank, parent_id,create_time,update_time
     </sql>
 
     <select id="queryAll" resultType="com.luoyu.blog.entity.operation.Category">

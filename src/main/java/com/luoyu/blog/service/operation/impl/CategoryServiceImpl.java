@@ -11,7 +11,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -80,16 +79,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     /**
      * 获取categoryList
      *
-     * @param params
+     * @param module
      * @return
      */
     @Override
-    public List<Category> listCategory(Map<String, Object> params) {
-        String type = (String) params.get("type");
-        String rank = (String) params.get("rank");
+    public List<Category> listCategory(String module) {
         return baseMapper.selectList(new QueryWrapper<Category>().lambda()
-                .eq(org.apache.commons.lang.StringUtils.isNotEmpty(type),Category::getModule,type)
-                .eq(org.apache.commons.lang.StringUtils.isNotEmpty(rank),Category::getRank,rank));
+                .eq(!StringUtils.isEmpty(module),Category::getModule,module));
     }
 
 }

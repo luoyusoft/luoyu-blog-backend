@@ -4,11 +4,11 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, link_id, type, order_num,create_time,update_time
+        id, link_id, module, order_num,create_time,update_time
     </sql>
 
     <select id="selectTopByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Top">
-        select * from top where type = #{type} and link_id = #{linkId}
+        select * from top where module = #{module} and link_id = #{linkId}
     </select>
 
     <select id="selectTopByOrderNum" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Top">
@@ -30,7 +30,7 @@
     <update id="updateTopOrderNumByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Top">
         update top
         set order_num = #{orderNum}
-        where type = #{type} and link_id = #{linkId}
+        where module = #{module} and link_id = #{linkId}
     </update>
 
     <update id="updateTopOrderNumById" parameterType="java.lang.Integer">
@@ -46,7 +46,7 @@
     <!-- *************************** portal ****************************** -->
 
     <select id="listTopDTO" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.vo.TopVO">
-        select <include refid="Base_Column_List"/> from top where type = #{type} order by order_num asc limit 10
+        select <include refid="Base_Column_List"/> from top where module = #{module} order by order_num asc limit 10
     </select>
 
 </mapper>

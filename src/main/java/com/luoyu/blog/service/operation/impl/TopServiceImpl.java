@@ -10,7 +10,6 @@ import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
-import com.luoyu.blog.entity.operation.Recommend;
 import com.luoyu.blog.entity.operation.Top;
 import com.luoyu.blog.entity.operation.vo.TopVO;
 import com.luoyu.blog.entity.video.Video;
@@ -63,13 +62,13 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
         IPage<Top> TopPage = baseMapper.selectPage(new Query<Top>(params).getPage(),
                 new QueryWrapper<Top>().orderByAsc("order_num"));
         TopPage.getRecords().forEach(TopPageItem -> {
-            if (ModuleEnum.ARTICLE.getCode() == TopPageItem.getType()){
+            if (ModuleEnum.ARTICLE.getCode() == TopPageItem.getModule()){
                 Article article = articleMapper.selectById(TopPageItem.getLinkId());
                 if (article != null){
                     TopPageItem.setTitle(article.getTitle());
                 }
             }
-            if (ModuleEnum.VIDEO.getCode() == TopPageItem.getType()){
+            if (ModuleEnum.VIDEO.getCode() == TopPageItem.getModule()){
                 Video video = videoMapper.selectById(TopPageItem.getLinkId());
                 if (video != null){
                     TopPageItem.setTitle(video.getTitle());
@@ -86,30 +85,30 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
      * @return
      */
     @Override
-    public List<TopVO> select(Integer type, String title) {
+    public List<TopVO> select(Integer module, String title) {
         List<TopVO> TopVOList = new ArrayList<>();
 
-        if (ModuleEnum.ARTICLE.getCode() == type){
+        if (ModuleEnum.ARTICLE.getCode() == module){
             List<Article> articleList = articleMapper.selectArticleListByTitle(title);
             if (!CollectionUtils.isEmpty(articleList)){
                 articleList.forEach(articleListItem -> {
                     TopVO TopVO = new TopVO();
                     TopVO.setTitle(articleListItem.getTitle());
                     TopVO.setLinkId(articleListItem.getId());
-                    TopVO.setType(type);
+                    TopVO.setModule(module);
                     TopVOList.add(TopVO);
                 });
             }
         }
 
-        if (ModuleEnum.VIDEO.getCode() == type){
+        if (ModuleEnum.VIDEO.getCode() == module){
             List<Video> videoList = videoMapper.selectVideoListByTitle(title);
             if (videoList != null && videoList.size() > 0){
                 videoList.forEach(videoListItem -> {
                     TopVO TopVO = new TopVO();
                     TopVO.setTitle(videoListItem.getTitle());
                     TopVO.setLinkId(videoListItem.getId());
-                    TopVO.setType(type);
+                    TopVO.setModule(module);
                     TopVOList.add(TopVO);
                 });
             }
@@ -122,14 +121,14 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
      * 批量删除
      *
      * @param linkIds
-     * @param type
+     * @param module
      */
     @Override
-    public void deleteTopsByLinkIdsAndType(List<Integer> linkIds, int type) {
+    public void deleteTopsByLinkIdsAndType(List<Integer> linkIds, int module) {
         for (Integer linkId : linkIds) {
             baseMapper.delete(new QueryWrapper<Top>().lambda()
                     .eq(Top::getLinkId,linkId)
-                    .eq(Top::getType,type));
+                    .eq(Top::getModule,module));
         }
     }
 
@@ -142,12 +141,12 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
         if (baseMapper.selectTopByOrderNum(top.getOrderNum()) != null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该顺序已被占用");
         }
-        if (ModuleEnum.ARTICLE.getCode() == top.getType()){
+        if (ModuleEnum.ARTICLE.getCode() == top.getModule()){
             Article article = articleMapper.selectById(top.getLinkId());
             if(article == null) {
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "置顶内容不存在");
             }
-            Top oldTop = baseMapper.selectTopByLinkIdAndType(top.getLinkId(), top.getType());
+            Top oldTop = baseMapper.selectTopByLinkIdAndType(top.getLinkId(), top.getModule());
             if(oldTop == null){
                 baseMapper.insert(top);
             }else {
@@ -155,12 +154,12 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
             }
         }
 
-        if (ModuleEnum.VIDEO.getCode() == top.getType()){
+        if (ModuleEnum.VIDEO.getCode() == top.getModule()){
             Video video = videoMapper.selectById(top.getLinkId());
             if(video == null) {
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "置顶内容不存在");
             }
-            Top oldTop = baseMapper.selectTopByLinkIdAndType(top.getLinkId(), top.getType());
+            Top oldTop = baseMapper.selectTopByLinkIdAndType(top.getLinkId(), top.getModule());
             if(oldTop == null){
                 baseMapper.insert(top);
             }else {
@@ -179,12 +178,12 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
         if (existTop != null && !existTop.getId().equals(top.getId())){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该顺序已被占用");
         }
-        if (ModuleEnum.ARTICLE.getCode() == top.getType()){
+        if (ModuleEnum.ARTICLE.getCode() == top.getModule()){
             Article article = articleMapper.selectById(top.getLinkId());
             if(article == null) {
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "置顶内容不存在");
             }
-            Top oldTop = baseMapper.selectTopByLinkIdAndType(top.getLinkId(), top.getType());
+            Top oldTop = baseMapper.selectTopByLinkIdAndType(top.getLinkId(), top.getModule());
             if(oldTop == null){
                 baseMapper.insert(top);
             }else {
@@ -192,12 +191,12 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
             }
         }
 
-        if (ModuleEnum.VIDEO.getCode() == top.getType()){
+        if (ModuleEnum.VIDEO.getCode() == top.getModule()){
             Video video = videoMapper.selectById(top.getLinkId());
             if(video == null) {
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "置顶内容不存在");
             }
-            Top oldTop = baseMapper.selectTopByLinkIdAndType(top.getLinkId(), top.getType());
+            Top oldTop = baseMapper.selectTopByLinkIdAndType(top.getLinkId(), top.getModule());
             if(oldTop == null){
                 baseMapper.insert(top);
             }else {
@@ -242,11 +241,11 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
      * 查找
      *
      * @param linkId
-     * @param type
+     * @param module
      */
     @Override
-    public Top selectTopByLinkIdAndType(Integer linkId, Integer type) {
-        return baseMapper.selectTopByLinkIdAndType(linkId, type);
+    public Top selectTopByLinkIdAndType(Integer linkId, Integer module) {
+        return baseMapper.selectTopByLinkIdAndType(linkId, module);
     }
 
     /**
@@ -260,22 +259,20 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
     /********************** portal ********************************/
 
     @Override
-    public List<TopVO> listTopVO(Integer type) {
-        List<TopVO> TopList =this.baseMapper.listTopDTO(type);
+    public List<TopVO> listTopVO(Integer module) {
+        List<TopVO> TopList =this.baseMapper.listTopDTO(module);
         return genTopList(TopList);
     }
 
     private List<TopVO> genTopList(List<TopVO> TopList) {
         TopList.forEach(TopVO -> {
-            if(ModuleEnum.ARTICLE.getCode() == TopVO.getType()){
+            if(ModuleEnum.ARTICLE.getCode() == TopVO.getModule()){
                 ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(TopVO.getLinkId());
                 BeanUtils.copyProperties(simpleArticleDTO, TopVO);
-                TopVO.setUrlType(ModuleEnum.ARTICLE.getName());
             }
-            if(ModuleEnum.VIDEO.getCode() == TopVO.getType()){
+            if(ModuleEnum.VIDEO.getCode() == TopVO.getModule()){
                 VideoDTO simpleVideoDTO = videoMapper.getSimpleVideoDTO(TopVO.getLinkId());
                 BeanUtils.copyProperties(simpleVideoDTO, TopVO);
-                TopVO.setUrlType(ModuleEnum.VIDEO.getName());
             }
         });
         return TopList;

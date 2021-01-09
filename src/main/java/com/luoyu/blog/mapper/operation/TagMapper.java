@@ -20,17 +20,17 @@ public interface TagMapper extends BaseMapper<Tag> {
     /**
      * 根据linkId获取Tag列表
      * @param linkId
-     * @param type
+     * @param module
      * @return
      */
-    List<Tag> listByLinkId(@Param("linkId") Integer linkId, @Param("type") Integer type);
+    List<Tag> listByLinkId(@Param("linkId") Integer linkId, @Param("module") Integer module);
 
     /**
      * 根据linkId删除多对多关联
      * @param linkId
-     * @param type
+     * @param module
      */
-    void deleteTagLink(@Param("linkId") Integer linkId, @Param("type") Integer type);
+    void deleteTagLink(@Param("linkId") Integer linkId, @Param("module") Integer module);
 
     /********************** portal ********************************/
 
@@ -38,12 +38,12 @@ public interface TagMapper extends BaseMapper<Tag> {
      * 获取tagVoList
      * @return
      */
-    List<TagVO> listTagArticleDTO(Integer type);
+    List<TagVO> listTagArticleDTO(Integer module);
 
     /**
      * 获取tagVoList
      * @return
      */
-    List<TagVO> listTagVideoDTO(Integer type);
+    List<TagVO> listTagVideoDTO(Integer module);
 
 }

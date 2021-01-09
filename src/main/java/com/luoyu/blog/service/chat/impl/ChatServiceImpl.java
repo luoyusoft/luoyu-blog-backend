@@ -3,12 +3,14 @@ package com.luoyu.blog.service.chat.impl;
 import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
-import com.luoyu.blog.common.util.*;
-import com.luoyu.blog.service.chat.WebsocketServerEndpoint;
+import com.luoyu.blog.common.util.DateUtils;
+import com.luoyu.blog.common.util.JsonUtils;
+import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.chat.Message;
 import com.luoyu.blog.entity.chat.User;
 import com.luoyu.blog.entity.chat.vo.UserVO;
 import com.luoyu.blog.service.chat.ChatService;
+import com.luoyu.blog.service.chat.WebsocketServerEndpoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -42,7 +43,7 @@ public class ChatServiceImpl implements ChatService {
      * @return UserVO对象
      */
     @Override
-    public UserVO init(String id){
+    public Response init(String id){
         if (websocketServerEndpoint.isOnline(id)){
             throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
         }
@@ -51,10 +52,10 @@ public class ChatServiceImpl implements ChatService {
         if (oldUserentity != null) {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(oldUserentity, userVO);
-            return userVO;
+            return Response.success(userVO);
         }
 
-        throw new MyException(ResponseEnums.CHAT_INITT_SUCCESS);
+        return Response.fail(ResponseEnums.CHAT_INITT_SUCCESS);
     }
 
     /**

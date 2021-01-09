@@ -26,8 +26,6 @@ public class RecommendVO extends Recommend {
 
     private Long likeNum;
 
-    private String urlType;
-
     private String cover;
 
     private List<Tag> tagList;

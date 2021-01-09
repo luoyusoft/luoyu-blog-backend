@@ -29,14 +29,14 @@ public interface TopService extends IService<Top> {
      * 获取推荐列表
      * @return
      */
-    List<TopVO> select(Integer type, String title);
+    List<TopVO> select(Integer module, String title);
 
     /**
      * 批量删除
      * @param linkIds
-     * @param type
+     * @param module
      */
-    void deleteTopsByLinkIdsAndType(List<Integer> linkIds, int type);
+    void deleteTopsByLinkIdsAndType(List<Integer> linkIds, int module);
 
     /**
      * 新增
@@ -65,9 +65,9 @@ public interface TopService extends IService<Top> {
     /**
      * 查找
      * @param linkId
-     * @param type
+     * @param module
      */
-    Top selectTopByLinkIdAndType(Integer linkId, Integer type);
+    Top selectTopByLinkIdAndType(Integer linkId, Integer module);
 
     /**
      * 查找最大顺序
@@ -76,6 +76,6 @@ public interface TopService extends IService<Top> {
 
     /********************** portal ********************************/
 
-    List<TopVO> listTopVO(Integer type);
+    List<TopVO> listTopVO(Integer module);
 
 }

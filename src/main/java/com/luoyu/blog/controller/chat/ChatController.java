@@ -53,7 +53,7 @@ public class ChatController {
 
         String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
 
-        return Response.success(chatService.init(id));
+        return chatService.init(id);
     }
 
     /**

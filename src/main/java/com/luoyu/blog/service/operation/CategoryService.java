@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.entity.operation.Category;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -43,9 +42,9 @@ public interface CategoryService extends IService<Category> {
 
     /**
      * 获取categoryList
-     * @param params
+     * @param module
      * @return
      */
-    List<Category> listCategory(Map<String, Object> params);
+    List<Category> listCategory(String module);
 
 }

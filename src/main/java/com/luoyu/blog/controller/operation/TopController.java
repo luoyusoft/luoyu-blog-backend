@@ -14,7 +14,6 @@ import com.luoyu.blog.service.operation.TopService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -51,11 +50,11 @@ public class TopController extends AbstractController {
      */
     @GetMapping("/manage/operation/top/select")
     @RequiresPermissions("operation:top:list")
-    public Response select(@RequestParam("type") Integer type, @RequestParam("title") String title) {
-        if(type == null){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
+    public Response select(@RequestParam("module") Integer module, @RequestParam("title") String title) {
+        if(module == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
-        List<TopVO> TopList = TopService.select(type, title);
+        List<TopVO> TopList = TopService.select(module, title);
         return Response.success(TopList);
     }
 
@@ -76,8 +75,8 @@ public class TopController extends AbstractController {
     @RequiresPermissions("operation:top:save")
     @CacheEvict(allEntries = true)
     public Response save(@RequestBody Top top){
-        if(top.getLinkId() == null || top.getType() == null || top.getOrderNum() == null){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "linkId，type，orderNum不能为空");
+        if(top.getLinkId() == null || top.getModule() == null || top.getOrderNum() == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "linkId，module，orderNum不能为空");
         }
         ValidatorUtils.validateEntity(top, AddGroup.class);
         TopService.insertTop(top);
@@ -93,8 +92,8 @@ public class TopController extends AbstractController {
     @CacheEvict(allEntries = true)
     public Response update(@RequestBody Top top){
         if(top.getId() == null || top.getLinkId() == null
-                || top.getType() == null || top.getOrderNum() == null){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，linkId，type，orderNum不能为空");
+                || top.getModule() == null || top.getOrderNum() == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，linkId，module，orderNum不能为空");
         }
         TopService.updateTop(top);
 

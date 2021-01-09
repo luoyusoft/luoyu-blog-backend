@@ -52,7 +52,6 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         Map<String, Object> params = new HashMap<>();
         params.put("limit", String.valueOf(limit));
         params.put("page", String.valueOf(page));
-        params.put("key", key);
 
         IPage<Tag> tagPage = baseMapper.selectPage(new Query<Tag>(params).getPage(),
                 new QueryWrapper<Tag>().lambda().like(StringUtils.isNotEmpty(key), Tag::getName, key));
@@ -66,8 +65,8 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      * @return
      */
     @Override
-    public List<Tag> listByLinkId(Integer linkId, Integer type) {
-        return this.baseMapper.listByLinkId(linkId, type);
+    public List<Tag> listByLinkId(Integer linkId, Integer module) {
+        return this.baseMapper.listByLinkId(linkId, module);
     }
 
     /**
@@ -77,13 +76,13 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      * @param linkId
      */
     @Override
-    public void saveTagAndNew(List<Tag> tagList, Integer linkId, Integer type) {
+    public void saveTagAndNew(List<Tag> tagList, Integer linkId, Integer module) {
         Optional.ofNullable(tagList)
                 .ifPresent(tagListValue -> tagListValue.forEach(tag -> {
                     if (tag.getId() == null) {
                         this.baseMapper.insert(tag);
                     }
-                    TagLink tagLink = new TagLink(linkId, tag.getId(), type);
+                    TagLink tagLink = new TagLink(linkId, tag.getId(), module);
                     tagLinkMapper.insert(tagLink);
                 }));
     }
@@ -94,10 +93,10 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      * @param linkId
      */
     @Override
-    public void deleteTagLink(Integer linkId, Integer type) {
+    public void deleteTagLink(Integer linkId, Integer module) {
         tagLinkMapper.delete(new QueryWrapper<TagLink>().lambda()
                 .eq(linkId != null, TagLink::getLinkId, linkId)
-                .eq(type != null, TagLink::getType, type));
+                .eq(module != null, TagLink::getModule, module));
     }
 
     /********************** portal ********************************/
@@ -108,14 +107,14 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      * @return
      */
     @Override
-    public List<TagVO> listTagDTO(Integer type) {
+    public List<TagVO> listTagDTO(Integer module) {
         List<TagVO> tagVOList = new ArrayList<>();
-        if(ModuleEnum.ARTICLE.getCode() == type){
-            tagVOList = baseMapper.listTagArticleDTO(type);
+        if(ModuleEnum.ARTICLE.getCode() == module){
+            tagVOList = baseMapper.listTagArticleDTO(module);
             return tagVOList.stream().filter(tagVOListItem -> Integer.parseInt(tagVOListItem.getLinkNum()) > 0).collect(Collectors.toList());
         }
-        if(ModuleEnum.VIDEO.getCode() == type){
-            tagVOList = baseMapper.listTagVideoDTO(type);
+        if(ModuleEnum.VIDEO.getCode() == module){
+            tagVOList = baseMapper.listTagVideoDTO(module);
             return tagVOList.stream().filter(tagVOListItem -> Integer.parseInt(tagVOListItem.getLinkNum()) > 0).collect(Collectors.toList());
         }
         return tagVOList;

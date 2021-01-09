@@ -29,7 +29,7 @@
     </resultMap>
 
     <resultMap id="WithTagList" type="com.luoyu.blog.entity.video.vo.VideoVO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id, type=type}" select="com.luoyu.blog.mapper.operation.TagMapper.listByLinkId"/>
+        <association property="tagList" column="{linkId=id, module=module}" select="com.luoyu.blog.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <sql id="homeVideoColumn">
@@ -162,7 +162,7 @@
     </select>
 
     <select id="queryPageCondition" resultMap="WithTagList">
-        select <include refid="homeVideoColumn"/> , 1 as `type` from video
+        select <include refid="homeVideoColumn"/> , 1 as `module` from video
         <where>
             publish = true
             <if test="params.categoryId !=null and params.categoryId != ''">

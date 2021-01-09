@@ -59,8 +59,8 @@ public class TagController extends AbstractController {
      */
     @GetMapping("/manage/operation/tag/select")
     @RequiresPermissions("operation:tag:list")
-    public Response select(@RequestParam("type") Integer type){
-        List<Tag> tagList = tagService.list(new QueryWrapper<Tag>().lambda().eq(type != null,Tag::getType,type));
+    public Response select(@RequestParam("module") Integer module){
+        List<Tag> tagList = tagService.list(new QueryWrapper<Tag>().lambda().eq(module != null,Tag::getModule,module));
         return Response.success(tagList);
     }
 
@@ -111,7 +111,7 @@ public class TagController extends AbstractController {
             List<TagLink> tagLinkList = tagLinkMapper.selectList(new QueryWrapper<TagLink>().lambda().eq(TagLink::getTagId, id));
             if(!CollectionUtils.isEmpty(tagLinkList)) {
                 TagLink tagLink = tagLinkList.get(0);
-                if (tagLink.getType().equals(ModuleEnum.ARTICLE.getCode())) {
+                if (tagLink.getModule().equals(ModuleEnum.ARTICLE.getCode())) {
                     throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该标签下有文章，无法删除");
                 }
             }
@@ -125,11 +125,11 @@ public class TagController extends AbstractController {
 
     @GetMapping("/operation/tags")
     @Cacheable
-    public Response listTag(@RequestParam("type") Integer type) {
-        if (type == null){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
+    public Response listTag(@RequestParam("module") Integer module) {
+        if (module == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
-        List<TagVO> tagList = tagService.listTagDTO(type);
+        List<TagVO> tagList = tagService.listTagDTO(module);
         return Response.success(tagList);
     }
 

@@ -3,8 +3,8 @@
 <mapper namespace="com.luoyu.blog.mapper.operation.TagMapper">
 
     <delete id="deleteTagLink">
-        delete from tag_link atl
-        where atl.link_id = #{linkId} and atl.type = #{type}
+        delete from tag_link
+        where link_id = #{linkId} and module = #{module}
     </delete>
 
     <select id="listByLinkId" resultType="com.luoyu.blog.entity.operation.Tag">
@@ -13,8 +13,8 @@
             <if test="linkId!=null">
                 and bat.link_id = #{linkId}
             </if>
-            <if test="type!=null">
-                and bt.type = #{type}
+            <if test="module!=null">
+                and bt.module = #{module}
             </if>
         </where>
     </select>
@@ -24,17 +24,17 @@
     <select id="listTagArticleDTO" resultType="com.luoyu.blog.entity.operation.vo.TagVO">
         select t.name, sum(t.num) as linkNum
         from (
-                 select distinct t.type,
+                 select distinct t.module,
                                  t.name,
                                  (select count(*)
                                   from tag_link tl2
                                            inner join article a on a.id = tl2.link_id
                                   where a.publish = true
-                                    and tl2.type = #{type}
+                                    and tl2.module = #{module}
                                     and tl2.tag_id = t.id) as num
                  from tag t
-                          left join tag_link tl on t.id = tl.tag_id and t.type = tl.type
-                 where t.type = #{type}) t
+                          left join tag_link tl on t.id = tl.tag_id and t.module = tl.module
+                 where t.module = #{module}) t
         group by t.name
         order by linkNum desc
     </select>
@@ -42,17 +42,17 @@
     <select id="listTagVideoDTO" resultType="com.luoyu.blog.entity.operation.vo.TagVO">
         select t.name, sum(t.num) as linkNum
         from (
-                 select distinct t.type,
+                 select distinct t.module,
                                  t.name,
                                  (select count(*)
                                   from tag_link tl2
                                            inner join video a on a.id = tl2.link_id
                                   where a.publish = true
-                                    and tl2.type = #{type}
+                                    and tl2.module = #{module}
                                     and tl2.tag_id = t.id) as num
                  from tag t
-                          left join tag_link tl on t.id = tl.tag_id and t.type = tl.type
-                 where t.type = #{type}) t
+                          left join tag_link tl on t.id = tl.tag_id and t.module = tl.module
+                 where t.module = #{module}) t
         group by t.name
         order by linkNum desc
     </select>

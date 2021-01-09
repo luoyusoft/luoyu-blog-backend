@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -35,9 +34,9 @@ public class Top extends BaseEntity implements Serializable {
     @NotNull(message="置顶链接id不能为空", groups = {AddGroup.class})
     private Integer linkId;
 
-    @ApiModelProperty(value = "置顶类型")
-    @NotNull(message="置顶类型不能为空", groups = {AddGroup.class})
-    private Integer type;
+    @ApiModelProperty(value = "置顶模块")
+    @NotNull(message="置顶模块不能为空", groups = {AddGroup.class})
+    private Integer module;
 
     @ApiModelProperty(value = "置顶顺序")
     @NotNull(message="置顶顺序不能为空", groups = {AddGroup.class})
