@@ -12,6 +12,7 @@ import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.Category;
 import com.luoyu.blog.service.article.ArticleService;
 import com.luoyu.blog.service.operation.CategoryService;
+import com.luoyu.blog.service.video.VideoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,13 +41,16 @@ public class CategoryController extends AbstractController {
     @Resource
     private ArticleService articleService;
 
+    @Resource
+    private VideoService videoService;
+
     /**
      * 列表
      */
     @GetMapping("/manage/operation/category/list")
     @RequiresPermissions("operation:category:list")
-    public Response list(@RequestParam("name") String name, @RequestParam("type") Integer type){
-        List<Category> categoryList = categoryService.queryWithParentName(name, type);
+    public Response list(@RequestParam("name") String name, @RequestParam("module") Integer module){
+        List<Category> categoryList = categoryService.queryWithParentName(name, module);
         return Response.success(categoryList);
     }
 
@@ -55,8 +59,8 @@ public class CategoryController extends AbstractController {
      */
     @GetMapping("/manage/operation/category/select")
     @RequiresPermissions("operation:category:list")
-    public Response select(@RequestParam("type") Integer type){
-        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(type!=null,Category::getType,type));
+    public Response select(@RequestParam("module") Integer module){
+        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(module!=null,Category::getModule,module));
 
         //添加顶级分类
         Category root = new Category();
@@ -154,6 +158,10 @@ public class CategoryController extends AbstractController {
         // 判断是否有文章
         if(articleService.checkByCategory(id)) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该类别下有文章，无法删除");
+        }
+        // 判断是否有视频
+        if(videoService.checkByCategory(id)) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该类别下有视频，无法删除");
         }
 
         categoryService.removeById(id);

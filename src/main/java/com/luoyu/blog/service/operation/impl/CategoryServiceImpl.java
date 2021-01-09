@@ -29,12 +29,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
      * 查询所有菜单
      *
      * @param name
-     * @param type
+     * @param module
      * @return
      */
     @Override
-    public List<Category> queryWithParentName(String name, Integer type) {
-        return baseMapper.queryAll(name, type);
+    public List<Category> queryWithParentName(String name, Integer module) {
+        return baseMapper.queryAll(name, module);
     }
 
     /**
@@ -88,7 +88,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         String type = (String) params.get("type");
         String rank = (String) params.get("rank");
         return baseMapper.selectList(new QueryWrapper<Category>().lambda()
-                .eq(org.apache.commons.lang.StringUtils.isNotEmpty(type),Category::getType,type)
+                .eq(org.apache.commons.lang.StringUtils.isNotEmpty(type),Category::getModule,type)
                 .eq(org.apache.commons.lang.StringUtils.isNotEmpty(rank),Category::getRank,rank));
     }
 

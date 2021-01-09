@@ -25,7 +25,7 @@ public class FileResourceVO implements Serializable {
     private MultipartFile file;
 
     @ApiModelProperty(value = "文件所属模块（0：article，1：video，2：link）")
-    private Integer fileModule;
+    private Integer module;
 
     @ApiModelProperty(value = "文件名称")
     private String name;

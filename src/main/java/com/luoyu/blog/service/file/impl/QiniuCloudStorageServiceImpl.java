@@ -1,8 +1,6 @@
 package com.luoyu.blog.service.file.impl;
 
 import com.luoyu.blog.common.config.CloudStorageProperties;
-import com.luoyu.blog.common.enums.FileModuleEnum;
-import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.DateUtils;
@@ -67,15 +65,7 @@ public class QiniuCloudStorageServiceImpl extends CloudStorageService {
             String suffix = fileName.substring(fileName.lastIndexOf("."));
             String url = this.uploadSuffix(file.getBytes(), suffix);
             FileResource fileResource = new FileResource();
-            if (fileModule.equals(FileModuleEnum.ARTICLE.getCode())){
-                fileResource.setFileModule(FileModuleEnum.ARTICLE.getName());
-            }else if (fileModule.equals(FileModuleEnum.VIDEO.getCode())){
-                fileResource.setFileModule(FileModuleEnum.VIDEO.getName());
-            }else if (fileModule.equals(FileModuleEnum.LINK.getCode())){
-                fileResource.setFileModule(FileModuleEnum.LINK.getName());
-            }else {
-                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "不存在该模块");
-            }
+            fileResource.setModule(fileModule);
             fileResource.setFileName(fileName);
             fileResource.setBucketName(cloudStorageProperties.getQiniuBucketName());
             fileResource.setStorageType(FileResource.STORAGE_TYPE_QINIUYUN);

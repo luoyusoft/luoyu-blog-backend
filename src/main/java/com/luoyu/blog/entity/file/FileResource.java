@@ -1,21 +1,13 @@
 package com.luoyu.blog.entity.file;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.luoyu.blog.entity.base.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -27,8 +19,9 @@ import java.time.LocalDateTime;
  */
 @Data
 @ApiModel(value="FileResource对象", description="云存储资源表")
+@EqualsAndHashCode(callSuper = false)
 @TableName("file_resource")
-public class FileResource implements Serializable {
+public class FileResource extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,11 +32,6 @@ public class FileResource implements Serializable {
     public static final String STORAGE_TYPE_QINIUYUN = "qiniuyun";
 
     public static final String STORAGE_TYPE_MINIO = "minio";
-
-    @ApiModelProperty(value = "主键")
-    @TableId(value = "id", type = IdType.AUTO)
-    @Id
-    private Integer id;
 
     @ApiModelProperty(value = "文件名称")
     private String fileName;
@@ -58,14 +46,6 @@ public class FileResource implements Serializable {
     private String bucketName;
 
     @ApiModelProperty(value = "文件所属模块（article，video，link）")
-    private String fileModule;
-
-    @ApiModelProperty(value = "创建时间")
-    @Field(type = FieldType.Date, format = DateFormat.none)
-    @TableField(fill = FieldFill.INSERT)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    private Integer module;
 
 }

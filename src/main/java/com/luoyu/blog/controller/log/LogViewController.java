@@ -22,10 +22,13 @@ public class LogViewController {
     @Autowired
     private LogViewService logViewService;
 
+    /**
+     * 获取列表
+     */
     @GetMapping("/manage/log/list")
     @RequiresPermissions("log:list")
-    public Response listTimeline(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("type") Integer type) {
-        PageUtils logViewPage = logViewService.queryPage(page, limit, type);
+    public Response listTimeline(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("module") Integer module) {
+        PageUtils logViewPage = logViewService.queryPage(page, limit, module);
         return Response.success(logViewPage);
     }
 

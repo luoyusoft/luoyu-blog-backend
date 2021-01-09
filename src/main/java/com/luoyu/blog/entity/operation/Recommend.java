@@ -34,9 +34,9 @@ public class Recommend extends BaseEntity implements Serializable {
     @NotNull(message="推荐链接id不能为空", groups = {AddGroup.class})
     private Integer linkId;
 
-    @ApiModelProperty(value = "推荐类型")
-    @NotNull(message="推荐类型不能为空", groups = {AddGroup.class})
-    private Integer type;
+    @ApiModelProperty(value = "推荐模块")
+    @NotNull(message="推荐模块不能为空", groups = {AddGroup.class})
+    private Integer module;
 
     @ApiModelProperty(value = "推荐顺序")
     @NotNull(message="推荐顺序不能为空", groups = {AddGroup.class})

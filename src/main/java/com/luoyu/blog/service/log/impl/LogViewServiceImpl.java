@@ -34,22 +34,21 @@ public class LogViewServiceImpl extends ServiceImpl<LogViewMapper, LogView> impl
     private IPApi ipApi;
 
     /**
-     * 分页查询角色
+     * 分页查询日志
      * @param page
      * @param limit
-     * @param type
+     * @param module
      * @return
      */
     @Override
-    public PageUtils queryPage(Integer page, Integer limit, Integer type) {
+    public PageUtils queryPage(Integer page, Integer limit, Integer module) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
-        params.put("type", type);
 
         IPage<LogView> logViewIPage = baseMapper.selectPage(new Query<LogView>(params).getPage(),
                 new QueryWrapper<LogView>().lambda()
-                .eq(type != null, LogView::getModule,type)
+                .eq(module != null, LogView::getModule,module)
                 .orderByDesc(LogView::getCreateTime)
         );
         return new PageUtils(logViewIPage);

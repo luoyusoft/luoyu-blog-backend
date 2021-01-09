@@ -51,11 +51,11 @@ public class RecommendController extends AbstractController {
      */
     @GetMapping("/manage/operation/recommend/select")
     @RequiresPermissions("operation:recommend:list")
-    public Response select(@RequestParam("type") Integer type, @RequestParam("title") String title) {
-        if(type == null){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
+    public Response select(@RequestParam("module") Integer module, @RequestParam("title") String title) {
+        if(module == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
-        List<RecommendVO> recommendList = recommendService.select(type, title);
+        List<RecommendVO> recommendList = recommendService.select(module, title);
         return Response.success(recommendList);
     }
 
@@ -76,8 +76,8 @@ public class RecommendController extends AbstractController {
     @RequiresPermissions("operation:recommend:save")
     @CacheEvict(allEntries = true)
     public Response save(@RequestBody Recommend recommend){
-        if(recommend.getLinkId() == null || recommend.getType() == null || recommend.getOrderNum() == null){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "linkId，type，orderNum不能为空");
+        if(recommend.getLinkId() == null || recommend.getModule() == null || recommend.getOrderNum() == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "linkId，module，orderNum不能为空");
         }
         ValidatorUtils.validateEntity(recommend, AddGroup.class);
         recommendService.insertRecommend(recommend);
@@ -93,8 +93,8 @@ public class RecommendController extends AbstractController {
     @CacheEvict(allEntries = true)
     public Response update(@RequestBody Recommend recommend){
         if(recommend.getId() == null || recommend.getLinkId() == null
-                || recommend.getType() == null || recommend.getOrderNum() == null){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，linkId，type，orderNum不能为空");
+                || recommend.getModule() == null || recommend.getOrderNum() == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，linkId，module，orderNum不能为空");
         }
         recommendService.updateRecommend(recommend);
 
@@ -130,12 +130,12 @@ public class RecommendController extends AbstractController {
     /********************** portal ********************************/
 
     @RequestMapping("/operation/recommends")
-    @Cacheable(key = "#type")
-    public Response listRecommend(@RequestParam("type") Integer type) {
-        if (type == null){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "type不能为空");
+    @Cacheable(key = "#module")
+    public Response listRecommend(@RequestParam("module") Integer module) {
+        if (module == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
-        List<RecommendVO> recommendList = recommendService.listRecommendVO(type);
+        List<RecommendVO> recommendList = recommendService.listRecommendVO(module);
         return Response.success(recommendList);
     }
 

@@ -14,13 +14,13 @@ import com.luoyu.blog.entity.log.LogView;
 public interface LogViewService extends IService<LogView> {
 
     /**
-     * 分页查询角色
+     * 分页查询日志
      * @param page
      * @param limit
-     * @param type
+     * @param module
      * @return
      */
-    PageUtils queryPage(Integer page, Integer limit, Integer type);
+    PageUtils queryPage(Integer page, Integer limit, Integer module);
 
     /**
      * 清洗城市信息

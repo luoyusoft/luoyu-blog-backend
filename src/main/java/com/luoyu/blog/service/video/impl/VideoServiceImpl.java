@@ -70,7 +70,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         Page<VideoDTO> videoDTOPage = new Query<VideoDTO>(params).getPage();
         List<VideoDTO> videoDTOList = baseMapper.listVideoDTO(videoDTOPage, params);
         // 查询所有分类
-        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType,ModuleEnum.VIDEO.getCode()));
+        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getModule,ModuleEnum.VIDEO.getCode()));
         // 封装ArticleVo
         List<VideoVO> videoVOList = new ArrayList<>();
         Optional.ofNullable(videoDTOList).ifPresent((videoDTOs ->
@@ -133,7 +133,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                     Integer maxOrderNum = recommendService.selectRecommendMaxOrderNum();
                     Recommend recommend = new Recommend();
                     LocalDateTime now = LocalDateTime.now();
-                    recommend.setType(ModuleEnum.VIDEO.getCode());
+                    recommend.setModule(ModuleEnum.VIDEO.getCode());
                     recommend.setLinkId(videoVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
                     recommend.setCreateTime(now);
@@ -180,7 +180,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                     Integer maxOrderNum = recommendService.selectRecommendMaxOrderNum();
                     Recommend recommend = new Recommend();
                     LocalDateTime now = LocalDateTime.now();
-                    recommend.setType(ModuleEnum.VIDEO.getCode());
+                    recommend.setModule(ModuleEnum.VIDEO.getCode());
                     recommend.setLinkId(videoVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
                     recommend.setCreateTime(now);

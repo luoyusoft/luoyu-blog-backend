@@ -5,7 +5,7 @@
     <resultMap id="BaseResultMap" type="com.luoyu.blog.entity.operation.Category">
         <id column="id" property="id" />
         <result column="name" property="name" />
-        <result column="type" property="type" />
+        <result column="module" property="module" />
         <result column="rank" property="rank" />
         <result column="parent_id" property="parentId" />
         <result column="create_time" property="createTime" />
@@ -23,8 +23,8 @@
             <if test="name != null and name != ''">
                 and t.name like concat('%',#{name},'%')
             </if>
-            <if test="type != null">
-                and t.type = #{type}
+            <if test="module != null">
+                and t.module = #{module}
             </if>
         </where>
     </select>

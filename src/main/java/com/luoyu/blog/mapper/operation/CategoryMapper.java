@@ -19,9 +19,9 @@ public interface CategoryMapper extends BaseMapper<Category> {
     /**
      * 查询所有类别
      * @param name
-     * @param type
+     * @param module
      * @return
      */
-    List<Category> queryAll(@Param("name") String name, @Param("type") Integer type);
+    List<Category> queryAll(@Param("name") String name, @Param("module") Integer module);
 
 }

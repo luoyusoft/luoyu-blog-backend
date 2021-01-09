@@ -33,9 +33,9 @@ public class Category extends BaseEntity implements Serializable {
     @NotBlank(message = "名称不能为空", groups = {AddGroup.class})
     private String name;
 
-    @ApiModelProperty(value = "类型")
-    @NotNull(message = "类型不能为空", groups = {AddGroup.class})
-    private Integer type;
+    @ApiModelProperty(value = "模块")
+    @NotNull(message = "模块不能为空", groups = {AddGroup.class})
+    private Integer module;
 
     @ApiModelProperty(value = "级别")
     @NotNull(message = "级别不能为空", groups = {AddGroup.class})

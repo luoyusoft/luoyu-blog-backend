@@ -19,10 +19,10 @@ public interface CategoryService extends IService<Category> {
     /**
      * 查询所有菜单
      * @param name
-     * @param type
+     * @param module
      * @return
      */
-    List<Category> queryWithParentName(String name, Integer type);
+    List<Category> queryWithParentName(String name, Integer module);
 
     /**
      * 根据父级别查询子级别

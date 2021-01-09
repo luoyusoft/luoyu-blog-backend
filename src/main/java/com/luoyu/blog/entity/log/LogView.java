@@ -5,6 +5,7 @@ import com.luoyu.blog.entity.base.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -18,6 +19,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value="ViewLog对象", description="浏览日志")
+@EqualsAndHashCode(callSuper = false)
 @TableName("log_view")
 public class LogView extends BaseEntity implements Serializable {
 

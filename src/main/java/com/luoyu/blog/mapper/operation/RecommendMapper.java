@@ -21,7 +21,7 @@ public interface RecommendMapper extends BaseMapper<Recommend> {
      * 获取
      * @return
      */
-    Recommend selectRecommendByLinkIdAndType(Integer linkId, Integer type);
+    Recommend selectRecommendByLinkIdAndType(Integer linkId, Integer module);
 
     /**
      * 获取
@@ -64,6 +64,6 @@ public interface RecommendMapper extends BaseMapper<Recommend> {
      * 获取推荐列表
      * @return
      */
-    List<RecommendVO> listRecommendDTO(Integer type);
+    List<RecommendVO> listRecommendDTO(Integer module);
 
 }

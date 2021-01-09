@@ -2,7 +2,6 @@ package com.luoyu.blog.service.job;
 
 import com.luoyu.blog.service.chat.ChatService;
 import com.luoyu.blog.service.gitalk.GitalkService;
-import com.luoyu.blog.service.log.LogLikeService;
 import com.luoyu.blog.service.log.LogViewService;
 import com.luoyu.blog.service.search.ArticleEsServer;
 import com.luoyu.blog.service.search.VideoEsServer;
@@ -49,9 +48,6 @@ public class XxlJobService {
 
     @Autowired
     private LogViewService logViewService;
-
-    @Autowired
-    private LogLikeService logLikeService;
 
     /**
      * 初始化es文章数据
@@ -100,7 +96,6 @@ public class XxlJobService {
     @XxlJob("cleanCityInfo")
     public ReturnT<String> cleanCityInfo(String param) throws Exception {
         logViewService.cleanCityInfo();
-        logLikeService.cleanCityInfo();
         return ReturnT.SUCCESS;
     }
 

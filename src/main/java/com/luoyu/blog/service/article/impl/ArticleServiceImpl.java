@@ -70,7 +70,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Page<ArticleDTO> articleDTOPage = new Query<ArticleDTO>(params).getPage();
         List<ArticleDTO> articleDTOList = baseMapper.listArticleDTO(articleDTOPage, params);
         // 查询所有分类
-        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getType,ModuleEnum.ARTICLE.getCode()));
+        List<Category> categoryList = categoryService.list(new QueryWrapper<Category>().lambda().eq(Category::getModule,ModuleEnum.ARTICLE.getCode()));
         // 封装ArticleVo
         List<ArticleVO> articleVOList = new ArrayList<>();
         Optional.ofNullable(articleDTOList).ifPresent((articleDTOs ->
@@ -133,7 +133,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     Integer maxOrderNum = recommendService.selectRecommendMaxOrderNum();
                     Recommend recommend = new Recommend();
                     LocalDateTime now = LocalDateTime.now();
-                    recommend.setType(ModuleEnum.ARTICLE.getCode());
+                    recommend.setModule(ModuleEnum.ARTICLE.getCode());
                     recommend.setLinkId(articleVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
                     recommend.setCreateTime(now);
@@ -180,7 +180,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     Integer maxOrderNum = recommendService.selectRecommendMaxOrderNum();
                     Recommend recommend = new Recommend();
                     LocalDateTime now = LocalDateTime.now();
-                    recommend.setType(ModuleEnum.ARTICLE.getCode());
+                    recommend.setModule(ModuleEnum.ARTICLE.getCode());
                     recommend.setLinkId(articleVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
                     recommend.setCreateTime(now);

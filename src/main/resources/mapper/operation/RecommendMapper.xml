@@ -4,11 +4,11 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, link_id, type, order_num,create_time,update_time
+        id, link_id, module, order_num,create_time,update_time
     </sql>
 
     <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
-      select * from recommend where type = #{type} and link_id = #{linkId}
+      select * from recommend where module = #{module} and link_id = #{linkId}
     </select>
 
     <select id="selectRecommendByOrderNum" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
@@ -30,7 +30,7 @@
     <update id="updateRecommendOrderNumByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Recommend">
       update recommend
       set order_num = #{orderNum}
-      where type = #{type} and link_id = #{linkId}
+      where module = #{module} and link_id = #{linkId}
     </update>
 
     <update id="updateRecommendOrderNumById" parameterType="java.lang.Integer">
@@ -46,7 +46,7 @@
     <!-- *************************** portal ****************************** -->
 
     <select id="listRecommendDTO" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.vo.RecommendVO">
-        select <include refid="Base_Column_List"/> from recommend where type = #{type} order by order_num asc limit 5
+        select <include refid="Base_Column_List"/> from recommend where module = #{module} order by order_num asc limit 5
     </select>
 
 </mapper>

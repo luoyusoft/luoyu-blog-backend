@@ -29,14 +29,14 @@ public interface RecommendService extends IService<Recommend> {
      * 获取推荐列表
      * @return
      */
-    List<RecommendVO> select(Integer type, String title);
+    List<RecommendVO> select(Integer module, String title);
 
     /**
      * 批量删除
      * @param linkIds
-     * @param type
+     * @param module
      */
-    void deleteRecommendsByLinkIdsAndType(List<Integer> linkIds, int type);
+    void deleteRecommendsByLinkIdsAndType(List<Integer> linkIds, int module);
 
     /**
      * 新增
@@ -65,9 +65,9 @@ public interface RecommendService extends IService<Recommend> {
     /**
      * 查找
      * @param linkId
-     * @param type
+     * @param module
      */
-    Recommend selectRecommendByLinkIdAndType(Integer linkId, Integer type);
+    Recommend selectRecommendByLinkIdAndType(Integer linkId, Integer module);
 
     /**
      * 查找最大顺序
@@ -76,6 +76,6 @@ public interface RecommendService extends IService<Recommend> {
 
     /********************** portal ********************************/
 
-    List<RecommendVO> listRecommendVO(Integer type);
+    List<RecommendVO> listRecommendVO(Integer module);
 
 }

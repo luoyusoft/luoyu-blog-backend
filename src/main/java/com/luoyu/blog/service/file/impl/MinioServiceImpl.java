@@ -1,7 +1,5 @@
 package com.luoyu.blog.service.file.impl;
 
-import com.luoyu.blog.common.enums.FileModuleEnum;
-import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.DateUtils;
@@ -10,14 +8,12 @@ import com.luoyu.blog.entity.file.FileResource;
 import com.luoyu.blog.entity.file.vo.FileResourceVO;
 import com.luoyu.blog.service.file.FileResourceService;
 import com.luoyu.blog.service.file.MinioService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
-import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
@@ -57,15 +53,7 @@ public class MinioServiceImpl implements MinioService {
             }
 
             FileResource fileResource = new FileResource();
-            if (fileModule.equals(FileModuleEnum.ARTICLE.getCode())){
-                fileResource.setFileModule(FileModuleEnum.ARTICLE.getName());
-            }else if (fileModule.equals(FileModuleEnum.VIDEO.getCode())){
-                fileResource.setFileModule(FileModuleEnum.VIDEO.getName());
-            }else if (fileModule.equals(FileModuleEnum.LINK.getCode())){
-                fileResource.setFileModule(FileModuleEnum.LINK.getName());
-            }else {
-                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "不存在该模块");
-            }
+            fileResource.setModule(fileModule);
 
             minioUtils.upload(inputStream, patchName, bucketName, contentType);
             String url = minioUtils.getObjectUrl(bucketName, patchName);
