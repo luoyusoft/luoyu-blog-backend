@@ -37,8 +37,8 @@ public class MinioUtils {
 
     /**
      * 检查存储桶是否存在
-     * @param bucketName
-     * @return
+     * @param bucketName 存储桶名称
+     * @return boolean
      */
     public boolean bucketExists(String bucketName){
         try {
@@ -49,22 +49,24 @@ public class MinioUtils {
     }
 
     /**
-     * 创建bucket
-     * @param bucketName bucket名称
+     * 创建存储桶
+     * @param bucketName 存储桶名称
+     * @return boolean
      */
-    public void createBucket(String bucketName) {
+    public boolean createBucket(String bucketName) {
         try {
             if (!this.bucketExists(bucketName)) {
                 minioClient.makeBucket(bucketName);
             }
+            return true;
         } catch (Exception e) {
             throw new MyException(ResponseEnums.MINIO_CREATE_BUCKET_ERROR.getCode(), e.getMessage());
         }
     }
 
     /**
-     * 根据bucketName获取信息
-     * @param bucketName bucket名称
+     * 根据存储桶名称获取信息
+     * @param bucketName 存储桶名称
      * @return
      */
     public Optional<Bucket> getBucket(String bucketName) {
@@ -108,11 +110,11 @@ public class MinioUtils {
     }
 
     /**
-     * 获取文件外链
-     * @param bucketName bucket名称
+     * 获取文件外链地址
+     * @param bucketName 存储桶名称
      * @param objectName 文件名称
      * @param expires    过期时间 <=7
-     * @return url
+     * @return String
      */
     public String getPresignedObjectUrl(String bucketName, String objectName, Integer expires) {
         try {
@@ -124,7 +126,7 @@ public class MinioUtils {
 
     /**
      * 获取文件外链
-     * @param bucketName bucket名称
+     * @param bucketName 存储桶名称
      * @param objectName 文件名称
      * @return url
      */

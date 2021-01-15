@@ -48,4 +48,22 @@ public class FileResource extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "文件所属模块（article，video，link）")
     private Integer module;
 
+    @ApiModelProperty(value = "文件的md5")
+    private String fileMd5;
+
+    @ApiModelProperty(value = "文件格式")
+    private String suffix;
+
+    @ApiModelProperty(value = "是否分片（0：否，1：是）")
+    private Integer isChunk;
+
+    @ApiModelProperty(value = "分片总数量")
+    private Integer chunkCount;
+
+    @ApiModelProperty(value = "上传状态（0：失败，1：成功，2：部分成功）")
+    private Integer uploadStatus;
+
+    @ApiModelProperty(value = "已上传到的分片序号")
+    private String chunkNumber;
+
 }
