@@ -82,7 +82,7 @@ public class LogViewAspect {
             com.luoyu.blog.entity.log.LogView viewLogEntity = new com.luoyu.blog.entity.log.LogView();
             viewLogEntity.setResponse(JsonUtils.objectToJson(result));
             //获取request
-            ParamsHttpServletRequestWrapper request = HttpContextUtils.getHttpServletRequest();
+            ParamsHttpServletRequestWrapper request = (ParamsHttpServletRequestWrapper) HttpContextUtils.getHttpServletRequest();
             //获取request
             viewLogEntity.setBorderName(UserAgentUtils.getBorderName(request));
             viewLogEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));

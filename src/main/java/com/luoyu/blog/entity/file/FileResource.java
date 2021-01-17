@@ -33,6 +33,14 @@ public class FileResource extends BaseEntity implements Serializable {
 
     public static final String STORAGE_TYPE_MINIO = "minio";
 
+    public static final Integer UPLOAD_STATUS_0 = 0;
+
+    public static final Integer UPLOAD_STATUS_1 = 1;
+
+    public static final Integer IS_CHUNK_0 = 0;
+
+    public static final Integer IS_CHUNK_1 = 1;
+
     @ApiModelProperty(value = "文件名称")
     private String fileName;
 
@@ -60,10 +68,10 @@ public class FileResource extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "分片总数量")
     private Integer chunkCount;
 
-    @ApiModelProperty(value = "上传状态（0：失败，1：成功，2：部分成功）")
+    @ApiModelProperty(value = "上传状态（0：部分成功，1：成功）")
     private Integer uploadStatus;
 
-    @ApiModelProperty(value = "已上传到的分片序号")
-    private String chunkNumber;
+    @ApiModelProperty(value = "已上传的分片序号")
+    private String uploadedChunk;
 
 }

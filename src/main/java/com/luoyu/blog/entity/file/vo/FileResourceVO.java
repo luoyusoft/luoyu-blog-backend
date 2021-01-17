@@ -24,13 +24,31 @@ public class FileResourceVO implements Serializable {
     @ApiModelProperty(value = "文件")
     private MultipartFile file;
 
-    @ApiModelProperty(value = "文件所属模块（0：article，1：video，2：link）")
+    @ApiModelProperty(value = "文件名称")
+    private String fileName;
+
+    @ApiModelProperty(value = "url地址")
+    private String url;
+
+    @ApiModelProperty(value = "桶名")
+    private String bucketName;
+
+    @ApiModelProperty(value = "文件所属模块（article，video，link）")
     private Integer module;
 
-    @ApiModelProperty(value = "文件名称")
-    private String name;
+    @ApiModelProperty(value = "文件的md5")
+    private String fileMd5;
 
-    @ApiModelProperty(value = "url")
-    private String url;
+    @ApiModelProperty(value = "是否分片（0：否，1：是）")
+    private Integer isChunk;
+
+    @ApiModelProperty(value = "分片总数量")
+    private Integer chunkCount;
+
+    @ApiModelProperty(value = "当前分片")
+    private Integer chunk;
+
+    @ApiModelProperty(value = "上传url地址")
+    private String uploadUrl;
 
 }

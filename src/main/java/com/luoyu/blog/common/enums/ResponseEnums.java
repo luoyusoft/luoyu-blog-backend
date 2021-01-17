@@ -49,6 +49,8 @@ public enum ResponseEnums {
     MINIO_CREATE_BUCKET_ERROR(10067,"Minio创建存储桶失败"),
     MINIO_GET_BUCKET_ERROR(10068,"Minio获取存储桶失败"),
     MINIO_DELETE_BUCKET_ERROR(10069,"Minio删除存储桶失败"),
+    MINIO_CREATE_URL_ERROR(10070,"Minio创建下载地址失败"),
+    MINIO_COMPOSE_FILE_ERROR(10071,"Minio合并分片文件失败"),
 
     //Zxing错误
     ZXING_CREATE_ERROR(10070,"生成二维码失败"),

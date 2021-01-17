@@ -2,4 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luoyu.blog.mapper.file.FileResourceMapper">
 
+    <select id="selectFileResourceByFileMd5AndModule" resultType="java.lang.Integer">
+        select *
+        from file_resource
+        where file_md5 = #{fileMd5}
+          and module = #{module}
+          and is_chunk = 1
+        order by id desc limit 1
+    </select>
+
+    <update id="updateFileResourceByFileMd5AndModule" parameterType="com.luoyu.blog.entity.file.FileResource">
+        update file_resource
+        <set>
+            <if test="uploadStatus != null">
+                upload_status = #{uploadStatus},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            update_time = #{updateTime}
+        </set>
+        where file_md5 = #{fileMd5}
+          and module = #{module}
+          and is_chunk = 1
+    </update>
+
 </mapper>

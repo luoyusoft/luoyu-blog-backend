@@ -7,7 +7,7 @@ import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.file.vo.FileResourceVO;
 import com.luoyu.blog.service.file.CloudStorageService;
 import com.luoyu.blog.service.file.FileResourceService;
-import com.luoyu.blog.service.file.MinioService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +27,6 @@ public class FileResourceController {
 
     @Autowired
     private CloudStorageService cloudStorageService;
-
-    @Autowired
-    private MinioService minioService;
 
     @Autowired
     private FileResourceService fileResourceService;
@@ -57,7 +54,7 @@ public class FileResourceController {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件，文件所属模块不能为空");
         }
 
-        return Response.success(minioService.upload(fileResourceVO.getFile(), fileResourceVO.getModule()));
+        return Response.success(fileResourceService.upload(fileResourceVO.getFile(), fileResourceVO.getModule()));
     }
 
     /**
@@ -65,7 +62,7 @@ public class FileResourceController {
      */
     @PostMapping("/manage/file/resource/minio/download")
     public Response downloadByMinio(HttpServletResponse response, @RequestBody FileResourceVO fileResourceVO) throws Exception {
-        minioService.download(response, fileResourceVO.getName());
+        fileResourceService.download(response, fileResourceVO.getFileName());
         return Response.success();
     }
 
@@ -74,7 +71,7 @@ public class FileResourceController {
      */
     @GetMapping("/manage/file/resource/minio/url")
     public Response getUrlByMinio(@RequestParam("fileName") String fileName) throws Exception {
-        return Response.success(minioService.getUrl(fileName));
+        return Response.success(fileResourceService.getUrl(fileName));
     }
 
     /**
@@ -85,6 +82,31 @@ public class FileResourceController {
     public Response listTimeline(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("module") Integer module) {
         PageUtils logViewPage = fileResourceService.queryPage(page, limit, module);
         return Response.success(logViewPage);
+    }
+
+    /**
+     * 分片上传文件
+     */
+    @PostMapping("/manage/file/resource/minio/chunkUpload")
+    public Response chunkUpload(@RequestBody FileResourceVO fileResourceVO){
+        if (StringUtils.isEmpty(fileResourceVO.getFileMd5()) || StringUtils.isEmpty(fileResourceVO.getFileName())
+                || fileResourceVO.getModule() == null || fileResourceVO.getChunkCount() == null) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，文件名次，文件所属模块，分片总数量不能为空");
+        }
+        return Response.success(fileResourceService.chunkUpload(fileResourceVO));
+    }
+
+    /**
+     * 合并文件并返回文件信息
+     */
+    @PostMapping("/manage/file/resource/minio/compose")
+    public Response composeFile(@RequestBody FileResourceVO fileResourceVO){
+        if (StringUtils.isEmpty(fileResourceVO.getFileMd5()) || StringUtils.isEmpty(fileResourceVO.getFileName())
+                || fileResourceVO.getModule() == null || fileResourceVO.getChunkCount() == null) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，文件名次，文件所属模块，分片总数量不能为空");
+        }
+
+        return Response.success(fileResourceService.composeFile(fileResourceVO));
     }
 
 }

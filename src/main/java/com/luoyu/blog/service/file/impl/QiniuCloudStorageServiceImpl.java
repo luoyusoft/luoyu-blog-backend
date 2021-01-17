@@ -72,7 +72,7 @@ public class QiniuCloudStorageServiceImpl extends CloudStorageService {
             fileResource.setUrl(url);
             fileResourceService.save(fileResource);
             FileResourceVO fileResourceVO = new FileResourceVO();
-            fileResourceVO.setName(fileName);
+            fileResourceVO.setFileName(fileName);
             fileResourceVO.setUrl(url);
             return fileResourceVO;
         }catch (Exception e){

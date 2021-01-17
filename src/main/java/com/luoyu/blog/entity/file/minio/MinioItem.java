@@ -5,7 +5,7 @@ import io.minio.messages.Owner;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class MinioItem {
@@ -16,7 +16,7 @@ public class MinioItem {
 
     // 最后操作时间
     @ApiModelProperty("最后操作时间")
-    private Date lastModified;
+    private LocalDateTime lastModified;
 
     private String etag;
 
@@ -25,6 +25,7 @@ public class MinioItem {
     private String size;
 
     private String storageClass;
+
     private Owner owner;
 
     // 对象类型：directory（目录）或file（文件）
@@ -41,11 +42,11 @@ public class MinioItem {
         this.objectName = item.objectName();
         this.type = item.isDir() ? "directory" : "file";
         this.etag = item.etag();
-        long sizeNum = item.objectSize();
+        long sizeNum = item.size();
         this.size = sizeNum > 0 ? this.convertFileSize(sizeNum):"0";
         this.storageClass = item.storageClass();
         this.owner = item.owner();
-        this.lastModified = item.lastModified();
+        this.lastModified = item.lastModified().toLocalDateTime();
     }
 
     public String convertFileSize(long size) {
