@@ -71,7 +71,4 @@ public class FileResource extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "上传状态（0：部分成功，1：成功）")
     private Integer uploadStatus;
 
-    @ApiModelProperty(value = "已上传的分片序号")
-    private String uploadedChunk;
-
 }

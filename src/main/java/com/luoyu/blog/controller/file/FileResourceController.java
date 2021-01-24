@@ -85,7 +85,7 @@ public class FileResourceController {
     }
 
     /**
-     * 分片上传文件
+     * 分片上传文件，获取各个分片上传地址
      */
     @PostMapping("/manage/file/resource/minio/chunkUpload")
     public Response chunkUpload(@RequestBody FileResourceVO fileResourceVO){
@@ -97,7 +97,19 @@ public class FileResourceController {
     }
 
     /**
-     * 合并文件并返回文件信息
+     * 分片上传，单个分片成功
+     */
+    @PostMapping("/manage/file/resource/minio/chunkSuccess")
+    public Response chunkSuccess(@RequestBody FileResourceVO fileResourceVO){
+        if (StringUtils.isEmpty(fileResourceVO.getFileMd5()) || fileResourceVO.getChunkNumber() == null
+                || fileResourceVO.getModule() == null) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，当前分片，文件所属模块不能为空");
+        }
+        return Response.success(fileResourceService.chunkSuccess(fileResourceVO));
+    }
+
+    /**
+     * 合并文件，获取文件访问地址
      */
     @PostMapping("/manage/file/resource/minio/compose")
     public Response composeFile(@RequestBody FileResourceVO fileResourceVO){

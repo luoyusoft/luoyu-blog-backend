@@ -9,21 +9,22 @@ import com.luoyu.blog.common.util.DateUtils;
 import com.luoyu.blog.common.util.MinioUtils;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
+import com.luoyu.blog.entity.file.FileChunk;
 import com.luoyu.blog.entity.file.FileResource;
 import com.luoyu.blog.entity.file.vo.FileResourceVO;
 import com.luoyu.blog.mapper.file.FileResourceMapper;
+import com.luoyu.blog.service.file.FileChunkService;
 import com.luoyu.blog.service.file.FileResourceService;
-import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,6 +39,12 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
 
     @Autowired
     private MinioUtils minioUtils;
+
+    @Autowired
+    private FileResourceMapper fileResourceMapper;
+
+    @Autowired
+    private FileChunkService fileChunkService;
 
     /**
      * 上传
@@ -159,7 +166,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
     @Override
     public List<FileResourceVO> chunkUpload(FileResourceVO fileResourceVO) {
         String bucketName;
-        FileResource fileResource = baseMapper.selectFileResourceByFileMd5AndModule(fileResourceVO.getFileMd5(), fileResourceVO.getModule());
+        FileResource fileResource = fileResourceMapper.selectFileResourceByFileMd5AndModule(fileResourceVO.getFileMd5(), fileResourceVO.getModule());
         // 校验该文件是否上传过
         if(fileResource != null){
             // 秒传
@@ -167,28 +174,14 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
                 return Collections.emptyList();
             }
             // 续传
-            if (fileResource.getSuffix().equals(".mp4")){
-                bucketName = FileResource.BUCKET_NAME_VIDEO;
-            }else if (fileResource.getSuffix().equals(".gif") || fileResource.getSuffix().equals(".jpg") || fileResource.getSuffix().equals(".png")){
-                bucketName = FileResource.BUCKET_NAME_IMG;
-            }else {
-                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "暂不支持该文件格式");
-            }
-            Map<Integer, String> successChunkMap = minioUtils.mapChunkObjectNames(bucketName, fileResource.getFileMd5(), true);
-            List<FileResourceVO> fileResourceVOList = new ArrayList<>();
-
-            List<Integer> chunkUploadUrls = new ArrayList<>();
-            if (!StringUtils.isEmpty(fileResource.getUploadedChunk())){
-                chunkUploadUrls = Arrays.asList((Integer[]) ConvertUtils.convert(fileResource.getUploadedChunk().split(","), Integer.class));
-            }
-
-            if (!CollectionUtils.isEmpty(successChunkMap)){
-                List<Integer> keys = new ArrayList<>(successChunkMap.keySet());
-                keys.removeAll(chunkUploadUrls);
-                keys.forEach(keysItem -> {
+            List<FileChunk> fileChunks = fileChunkService.selectFileChunksByFileMd5(fileResource.getFileMd5());
+            if (!CollectionUtils.isEmpty(fileChunks)){
+                List<FileResourceVO> fileResourceVOList = new ArrayList<>();
+                List<FileChunk> collect = fileChunks.stream().filter(x -> x.getUploadStatus().equals(FileChunk.UPLOAD_STATUS_0)).collect(Collectors.toList());
+                collect.forEach(fileChunk -> {
                     FileResourceVO file = new FileResourceVO();
-                    file.setUploadUrl(successChunkMap.get(keysItem));
-                    file.setChunk(keysItem);
+                    file.setUploadUrl(fileChunk.getUploadUrl());
+                    file.setChunkNumber(fileChunk.getChunkNumber());
                     fileResourceVOList.add(file);
                 });
 
@@ -206,11 +199,18 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
         }
         List<String> uploadUrls = minioUtils.createUploadChunkUrlList(bucketName, fileResourceVO.getFileMd5(), fileResourceVO.getChunkCount(), 604800);
         List<FileResourceVO> fileResourceVOList = new ArrayList<>();
-        for (int i = 1; i <= uploadUrls.size(); i++) {
+        for (int i = 0; i < uploadUrls.size(); i++) {
             FileResourceVO file = new FileResourceVO();
             file.setUploadUrl(minioUtils.createUploadChunkUrl(bucketName, fileResourceVO.getFileMd5(), i, 604800));
-            file.setChunk(i);
+            file.setChunkNumber(i);
             fileResourceVOList.add(file);
+
+            FileChunk fileChunk = new FileChunk();
+            fileChunk.setFileMd5(fileResourceVO.getFileMd5());
+            fileChunk.setUploadUrl(file.getUploadUrl());
+            fileChunk.setUploadStatus(FileChunk.UPLOAD_STATUS_0);
+            fileChunk.setChunkNumber(file.getChunkNumber());
+            fileChunkService.insertFileChunk(fileChunk);
         }
         // 向数据库中记录该文件的上传信息
         FileResource newFileResource = new FileResource();
@@ -222,10 +222,29 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
         newFileResource.setModule(fileResourceVO.getModule());
         newFileResource.setSuffix(suffix);
         newFileResource.setChunkCount(fileResourceVO.getChunkCount());
-        newFileResource.setUploadStatus(FileResource.IS_CHUNK_0);
+        newFileResource.setUploadStatus(FileResource.UPLOAD_STATUS_0);
         baseMapper.insert(newFileResource);
 
         return fileResourceVOList;
+    }
+
+    /**
+     * 分片上传，单个分片成功
+     * @param fileResourceVO
+     */
+    @Override
+    public Boolean chunkSuccess(FileResourceVO fileResourceVO) {
+        FileResource fileResource = fileResourceMapper.selectFileResourceByFileMd5AndModule(fileResourceVO.getFileMd5(), fileResourceVO.getModule());
+        if (fileResource == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该文件未上传过");
+        }
+
+        FileChunk fileChunk = new FileChunk();
+        fileChunk.setFileMd5(fileResourceVO.getFileMd5());
+        fileChunk.setUploadStatus(FileChunk.UPLOAD_STATUS_1);
+        fileChunk.setChunkNumber(fileResourceVO.getChunkNumber());
+        fileChunk.setUpdateTime(LocalDateTime.now());
+        return fileChunkService.updateFileChunkByFileMd5AndChunkNumber(fileChunk);
     }
 
     /**
@@ -234,6 +253,13 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
      */
     @Override
     public String composeFile(FileResourceVO fileResourceVO) {
+        if (fileResourceMapper.selectFileResourceByFileMd5AndModule(fileResourceVO.getFileMd5(), fileResourceVO.getModule()) == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该文件未上传过");
+        }
+        if(!fileChunkService.checkIsUploadAllChunkByFileMd5(fileResourceVO.getFileMd5())){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该文件还有部分分片未上传");
+        }
+
         String bucketName;
         String suffix = fileResourceVO.getFileName().substring(fileResourceVO.getFileName().lastIndexOf("."));
         if (suffix.equals(".mp4")){
@@ -261,10 +287,10 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             fileResource.setUrl(url);
             fileResource.setUploadStatus(FileResource.UPLOAD_STATUS_1);
             fileResource.setUpdateTime(LocalDateTime.now());
-            baseMapper.updateFileResourceByFileMd5AndModule(fileResource);
+            fileResourceMapper.updateFileResourceByFileMd5AndModule(fileResource);
             return url;
         }
-        return null;
+        throw new MyException(ResponseEnums.MINIO_COMPOSE_FILE_ERROR);
     }
 
 }

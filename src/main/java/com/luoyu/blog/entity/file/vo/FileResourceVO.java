@@ -45,8 +45,8 @@ public class FileResourceVO implements Serializable {
     @ApiModelProperty(value = "分片总数量")
     private Integer chunkCount;
 
-    @ApiModelProperty(value = "当前分片")
-    private Integer chunk;
+    @ApiModelProperty(value = "分片序号")
+    private Integer chunkNumber;
 
     @ApiModelProperty(value = "上传url地址")
     private String uploadUrl;

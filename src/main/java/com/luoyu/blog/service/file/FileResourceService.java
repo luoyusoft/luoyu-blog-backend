@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.file.FileResource;
 import com.luoyu.blog.entity.file.vo.FileResourceVO;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -52,12 +51,18 @@ public interface FileResourceService extends IService<FileResource> {
      * 分片上传文件
      * @param fileResourceVO
      */
-    List<FileResourceVO> chunkUpload(@RequestBody FileResourceVO fileResourceVO);
+    List<FileResourceVO> chunkUpload(FileResourceVO fileResourceVO);
+
+    /**
+     * 分片上传，单个分片成功
+     * @param fileResourceVO
+     */
+    Boolean chunkSuccess(FileResourceVO fileResourceVO);
 
     /**
      * 合并文件并返回文件信息
      * @param fileResourceVO
      */
-    String composeFile(@RequestBody FileResourceVO fileResourceVO);
+    String composeFile(FileResourceVO fileResourceVO);
 
 }
