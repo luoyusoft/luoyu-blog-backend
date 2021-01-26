@@ -51,4 +51,7 @@ public class FileResourceVO implements Serializable {
     @ApiModelProperty(value = "上传url地址")
     private String uploadUrl;
 
+    @ApiModelProperty(value = "上传状态（0：未上传，1：已上传）")
+    private Integer uploadStatus;
+
 }

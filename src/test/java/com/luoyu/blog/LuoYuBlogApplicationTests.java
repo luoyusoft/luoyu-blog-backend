@@ -4,6 +4,7 @@ import com.luoyu.blog.common.api.IPApi;
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
 import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
+import com.luoyu.blog.common.util.MinioUtils;
 import com.luoyu.blog.common.util.SnowFlakeUtil;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.sys.IPInfo;
@@ -21,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @SpringBootTest
@@ -44,6 +44,9 @@ class LuoYuBlogApplicationTests {
 
     @Autowired
     private SnowFlakeUtil snowFlakeUtil;
+
+    @Autowired
+    private MinioUtils minioUtils;
 
     @Test
     void testEnumUtil() {
@@ -133,6 +136,11 @@ class LuoYuBlogApplicationTests {
     void testESInitArticle() throws Exception {
         videoEsServer.initVideoList();
         Thread.sleep(60000);
+    }
+
+    @Test
+    void testMinio() throws Exception {
+        minioUtils.deleteObjectName("video", "63411811a9fd435e0e56a45162ce3fc9/0.chunk");
     }
 
     @Test

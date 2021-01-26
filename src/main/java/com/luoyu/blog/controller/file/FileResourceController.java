@@ -67,14 +67,6 @@ public class FileResourceController {
     }
 
     /**
-     * 获取文件下载地址
-     */
-    @GetMapping("/manage/file/resource/minio/url")
-    public Response getUrlByMinio(@RequestParam("fileName") String fileName) throws Exception {
-        return Response.success(fileResourceService.getUrl(fileName));
-    }
-
-    /**
      * 获取列表
      */
     @GetMapping("/manage/file/resource/list")
@@ -91,15 +83,15 @@ public class FileResourceController {
     public Response chunkUpload(@RequestBody FileResourceVO fileResourceVO){
         if (StringUtils.isEmpty(fileResourceVO.getFileMd5()) || StringUtils.isEmpty(fileResourceVO.getFileName())
                 || fileResourceVO.getModule() == null || fileResourceVO.getChunkCount() == null) {
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，文件名次，文件所属模块，分片总数量不能为空");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，文件名称，文件所属模块，分片总数量不能为空");
         }
         return Response.success(fileResourceService.chunkUpload(fileResourceVO));
     }
 
     /**
-     * 分片上传，单个分片成功
+     * 分片上传，单个分片成功更新
      */
-    @PostMapping("/manage/file/resource/minio/chunkSuccess")
+    @PutMapping("/manage/file/resource/minio/chunkSuccess")
     public Response chunkSuccess(@RequestBody FileResourceVO fileResourceVO){
         if (StringUtils.isEmpty(fileResourceVO.getFileMd5()) || fileResourceVO.getChunkNumber() == null
                 || fileResourceVO.getModule() == null) {
@@ -115,10 +107,22 @@ public class FileResourceController {
     public Response composeFile(@RequestBody FileResourceVO fileResourceVO){
         if (StringUtils.isEmpty(fileResourceVO.getFileMd5()) || StringUtils.isEmpty(fileResourceVO.getFileName())
                 || fileResourceVO.getModule() == null || fileResourceVO.getChunkCount() == null) {
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，文件名次，文件所属模块，分片总数量不能为空");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，文件名称，文件所属模块，分片总数量不能为空");
         }
 
         return Response.success(fileResourceService.composeFile(fileResourceVO));
+    }
+
+    /**
+     * 获取文件访问地址
+     */
+    @GetMapping("/manage/file/resource/minio/url")
+    public Response getFileUrl(@RequestParam("fileMd5") String fileMd5, @RequestParam("module") Integer module){
+        if (StringUtils.isEmpty(fileMd5) || module == null) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，文件所属模块不能为空");
+        }
+
+        return Response.success(fileResourceService.getFileUrl(fileMd5, module));
     }
 
 }

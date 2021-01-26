@@ -279,7 +279,7 @@ public class MinioUtils {
      * @param bucketName bucketName
      * @param objectName 文件名
      */
-    public void delete(String bucketName, String objectName) {
+    public void deleteObjectName(String bucketName, String objectName) {
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
@@ -290,6 +290,17 @@ public class MinioUtils {
         } catch (Exception e) {
             throw new MyException(ResponseEnums.MINIO_DELETE_FILE_ERROR.getCode(), e.getMessage());
         }
+    }
+
+    /**
+     * 批量删除文件
+     * @param bucketName bucketName
+     * @param objectNames 文件名列表
+     */
+    public void deleteObjectNames(String bucketName, List<String> objectNames) {
+        objectNames.forEach(objectNamesItem -> {
+            this.deleteObjectName(bucketName, objectNamesItem);
+        });
     }
 
     /**

@@ -15,6 +15,7 @@ import com.luoyu.blog.entity.file.vo.FileResourceVO;
 import com.luoyu.blog.mapper.file.FileResourceMapper;
 import com.luoyu.blog.service.file.FileChunkService;
 import com.luoyu.blog.service.file.FileResourceService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -79,6 +79,11 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             fileResource.setBucketName(bucketName);
             fileResource.setStorageType(storageType);
             fileResource.setUrl(url);
+            fileResource.setIsChunk(FileResource.IS_CHUNK_0);
+            fileResource.setChunkCount(0);
+            fileResource.setUploadStatus(FileResource.UPLOAD_STATUS_1);
+            fileResource.setSuffix(suffix);
+            fileResource.setFileMd5(DigestUtils.md5Hex(file.getInputStream()));
             baseMapper.insert(fileResource);
             FileResourceVO fileResourceVO = new FileResourceVO();
             fileResourceVO.setFileName(fileName);
@@ -121,25 +126,6 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
     }
 
     /**
-     * 获取下载地址
-     * @param fileName
-     */
-    @Override
-    public String getUrl(String fileName) {
-        String suffix = fileName.substring(fileName.lastIndexOf("."));
-        String bucketName;
-        if (suffix.equals(".mp4")){
-            bucketName = FileResource.BUCKET_NAME_VIDEO;
-        }else if (suffix.equals(".gif") || suffix.equals(".jpg") || suffix.equals(".png")){
-            bucketName = FileResource.BUCKET_NAME_IMG;
-        }else {
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "不存在该文件类型");
-        }
-
-        return minioUtils.getObjectUrl(bucketName, fileName);
-    }
-
-    /**
      * 分页查询文件
      * @param page
      * @param limit
@@ -177,18 +163,18 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             List<FileChunk> fileChunks = fileChunkService.selectFileChunksByFileMd5(fileResource.getFileMd5());
             if (!CollectionUtils.isEmpty(fileChunks)){
                 List<FileResourceVO> fileResourceVOList = new ArrayList<>();
-                List<FileChunk> collect = fileChunks.stream().filter(x -> x.getUploadStatus().equals(FileChunk.UPLOAD_STATUS_0)).collect(Collectors.toList());
-                collect.forEach(fileChunk -> {
+                fileChunks.forEach(fileChunk -> {
                     FileResourceVO file = new FileResourceVO();
                     file.setUploadUrl(fileChunk.getUploadUrl());
                     file.setChunkNumber(fileChunk.getChunkNumber());
+                    file.setUploadStatus(fileChunk.getUploadStatus());
                     fileResourceVOList.add(file);
                 });
 
                 return fileResourceVOList;
             }
         }
-        // 初次上传和已有文件信息，但未上传任何分片的情况下则直接生成所有上传url
+        // 初次上传
         String suffix = fileResourceVO.getFileName().substring(fileResourceVO.getFileName().lastIndexOf("."));
         if (suffix.equals(".mp4")){
             bucketName = FileResource.BUCKET_NAME_VIDEO;
@@ -203,6 +189,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             FileResourceVO file = new FileResourceVO();
             file.setUploadUrl(minioUtils.createUploadChunkUrl(bucketName, fileResourceVO.getFileMd5(), i, 604800));
             file.setChunkNumber(i);
+            file.setUploadStatus(FileChunk.UPLOAD_STATUS_0);
             fileResourceVOList.add(file);
 
             FileChunk fileChunk = new FileChunk();
@@ -277,6 +264,8 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
 
         // 合并文件
         if(minioUtils.composeObject(bucketName, bucketName, chunks, patchName)){
+            minioUtils.deleteObjectNames(bucketName, chunks);
+
             // 获取文件访问外链(1小时过期)
             String url = minioUtils.getObjectUrl(bucketName, patchName);
             url = url.replace("http://39.108.255.214:9090", "https://luoyublog.com/file");
@@ -291,6 +280,20 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             return url;
         }
         throw new MyException(ResponseEnums.MINIO_COMPOSE_FILE_ERROR);
+    }
+
+    /**
+     * 获取文件访问地址
+     * @param fileMd5
+     * @param module
+     */
+    @Override
+    public String getFileUrl(String fileMd5, Integer module) {
+        FileResource fileResource = fileResourceMapper.selectFileResourceByFileMd5AndModule(fileMd5, module);
+        if (fileResource == null){
+            return null;
+        }
+        return fileResource.getUrl();
     }
 
 }

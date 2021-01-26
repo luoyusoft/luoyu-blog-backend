@@ -34,12 +34,6 @@ public interface FileResourceService extends IService<FileResource> {
     void download(HttpServletResponse response, String fileName);
 
     /**
-     * 获取下载地址
-     * @param fileName
-     */
-    String getUrl(String fileName);
-
-    /**
      * 分页查询文件
      * @param page
      * @param limit
@@ -64,5 +58,12 @@ public interface FileResourceService extends IService<FileResource> {
      * @param fileResourceVO
      */
     String composeFile(FileResourceVO fileResourceVO);
+
+    /**
+     * 获取文件访问地址
+     * @param fileMd5
+     * @param module
+     */
+    String getFileUrl(String fileMd5, Integer module);
 
 }

@@ -20,9 +20,6 @@
             <if test="url != null">
                 url = #{url},
             </if>
-            <if test="uploadedChunk != null">
-                uploaded_chunk = #{uploadedChunk},
-            </if>
             update_time = #{updateTime}
         </set>
         where file_md5 = #{fileMd5}

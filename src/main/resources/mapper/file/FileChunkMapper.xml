@@ -13,6 +13,7 @@
         select *
         from file_chunk
         where file_md5 = #{fileMd5}
+        order by chunk_number asc
     </select>
 
     <update id="updateFileChunkByFileMd5AndChunkNumber" parameterType="com.luoyu.blog.entity.file.FileChunk">
