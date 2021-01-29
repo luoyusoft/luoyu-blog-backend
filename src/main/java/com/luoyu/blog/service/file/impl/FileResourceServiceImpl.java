@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -84,6 +85,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             fileResource.setUploadStatus(FileResource.UPLOAD_STATUS_1);
             fileResource.setSuffix(suffix);
             fileResource.setFileMd5(DigestUtils.md5Hex(file.getInputStream()));
+            fileResource.setFileSize(this.getFileSize(file.getSize()));
             baseMapper.insert(fileResource);
             FileResourceVO fileResourceVO = new FileResourceVO();
             fileResourceVO.setFileName(fileName);
@@ -187,14 +189,15 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
         List<FileResourceVO> fileResourceVOList = new ArrayList<>();
         for (int i = 0; i < uploadUrls.size(); i++) {
             FileResourceVO file = new FileResourceVO();
-            file.setUploadUrl(minioUtils.createUploadChunkUrl(bucketName, fileResourceVO.getFileMd5(), i, 604800));
+            String url = minioUtils.createUploadChunkUrl(bucketName, fileResourceVO.getFileMd5(), i, 604800).replace("http://39.108.255.214:9090", "https://luoyublog.com/file");
+            file.setUploadUrl(url);
             file.setChunkNumber(i);
             file.setUploadStatus(FileChunk.UPLOAD_STATUS_0);
             fileResourceVOList.add(file);
 
             FileChunk fileChunk = new FileChunk();
             fileChunk.setFileMd5(fileResourceVO.getFileMd5());
-            fileChunk.setUploadUrl(file.getUploadUrl());
+            fileChunk.setUploadUrl(url);
             fileChunk.setUploadStatus(FileChunk.UPLOAD_STATUS_0);
             fileChunk.setChunkNumber(file.getChunkNumber());
             fileChunkService.insertFileChunk(fileChunk);
@@ -204,6 +207,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
         newFileResource.setFileName(fileResourceVO.getFileName());
         newFileResource.setFileMd5(fileResourceVO.getFileMd5());
         newFileResource.setBucketName(bucketName);
+        newFileResource.setFileSize(this.getFileSize(fileResourceVO.getFileSize()));
         newFileResource.setIsChunk(FileResource.IS_CHUNK_1);
         newFileResource.setStorageType(FileResource.STORAGE_TYPE_MINIO);
         newFileResource.setModule(fileResourceVO.getModule());
@@ -294,6 +298,31 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             return null;
         }
         return fileResource.getUrl();
+    }
+
+    /**
+     * 获取带单位的文件大小
+     * @param size
+     */
+    public String getFileSize(Long size) {
+        double num = 1024;
+
+        if (size < num){
+            return size + "B";
+        }
+        if (size < Math.pow(num, 2)){
+            return new DecimalFormat("0.00").format(size / num) + "K";
+        }
+        if (size < Math.pow(num, 3)){
+            return new DecimalFormat("0.00").format(size / Math.pow(num, 2)) + "M";
+        }
+        if (size < Math.pow(num, 4)){
+            return new DecimalFormat("0.00").format(size / Math.pow(num, 3)) + "G";
+        }
+        if (size < Math.pow(num, 5)){
+            return new DecimalFormat("0.00").format(size / Math.pow(num, 4)) + "T";
+        }
+        return null;
     }
 
 }

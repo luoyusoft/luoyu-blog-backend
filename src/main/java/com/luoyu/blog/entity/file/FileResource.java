@@ -59,6 +59,9 @@ public class FileResource extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "文件的md5")
     private String fileMd5;
 
+    @ApiModelProperty(value = "文件大小")
+    private String fileSize;
+
     @ApiModelProperty(value = "文件格式")
     private String suffix;
 

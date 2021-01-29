@@ -39,6 +39,9 @@ public class FileResourceVO implements Serializable {
     @ApiModelProperty(value = "文件的md5")
     private String fileMd5;
 
+    @ApiModelProperty(value = "文件大小")
+    private Long fileSize;
+
     @ApiModelProperty(value = "是否分片（0：否，1：是）")
     private Integer isChunk;
 
