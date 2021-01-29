@@ -189,7 +189,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
         List<FileResourceVO> fileResourceVOList = new ArrayList<>();
         for (int i = 0; i < uploadUrls.size(); i++) {
             FileResourceVO file = new FileResourceVO();
-            String url = minioUtils.createUploadChunkUrl(bucketName, fileResourceVO.getFileMd5(), i, 604800).replace("http://39.108.255.214:9090", "https://luoyublog.com/file");
+            String url = minioUtils.createUploadChunkUrl(bucketName, fileResourceVO.getFileMd5(), i, 604800);
             file.setUploadUrl(url);
             file.setChunkNumber(i);
             file.setUploadStatus(FileChunk.UPLOAD_STATUS_0);
