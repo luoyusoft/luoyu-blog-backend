@@ -37,8 +37,8 @@ public class RedisConfig {
     public CacheManager cacheManager() {
         return new RedisCacheManager(
                 RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory),
-                // 未配置的 key 的默认一周过期
-                RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(7))
+                // 默认缓存24小时
+                RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
                         .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())),
                 this.getRedisCacheConfigurationMap()
         );
@@ -49,10 +49,10 @@ public class RedisConfig {
      */
     private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>(1);
-        // 文章、图书的缓存默认一天失效
-        redisCacheConfigurationMap.put(RedisCacheNames.ARTICLE, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
+        // 文章、视频默认缓存12小时
+        redisCacheConfigurationMap.put(RedisCacheNames.ARTICLE, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(12))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
-        redisCacheConfigurationMap.put(RedisCacheNames.VIDEO, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
+        redisCacheConfigurationMap.put(RedisCacheNames.VIDEO, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(12))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
         return redisCacheConfigurationMap;
     }

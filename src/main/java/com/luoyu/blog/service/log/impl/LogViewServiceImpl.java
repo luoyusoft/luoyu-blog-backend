@@ -10,6 +10,7 @@ import com.luoyu.blog.entity.log.LogView;
 import com.luoyu.blog.entity.sys.IPInfo;
 import com.luoyu.blog.mapper.log.LogViewMapper;
 import com.luoyu.blog.service.log.LogViewService;
+import com.xxl.job.core.log.XxlJobLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,11 +58,12 @@ public class LogViewServiceImpl extends ServiceImpl<LogViewMapper, LogView> impl
     @Override
     public void cleanCityInfo() {
         log.info("开始清洗log_view表");
+        XxlJobLogger.log("开始清洗log_view表");
         Integer maxId = baseMapper.selectMaxId();
         if (maxId == null || maxId < 1){
             return;
         }
-        for (int start = 0, end = 200; start < maxId; start += 200, end += 200) {
+        for (int start = 0, end = 500; start < maxId; start += 500, end += 500) {
             List<LogView> logViews = baseMapper.selectLogViewsByPage(start, end);
             logViews.forEach(logViewsItem -> {
                 try {
@@ -71,14 +73,17 @@ public class LogViewServiceImpl extends ServiceImpl<LogViewMapper, LogView> impl
                     logViewsItem.setCity(ipInfo.getCity());
                     logViewsItem.setUpdateTime(LocalDateTime.now());
                     baseMapper.updateLogViewById(logViewsItem);
-                    log.info("清洗成功：{}", logViewsItem);
+                    log.info("清洗成功：{}", logViewsItem.toString());
+                    XxlJobLogger.log("清洗成功：{}", logViewsItem.toString());
                     Thread.sleep(1000);
                 }catch (Exception e){
-                    e.getStackTrace();
+                    log.info("清洗失败：" + e);
+                    XxlJobLogger.log("清洗失败：" + e);
                 }
             });
         }
         log.info("清洗log_view表结束");
+        XxlJobLogger.log("清洗log_view表结束");
     }
 
 }

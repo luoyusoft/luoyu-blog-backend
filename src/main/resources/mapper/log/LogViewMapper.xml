@@ -5,6 +5,9 @@
     <select id="selectMaxId" resultType="java.lang.Integer">
         select id
         from log_view
+        where country is null
+        or region is null
+        or city is null
         order by id desc limit 1
     </select>
 
@@ -28,7 +31,7 @@
     <select id="selectLogViewsByPage" resultType="com.luoyu.blog.entity.log.LogView" parameterType="java.lang.Integer">
         select *
         from log_view
-        where id &gt;= #{start} and id &lt; #{end} and city is null
+        where id &gt;= #{start} and id &lt; #{end} and (country is null or region is null or city is null)
     </select>
 
 </mapper>
