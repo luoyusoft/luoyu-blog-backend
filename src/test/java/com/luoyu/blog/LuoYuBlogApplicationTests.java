@@ -140,7 +140,9 @@ class LuoYuBlogApplicationTests {
 
     @Test
     void testMinio() throws Exception {
-        minioUtils.deleteObjectName("video", "63411811a9fd435e0e56a45162ce3fc9/0.chunk");
+//        minioUtils.deleteObjectName("video", "63411811a9fd435e0e56a45162ce3fc9/0.chunk");
+        String uploadChunkUrl = minioUtils.createUploadChunkUrl("video", "xxxxx", 0, 604800);
+        log.info(uploadChunkUrl);
     }
 
     @Test
