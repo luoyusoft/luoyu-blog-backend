@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import java.io.Serializable;
 
 /**
- * CloudStorageConfig
+ * QrCodeConfig
  *
  * @author luoyu
  * @date 2018/10/19 18:47
@@ -16,20 +16,25 @@ import java.io.Serializable;
  */
 @Data
 @Configuration
-public class QrCodeProperties implements Serializable {
+public class QrCodeConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Value("${qr.code.charset}")
     private String configCharset;
+
     @Value("${qr.code.width}")
     private Integer configWidth;
+
     @Value("${qr.code.height}")
     private Integer configHeight;
+
     @Value("${qr.code.logoWidth}")
     private Integer configLogoWidth;
+
     @Value("${qr.code.logoHeight}")
     private Integer configLogoHeight;
+
     @Value("${qr.code.picType}")
     private String configPicType;
 

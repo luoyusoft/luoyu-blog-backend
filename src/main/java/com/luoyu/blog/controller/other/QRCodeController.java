@@ -10,7 +10,7 @@ import java.io.File;
 
 /**
  * <p>
- * 云存储资源表 前端控制器
+ * 二维码 前端控制器
  * </p>
  *
  * @author luoyu
