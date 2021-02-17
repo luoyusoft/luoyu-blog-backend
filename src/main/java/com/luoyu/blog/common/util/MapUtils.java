@@ -1,8 +1,11 @@
 package com.luoyu.blog.common.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * MapUtils
@@ -11,6 +14,7 @@ import java.util.*;
  * @date 2018/10/22 19:38
  * @description Map工具类
  */
+@Slf4j
 public class MapUtils extends HashMap<String, Object> {
 
     @Override
@@ -20,43 +24,35 @@ public class MapUtils extends HashMap<String, Object> {
     }
 
     /**
-     * @author jinhaoxun
-     * @description 实体对象转成Map方法
-     * @param obj 实体对象
-     * @return Map 实体对象转换后的Map
+     * object转换成map
      */
-    public static Map<String, Object> objectToMap(Object obj) {
-        Map<String, Object> map = new HashMap<>();
+    public static <T>Map<String, Object> objectToMap(T obj) {
         if (obj == null) {
-            return map;
+            return null;
         }
-        Class clazz = obj.getClass();
-        Field[] fields = clazz.getDeclaredFields();
         try {
+            Field[] fields = obj.getClass().getDeclaredFields();
+            Map<String, Object> map = new HashMap<>();
             for (Field field : fields) {
                 field.setAccessible(true);
                 map.put(field.getName(), field.get(obj));
             }
+            return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("object转换成map失败：", e);
+            return null;
         }
-        return map;
     }
 
     /**
-     * @author jinhaoxun
-     * @description Map转成实体对象方法
-     * @param map map实体对象包含属性
-     * @param clazz 实体对象类型
-     * @return Object Map数据转换后的对象
+     * map转换成object
      */
-    public static Object mapToObject(Map<String, Object> map, Class<?> clazz) {
+    public static <T>T mapToObject(Map<String, Object> map, Class<T> clazz) {
         if (map == null) {
             return null;
         }
-        Object obj = null;
         try {
-            obj = clazz.newInstance();
+            T obj = clazz.newInstance();
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
                 int mod = field.getModifiers();
@@ -66,10 +62,11 @@ public class MapUtils extends HashMap<String, Object> {
                 field.setAccessible(true);
                 field.set(obj, map.get(field.getName()));
             }
+            return obj;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("map转换成object失败：", e);
+            return null;
         }
-        return obj;
     }
 
 }

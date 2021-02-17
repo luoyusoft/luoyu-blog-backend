@@ -6,7 +6,6 @@ import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
-import com.luoyu.blog.common.validator.group.UpdateGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.sys.SysUser;

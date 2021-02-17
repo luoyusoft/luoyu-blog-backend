@@ -35,7 +35,7 @@ public class DateUtils {
      * @return
      */
     public static String format(Date date, String pattern) {
-        SimpleDateFormat sdf=new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(date);
     }
 
@@ -100,7 +100,6 @@ public class DateUtils {
     public static LocalDateTime startOfThisMonth() {
         return LocalDateTime.of(firstDayOfThisMonth(), LocalTime.MIN);
     }
-
 
     /**
      * 取本月最后一天的结束时间
