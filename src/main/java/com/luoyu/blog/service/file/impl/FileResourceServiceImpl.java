@@ -18,6 +18,7 @@ import com.luoyu.blog.service.file.FileResourceService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,6 +47,9 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
 
     @Autowired
     private FileChunkService fileChunkService;
+
+    @Value("${minio.base.url}")
+    private String minioBaseUrl;
 
     /**
      * 上传
@@ -188,7 +192,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
         List<FileResourceVO> fileResourceVOList = new ArrayList<>();
         for (int i = 0; i < uploadUrls.size(); i++) {
             FileResourceVO file = new FileResourceVO();
-            String url = minioUtils.createUploadChunkUrl(bucketName, fileResourceVO.getFileMd5(), i, 604800);
+            String url = minioUtils.createUploadChunkUrl(bucketName, fileResourceVO.getFileMd5(), i, 604800).replace(minioBaseUrl, "https://luoyublog.com/api/file");
             file.setUploadUrl(url);
             file.setChunkNumber(i);
             file.setUploadStatus(FileChunk.UPLOAD_STATUS_0);
