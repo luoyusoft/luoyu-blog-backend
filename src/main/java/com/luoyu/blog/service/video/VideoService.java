@@ -81,13 +81,6 @@ public interface VideoService extends IService<Video> {
     VideoDTO getVideoDTOById(Integer videoId);
 
     /**
-     * 获取简单的VideoDTO对象
-     * @param videoId
-     * @return
-     */
-    VideoDTO getSimpleVideoDTO(Integer videoId);
-
-    /**
      * 获取热读榜
      * @return
      */

@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -261,18 +258,25 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
     @Override
     public List<RecommendVO> listRecommendVO(Integer module) {
         List<RecommendVO> recommendList =this.baseMapper.listRecommendDTO(module);
-        return genRecommendList(recommendList);
+        if (CollectionUtils.isEmpty(recommendList)){
+            return Collections.emptyList();
+        }
+        return this.genRecommendList(recommendList);
     }
 
     private List<RecommendVO> genRecommendList(List<RecommendVO> recommendList) {
         recommendList.forEach(recommendVO -> {
             if(ModuleEnum.ARTICLE.getCode() == recommendVO.getModule()){
                 ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(recommendVO.getLinkId());
-                BeanUtils.copyProperties(simpleArticleDTO, recommendVO);
+                if (simpleArticleDTO != null){
+                    BeanUtils.copyProperties(simpleArticleDTO, recommendVO);
+                }
             }
             if(ModuleEnum.VIDEO.getCode() == recommendVO.getModule()){
                 VideoDTO simpleVideoDTO = videoMapper.getSimpleVideoDTO(recommendVO.getLinkId());
-                BeanUtils.copyProperties(simpleVideoDTO, recommendVO);
+                if (simpleVideoDTO != null){
+                    BeanUtils.copyProperties(simpleVideoDTO, recommendVO);
+                }
             }
         });
         return recommendList;

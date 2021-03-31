@@ -297,21 +297,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     /**
-     * 获取简单的Article对象
-     * @param articleId
-     * @return
-     */
-    @Override
-    public ArticleDTO getSimpleArticleDTO(Integer articleId) {
-        ArticleDTO articleDTO = baseMapper.getSimpleArticleDTO(articleId);
-        if (articleDTO == null){
-            return null;
-        }
-        articleDTO.setTagList(tagService.listByLinkId(articleId, ModuleEnum.ARTICLE.getCode()));
-        return articleDTO;
-    }
-
-    /**
      * 获取热读榜
      * @return
      */

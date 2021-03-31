@@ -81,13 +81,6 @@ public interface ArticleService extends IService<Article> {
     ArticleDTO getArticleDTOById(Integer articleId);
 
     /**
-     * 获取简单的Article对象
-     * @param articleId
-     * @return
-     */
-    ArticleDTO getSimpleArticleDTO(Integer articleId);
-
-    /**
      * 获取热读榜
      * @return
      */

@@ -25,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -260,22 +257,29 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
 
     @Override
     public List<TopVO> listTopVO(Integer module) {
-        List<TopVO> TopList =this.baseMapper.listTopDTO(module);
-        return genTopList(TopList);
+        List<TopVO> topList =this.baseMapper.listTopDTO(module);
+        if (CollectionUtils.isEmpty(topList)){
+            return Collections.emptyList();
+        }
+        return this.genTopList(topList);
     }
 
-    private List<TopVO> genTopList(List<TopVO> TopList) {
-        TopList.forEach(TopVO -> {
-            if(ModuleEnum.ARTICLE.getCode() == TopVO.getModule()){
-                ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(TopVO.getLinkId());
-                BeanUtils.copyProperties(simpleArticleDTO, TopVO);
+    private List<TopVO> genTopList(List<TopVO> topList) {
+        topList.forEach(topVO -> {
+            if(ModuleEnum.ARTICLE.getCode() == topVO.getModule()){
+                ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(topVO.getLinkId());
+                if (simpleArticleDTO != null){
+                    BeanUtils.copyProperties(simpleArticleDTO, topVO);
+                }
             }
-            if(ModuleEnum.VIDEO.getCode() == TopVO.getModule()){
-                VideoDTO simpleVideoDTO = videoMapper.getSimpleVideoDTO(TopVO.getLinkId());
-                BeanUtils.copyProperties(simpleVideoDTO, TopVO);
+            if(ModuleEnum.VIDEO.getCode() == topVO.getModule()){
+                VideoDTO simpleVideoDTO = videoMapper.getSimpleVideoDTO(topVO.getLinkId());
+                if (simpleVideoDTO != null){
+                    BeanUtils.copyProperties(simpleVideoDTO, topVO);
+                }
             }
         });
-        return TopList;
+        return topList;
     }
 
 }

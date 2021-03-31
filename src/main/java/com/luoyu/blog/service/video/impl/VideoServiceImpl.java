@@ -297,21 +297,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     }
 
     /**
-     * 获取简单的VideoDTO对象
-     * @param videoId
-     * @return
-     */
-    @Override
-    public VideoDTO getSimpleVideoDTO(Integer videoId) {
-        VideoDTO videoDTO = baseMapper.getSimpleVideoDTO(videoId);
-        if (videoDTO == null){
-            return null;
-        }
-        videoDTO.setTagList(tagService.listByLinkId(videoId, ModuleEnum.VIDEO.getCode()));
-        return videoDTO;
-    }
-
-    /**
      * 获取热观榜
      * @return
      */

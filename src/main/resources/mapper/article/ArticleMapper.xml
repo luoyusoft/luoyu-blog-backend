@@ -43,11 +43,11 @@
     </select>
 
     <update id="updateReadNum">
-        update article set read_num = read_num + 1 where id = #{id}
+        update article set read_num = read_num + 1 where id = #{id} and publish = true
     </update>
 
     <update id="updateLikeNum">
-        update article set like_num = like_num + 1 where id = #{id}
+        update article set like_num = like_num + 1 where id = #{id} and publish = true
     </update>
 
     <select id="checkByCategory" resultType="Integer">
@@ -117,11 +117,11 @@
     <!-- *************************** portal ****************************** -->
 
     <select id="getSimpleArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
-        select <include refid="homeArticleColumn"/> from article where id = #{id}
+        select <include refid="homeArticleColumn"/> from article where id = #{id} and publish = true
     </select>
 
     <select id="getHotReadList" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
-        select <include refid="homeArticleColumn"/> from article order by read_num desc limit 5
+        select <include refid="homeArticleColumn"/> from article where publish = true order by read_num desc limit 5
     </select>
 
     <select id="selectArticleById" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.article.Article">

@@ -53,11 +53,11 @@
     </select>
 
     <update id="updateWatchNum">
-        update video set watch_num = watch_num + 1 where id = #{id}
+        update video set watch_num = watch_num + 1 where id = #{id} and publish = true
     </update>
 
     <update id="updateLikeNum">
-        update video set like_num = like_num + 1 where id = #{id}
+        update video set like_num = like_num + 1 where id = #{id} and publish = true
     </update>
 
     <select id="checkByCategory" resultType="Integer">
@@ -148,11 +148,11 @@
     <!-- *************************** portal ****************************** -->
 
     <select id="getSimpleVideoDTO" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
-        select <include refid="homeVideoColumn"/> from video where id = #{id}
+        select <include refid="homeVideoColumn"/> from video where id = #{id} and publish = true
     </select>
 
     <select id="getHotWatchList" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
-        select <include refid="homeVideoColumn"/> from video order by watch_num desc limit 5
+        select <include refid="homeVideoColumn"/> from video where and publish = true order by watch_num desc limit 5
     </select>
 
     <select id="selectVideoById" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.video.Video">
