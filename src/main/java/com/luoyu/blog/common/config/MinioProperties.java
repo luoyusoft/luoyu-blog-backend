@@ -15,8 +15,8 @@ public class MinioProperties {
     /**
      * 对象存储服务的URL
      */
-    @Value("${minio.endpoint}")
-    private String endpoint;
+    @Value("${minio.url}")
+    private String url;
 
     /**
      * Access key就像用户ID，可以唯一标识你的账户

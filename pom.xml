@@ -40,7 +40,7 @@
         <freemarker.version>2.3.29</freemarker.version>
         <knife4j.spring.boot.starter.version>2.0.4</knife4j.spring.boot.starter.version>
         <xxl.job.core.version>2.2.0</xxl.job.core.version>
-        <io.minio.version>7.1.0</io.minio.version>
+        <io.minio.version>8.1.0</io.minio.version>
         <com.google.zxing.version>3.2.0</com.google.zxing.version>
         <eu.bitwalker.version>1.21</eu.bitwalker.version>
         <org.mindrot.version>0.4</org.mindrot.version>

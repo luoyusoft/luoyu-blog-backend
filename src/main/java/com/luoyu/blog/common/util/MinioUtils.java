@@ -214,7 +214,7 @@ public class MinioUtils {
     public void download(HttpServletResponse response, String bucketName, String objectName) {
         InputStream inputStream = null;
         try {
-            ObjectStat stat = minioClient.statObject(
+            StatObjectResponse stat = minioClient.statObject(
                     StatObjectArgs.builder()
                             .bucket(bucketName)
                             .object(objectName)
@@ -244,7 +244,12 @@ public class MinioUtils {
      */
     public String getObjectUrl(String bucketName, String objectName) {
         try {
-            return minioClient.getObjectUrl(bucketName, objectName);
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                    .method(Method.GET)
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .build());
         } catch (Exception e) {
             throw new MyException(ResponseEnums.MINIO_GET_URL_ERROR.getCode(), e.getMessage());
         }
