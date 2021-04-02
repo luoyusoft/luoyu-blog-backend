@@ -58,6 +58,20 @@ public class FileResourceController {
     }
 
     /**
+     * 分片上传文件
+     */
+    @PostMapping("/manage/file/resource/minio/chunkUpload")
+    public Response chunkUpload(FileResourceVO fileResourceVO) throws Exception {
+        if (fileResourceVO.getFile() == null || fileResourceVO.getFile().isEmpty()
+                || StringUtils.isEmpty(fileResourceVO.getUploadUrl())) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件，上传url地址不能为空");
+        }
+
+        fileResourceService.chunkUpload(fileResourceVO.getFile(), fileResourceVO.getUploadUrl());
+        return Response.success();
+    }
+
+    /**
      * 下载文件
      */
     @PostMapping("/manage/file/resource/minio/download")
@@ -79,25 +93,25 @@ public class FileResourceController {
     /**
      * 分片上传文件，获取各个分片上传地址
      */
-    @PostMapping("/manage/file/resource/minio/chunkUpload")
-    public Response chunkUpload(@RequestBody FileResourceVO fileResourceVO){
+    @PostMapping("/manage/file/resource/minio/chunk")
+    public Response chunk(@RequestBody FileResourceVO fileResourceVO){
         if (StringUtils.isEmpty(fileResourceVO.getFileMd5()) || StringUtils.isEmpty(fileResourceVO.getFileName())
                 || fileResourceVO.getModule() == null || fileResourceVO.getChunkCount() == null) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，文件名称，文件所属模块，分片总数量不能为空");
         }
-        return Response.success(fileResourceService.chunkUpload(fileResourceVO));
+        return Response.success(fileResourceService.chunk(fileResourceVO));
     }
 
     /**
      * 分片上传，单个分片成功更新
      */
-    @PutMapping("/manage/file/resource/minio/chunkSuccess")
-    public Response chunkSuccess(@RequestBody FileResourceVO fileResourceVO){
+    @PutMapping("/manage/file/resource/minio/chunkUploadSuccess")
+    public Response chunkUploadSuccess(@RequestBody FileResourceVO fileResourceVO){
         if (StringUtils.isEmpty(fileResourceVO.getFileMd5()) || fileResourceVO.getChunkNumber() == null
                 || fileResourceVO.getModule() == null) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文件md5，当前分片，文件所属模块不能为空");
         }
-        return Response.success(fileResourceService.chunkSuccess(fileResourceVO));
+        return Response.success(fileResourceService.chunkUploadSuccess(fileResourceVO));
     }
 
     /**

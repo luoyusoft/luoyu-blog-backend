@@ -27,6 +27,13 @@ public interface FileResourceService extends IService<FileResource> {
     FileResourceVO upload(MultipartFile file, Integer fileModule);
 
     /**
+     * 分片上传
+     * @param file
+     * @param uploadUrl
+     */
+    void chunkUpload(MultipartFile file, String uploadUrl);
+
+    /**
      * 下载
      * @param response
      * @param fileName
@@ -45,13 +52,13 @@ public interface FileResourceService extends IService<FileResource> {
      * 分片上传文件
      * @param fileResourceVO
      */
-    List<FileResourceVO> chunkUpload(FileResourceVO fileResourceVO);
+    List<FileResourceVO> chunk(FileResourceVO fileResourceVO);
 
     /**
      * 分片上传，单个分片成功
      * @param fileResourceVO
      */
-    Boolean chunkSuccess(FileResourceVO fileResourceVO);
+    Boolean chunkUploadSuccess(FileResourceVO fileResourceVO);
 
     /**
      * 合并文件并返回文件信息
