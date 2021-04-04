@@ -40,7 +40,6 @@ public class FileResourceController {
                 || fileResourceVO.getModule() == null) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件，文件所属模块不能为空");
         }
-
         return Response.success(cloudStorageService.upload(fileResourceVO.getFile(), fileResourceVO.getModule()));
     }
 
@@ -53,7 +52,6 @@ public class FileResourceController {
                 || fileResourceVO.getModule() == null) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件，文件所属模块不能为空");
         }
-
         return Response.success(fileResourceService.upload(fileResourceVO.getFile(), fileResourceVO.getModule()));
     }
 
@@ -63,11 +61,11 @@ public class FileResourceController {
     @PostMapping("/manage/file/resource/minio/chunkUpload")
     public Response chunkUpload(FileResourceVO fileResourceVO) throws Exception {
         if (fileResourceVO.getFile() == null || fileResourceVO.getFile().isEmpty()
-                || StringUtils.isEmpty(fileResourceVO.getUploadUrl())) {
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件，上传url地址不能为空");
+                || StringUtils.isEmpty(fileResourceVO.getBucketName()) || StringUtils.isEmpty(fileResourceVO.getFileMd5())
+                || fileResourceVO.getChunkNumber() == null) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "上传文件，桶名，文件的md5，分片序号不能为空");
         }
-
-        fileResourceService.chunkUpload(fileResourceVO.getFile(), fileResourceVO.getUploadUrl());
+        fileResourceService.chunkUpload(fileResourceVO.getFile(), fileResourceVO.getBucketName(), fileResourceVO.getFileMd5(), fileResourceVO.getChunkNumber());
         return Response.success();
     }
 

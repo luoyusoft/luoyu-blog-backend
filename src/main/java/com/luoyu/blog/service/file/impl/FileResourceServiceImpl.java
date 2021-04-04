@@ -19,13 +19,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -54,8 +48,8 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
     @Autowired
     private FileChunkService fileChunkService;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    @Value("${minio.base.url}")
+    private String minioBaseUrl;
 
     /**
      * 上传
@@ -108,16 +102,17 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
     /**
      * 分片上传
      * @param file
-     * @param uploadUrl
+     * @param bucketName
+     * @param fileMd5
+     * @param chunkNumber
      */
     @Override
-    public void chunkUpload(MultipartFile file, String uploadUrl) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        MultiValueMap map = new LinkedMultiValueMap();
-        map.add("data", file);
-        HttpEntity requestBody = new HttpEntity(map, headers);
-        restTemplate.put(uploadUrl, requestBody, String.class);
+    public void chunkUpload(MultipartFile file, String bucketName, String fileMd5, Integer chunkNumber) {
+        try {
+            minioUtils.upload(file.getInputStream(), fileMd5 + "/" + chunkNumber + ".chunk", bucketName, file.getContentType());
+        }catch (Exception e){
+            throw new MyException(ResponseEnums.MINIO_UPLOAD_ERROR.getCode(), e.getMessage());
+        }
     }
 
     /**
@@ -217,6 +212,8 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             file.setUploadUrl(url);
             file.setChunkNumber(i);
             file.setUploadStatus(FileChunk.UPLOAD_STATUS_0);
+            file.setFileMd5(fileResourceVO.getFileMd5());
+            file.setBucketName(bucketName);
             fileResourceVOList.add(file);
 
             FileChunk fileChunk = new FileChunk();
@@ -296,7 +293,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
 
             // 获取文件访问外链(1小时过期)
             String url = minioUtils.getObjectUrl(bucketName, patchName);
-            url = url.replace("http://39.108.255.214:9090", "https://luoyublog.com/file");
+            url = url.replace(minioBaseUrl, "https://minio.luoyublog.com").substring(0, url.indexOf("?"));
             // 获取数据库里记录的文件信息，修改数据并返回文件信息
             FileResource fileResource = new FileResource();
             fileResource.setFileMd5(fileResourceVO.getFileMd5());

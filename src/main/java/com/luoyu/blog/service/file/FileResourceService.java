@@ -29,9 +29,11 @@ public interface FileResourceService extends IService<FileResource> {
     /**
      * 分片上传
      * @param file
-     * @param uploadUrl
+     * @param bucketName
+     * @param fileMd5
+     * @param chunkNumber
      */
-    void chunkUpload(MultipartFile file, String uploadUrl);
+    void chunkUpload(MultipartFile file, String bucketName, String fileMd5, Integer chunkNumber);
 
     /**
      * 下载
