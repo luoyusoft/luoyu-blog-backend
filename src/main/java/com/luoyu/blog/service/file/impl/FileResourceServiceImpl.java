@@ -172,7 +172,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
      */
     @Override
     public List<FileResourceVO> chunk(FileResourceVO fileResourceVO) {
-        String bucketName;
+        String bucketName = null;
         FileResource fileResource = fileResourceMapper.selectFileResourceByFileMd5AndModule(fileResourceVO.getFileMd5(), fileResourceVO.getModule());
         // 校验该文件是否上传过
         if(fileResource != null){
@@ -184,13 +184,15 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             List<FileChunk> fileChunks = fileChunkService.selectFileChunksByFileMd5(fileResource.getFileMd5());
             if (!CollectionUtils.isEmpty(fileChunks)){
                 List<FileResourceVO> fileResourceVOList = new ArrayList<>();
-                fileChunks.forEach(fileChunk -> {
+                for (FileChunk fileChunk : fileChunks){
                     FileResourceVO file = new FileResourceVO();
                     file.setUploadUrl(fileChunk.getUploadUrl());
                     file.setChunkNumber(fileChunk.getChunkNumber());
                     file.setUploadStatus(fileChunk.getUploadStatus());
+                    file.setFileMd5(fileChunk.getFileMd5());
+                    file.setBucketName(bucketName);
                     fileResourceVOList.add(file);
-                });
+                }
 
                 return fileResourceVOList;
             }
