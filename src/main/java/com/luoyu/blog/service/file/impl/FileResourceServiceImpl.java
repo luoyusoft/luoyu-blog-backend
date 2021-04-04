@@ -79,7 +79,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
 
             minioUtils.upload(inputStream, patchName, bucketName, contentType);
             String url = minioUtils.getObjectUrl(bucketName, patchName);
-            url = url.replace(minioBaseUrl, "https://minio.luoyublog.com").substring(0, url.indexOf("?"));
+            url = url.replace(minioBaseUrl, "https://minio.luoyublog.com").substring(0, url.indexOf("?") + 1);
             fileResource.setFileName(fileName);
             fileResource.setBucketName(bucketName);
             fileResource.setStorageType(storageType);
@@ -296,7 +296,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
 
             // 获取文件访问外链(1小时过期)
             String url = minioUtils.getObjectUrl(bucketName, patchName);
-            url = url.replace(minioBaseUrl, "https://minio.luoyublog.com").substring(0, url.indexOf("?"));
+            url = url.replace(minioBaseUrl, "https://minio.luoyublog.com").substring(0, url.indexOf("?") + 1);
             // 获取数据库里记录的文件信息，修改数据并返回文件信息
             FileResource fileResource = new FileResource();
             fileResource.setFileMd5(fileResourceVO.getFileMd5());
