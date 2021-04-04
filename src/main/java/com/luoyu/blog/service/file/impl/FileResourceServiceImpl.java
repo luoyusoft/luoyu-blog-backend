@@ -79,6 +79,7 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
 
             minioUtils.upload(inputStream, patchName, bucketName, contentType);
             String url = minioUtils.getObjectUrl(bucketName, patchName);
+            url = url.replace(minioBaseUrl, "https://minio.luoyublog.com").substring(0, url.indexOf("?"));
             fileResource.setFileName(fileName);
             fileResource.setBucketName(bucketName);
             fileResource.setStorageType(storageType);
