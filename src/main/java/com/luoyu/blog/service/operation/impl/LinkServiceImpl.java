@@ -46,6 +46,16 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
         return new PageUtils(linkPage);
     }
 
+    /**
+     * 判断上传文件下是否有友链
+     * @param url
+     * @return
+     */
+    @Override
+    public boolean checkByFile(String url) {
+        return baseMapper.checkByFile(url) > 0;
+    }
+
     /********************** portal ********************************/
 
     /**

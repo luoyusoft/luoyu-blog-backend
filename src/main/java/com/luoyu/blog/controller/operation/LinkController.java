@@ -1,6 +1,8 @@
 package com.luoyu.blog.controller.operation;
 
 import com.luoyu.blog.common.constants.RedisCacheNames;
+import com.luoyu.blog.common.enums.ResponseEnums;
+import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
@@ -84,6 +86,14 @@ public class LinkController extends AbstractController {
     @RequiresPermissions("operation:link:delete")
     @CacheEvict(allEntries = true)
     public Response delete(@RequestBody String[] ids){
+        if (ids == null || ids.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
+        }
+
+        if (ids.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能超过100个");
+        }
+
         linkService.removeByIds(Arrays.asList(ids));
         return Response.success();
     }

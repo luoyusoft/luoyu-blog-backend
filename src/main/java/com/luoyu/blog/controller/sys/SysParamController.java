@@ -1,5 +1,7 @@
 package com.luoyu.blog.controller.sys;
 
+import com.luoyu.blog.common.enums.ResponseEnums;
+import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
@@ -89,6 +91,14 @@ public class SysParamController extends AbstractController {
     @DeleteMapping("/manage/sys/param/delete")
     @RequiresPermissions("sys:param:delete")
     public Response delete(@RequestBody String[] ids){
+        if (ids == null || ids.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
+        }
+
+        if (ids.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能超过100个");
+        }
+
         paramService.removeByIds(Arrays.asList(ids));
         return Response.success();
     }

@@ -13,4 +13,11 @@ import com.luoyu.blog.entity.operation.Link;
  */
 public interface LinkMapper extends BaseMapper<Link> {
 
+    /**
+     * 判断上传文件下是否有友链
+     * @param url
+     * @return
+     */
+    int checkByFile(String url);
+
 }

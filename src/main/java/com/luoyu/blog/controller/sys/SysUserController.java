@@ -117,6 +117,14 @@ public class SysUserController extends AbstractController {
     @PostMapping("/manage/sys/user/delete")
     @RequiresPermissions("sys:user:delete")
     public Response delete(@RequestBody Integer[] userIds){
+        if (userIds == null || userIds.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "userIds不能为空");
+        }
+
+        if (userIds.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "userIds不能超过100个");
+        }
+
         if(ArrayUtils.contains(userIds, SysConstants.SUPER_ADMIN)){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "系统管理员不能删除");
         }

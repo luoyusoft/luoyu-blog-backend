@@ -75,4 +75,10 @@ public interface FileResourceService extends IService<FileResource> {
      */
     String getFileUrl(String fileMd5, Integer module);
 
+    /**
+     * 批量删除文件
+     * @param ids
+     */
+    void deleteFile(Integer[] ids);
+
 }

@@ -107,6 +107,14 @@ public class TagController extends AbstractController {
     @RequiresPermissions("operation:tag:delete")
     @CacheEvict(allEntries = true)
     public Response delete(@RequestBody String[] ids){
+        if (ids == null || ids.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
+        }
+
+        if (ids.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能超过100个");
+        }
+
         for (String id : ids) {
             List<TagLink> tagLinkList = tagLinkMapper.selectList(new QueryWrapper<TagLink>().lambda().eq(TagLink::getTagId, id));
             if(!CollectionUtils.isEmpty(tagLinkList)) {

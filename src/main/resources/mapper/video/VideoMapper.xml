@@ -60,8 +60,12 @@
         update video set like_num = like_num + 1 where id = #{id} and publish = true
     </update>
 
-    <select id="checkByCategory" resultType="Integer">
+    <select id="checkByCategory" resultType="java.lang.Integer">
         select count(*) from video where category_id = #{categoryId}
+    </select>
+
+    <select id="checkByFile" resultType="java.lang.String">
+        select count(*) from video where video_url = #{url} or cover = #{url}
     </select>
 
     <select id="selectVideoDTOList" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">

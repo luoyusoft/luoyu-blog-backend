@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blog.entity.file.FileResource;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  * 云存储资源表 Mapper 接口
@@ -30,5 +32,13 @@ public interface FileResourceMapper extends BaseMapper<FileResource> {
      * @return
      */
     Boolean updateFileResourceByFileMd5AndModule(FileResource fileResource);
+
+    /**
+     * 批量查询文件
+     *
+     * @param ids ids
+     * @return
+     */
+    List<FileResource> selectFileResourceByIds(@Param("ids") Integer[] ids);
 
 }

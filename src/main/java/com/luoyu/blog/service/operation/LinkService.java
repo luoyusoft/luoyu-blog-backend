@@ -25,6 +25,13 @@ public interface LinkService extends IService<Link> {
      */
      PageUtils queryPage(Integer page, Integer limit, String title);
 
+    /**
+     * 判断上传文件下是否有友链
+     * @param url
+     * @return
+     */
+    boolean checkByFile(String url);
+
     /********************** portal ********************************/
 
     /**

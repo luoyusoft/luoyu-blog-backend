@@ -33,7 +33,7 @@ import java.util.List;
 public class TopController extends AbstractController {
 
     @Resource
-    private TopService TopService;
+    private TopService topService;
 
     /**
      * 列表
@@ -41,7 +41,7 @@ public class TopController extends AbstractController {
     @GetMapping("/manage/operation/top/list")
     @RequiresPermissions("operation:top:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit){
-        PageUtils TopPage = TopService.queryPage(page, limit);
+        PageUtils TopPage = topService.queryPage(page, limit);
         return Response.success(TopPage);
     }
 
@@ -54,7 +54,7 @@ public class TopController extends AbstractController {
         if(module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
-        List<TopVO> TopList = TopService.select(module, title);
+        List<TopVO> TopList = topService.select(module, title);
         return Response.success(TopList);
     }
 
@@ -64,7 +64,7 @@ public class TopController extends AbstractController {
     @GetMapping("/manage/operation/top/info/{id}")
     @RequiresPermissions("operation:top:info")
     public Response info(@PathVariable("id") String id){
-       Top Top = TopService.getById(id);
+       Top Top = topService.getById(id);
         return Response.success(Top);
     }
 
@@ -79,7 +79,7 @@ public class TopController extends AbstractController {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "linkId，module，orderNum不能为空");
         }
         ValidatorUtils.validateEntity(top, AddGroup.class);
-        TopService.insertTop(top);
+        topService.insertTop(top);
 
         return Response.success();
     }
@@ -95,7 +95,7 @@ public class TopController extends AbstractController {
                 || top.getModule() == null || top.getOrderNum() == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，linkId，module，orderNum不能为空");
         }
-        TopService.updateTop(top);
+        topService.updateTop(top);
 
         return Response.success();
     }
@@ -110,7 +110,7 @@ public class TopController extends AbstractController {
         if(id == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id不能为空");
         }
-        TopService.updateTopTop(id);
+        topService.updateTopTop(id);
 
         return Response.success();
     }
@@ -122,7 +122,15 @@ public class TopController extends AbstractController {
     @RequiresPermissions("operation:top:delete")
     @CacheEvict(allEntries = true)
     public Response deleteTopsByIds(@RequestBody Integer[] ids){
-        TopService.deleteTopsByIds(Arrays.asList(ids));
+        if (ids == null || ids.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
+        }
+
+        if (ids.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能超过100个");
+        }
+
+        topService.deleteTopsByIds(Arrays.asList(ids));
         return Response.success();
     }
 

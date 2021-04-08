@@ -13,19 +13,24 @@ import com.luoyu.blog.entity.file.FileChunk;
 import com.luoyu.blog.entity.file.FileResource;
 import com.luoyu.blog.entity.file.vo.FileResourceVO;
 import com.luoyu.blog.mapper.file.FileResourceMapper;
+import com.luoyu.blog.service.article.ArticleService;
 import com.luoyu.blog.service.file.FileChunkService;
 import com.luoyu.blog.service.file.FileResourceService;
+import com.luoyu.blog.service.operation.LinkService;
+import com.luoyu.blog.service.video.VideoService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -47,6 +52,15 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
 
     @Autowired
     private FileChunkService fileChunkService;
+
+    @Autowired
+    private ArticleService articleService;
+
+    @Autowired
+    private VideoService videoService;
+
+    @Autowired
+    private LinkService linkService;
 
     @Value("${minio.base.url}")
     private String minioBaseUrl;
@@ -347,6 +361,48 @@ public class FileResourceServiceImpl extends ServiceImpl<FileResourceMapper, Fil
             return new DecimalFormat("0.00").format(size / Math.pow(num, 4)) + "T";
         }
         return null;
+    }
+
+    /**
+     * 批量删除文件
+     *
+     * @param ids
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFile(Integer[] ids) {
+        List<FileResource> fileResourceList = fileResourceMapper.selectFileResourceByIds(ids);
+
+        List<Integer> failList = new ArrayList<>();
+        for (FileResource fileResourceListItem : fileResourceList) {
+            // 检测文章
+            if (articleService.checkByFile(fileResourceListItem.getUrl())){
+                failList.add(fileResourceListItem.getId());
+                continue;
+            }
+
+            // 检测视频
+            if (videoService.checkByFile(fileResourceListItem.getUrl())){
+                failList.add(fileResourceListItem.getId());
+                continue;
+            }
+
+            // 检测友链
+            if (linkService.checkByFile(fileResourceListItem.getUrl())){
+                failList.add(fileResourceListItem.getId());
+                continue;
+            }
+
+            String[] urls = fileResourceListItem.getUrl().split("/");
+            minioUtils.deleteObjectName(fileResourceListItem.getBucketName(),
+                    DateTimeFormatter.ofPattern("yyyyMMdd").format(fileResourceListItem.getUpdateTime())
+                            + "/" + urls[urls.length - 1]);
+            fileResourceMapper.deleteById(fileResourceListItem.getId());
+        }
+
+        if (!CollectionUtils.isEmpty(failList)){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "部分文件已有关联，删除失败，列表：" + failList.toString());
+        }
     }
 
 }

@@ -137,4 +137,21 @@ public class FileResourceController {
         return Response.success(fileResourceService.getFileUrl(fileMd5, module));
     }
 
+    /**
+     * 批量删除文件
+     */
+    @DeleteMapping("/manage/file/resource/minio/file")
+    public Response deleteFile(@RequestBody Integer[] ids){
+        if (ids == null || ids.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
+        }
+
+        if (ids.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能超过100个");
+        }
+
+        fileResourceService.deleteFile(ids);
+        return Response.success();
+    }
+
 }

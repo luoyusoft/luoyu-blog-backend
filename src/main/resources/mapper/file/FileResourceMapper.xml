@@ -27,4 +27,13 @@
           and is_chunk = 1
     </update>
 
+    <select id="selectFileResourceByIds" resultType="com.luoyu.blog.entity.file.FileResource">
+        select * from file_resource where
+        id in
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

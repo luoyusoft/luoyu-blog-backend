@@ -217,9 +217,24 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         return videoVO;
     }
 
+    /**
+     * 判断类别下是否有视频
+     * @param categoryId
+     * @return
+     */
     @Override
     public boolean checkByCategory(Integer categoryId) {
         return baseMapper.checkByCategory(categoryId) > 0;
+    }
+
+    /**
+     * 判断上传文件下是否有文章
+     * @param url
+     * @return
+     */
+    @Override
+    public boolean checkByFile(String url) {
+        return baseMapper.checkByFile(url) > 0;
     }
 
     /**

@@ -57,7 +57,19 @@ public interface VideoService extends IService<Video> {
      */
     VideoVO getVideo(Integer videoId);
 
-    boolean checkByCategory(Integer id);
+    /**
+     * 判断类别下是否有文章
+     * @param categoryId
+     * @return
+     */
+    boolean checkByCategory(Integer categoryId);
+
+    /**
+     * 判断上传文件下是否有文章
+     * @param url
+     * @return
+     */
+    boolean checkByFile(String url);
 
     /********************** portal ********************************/
 

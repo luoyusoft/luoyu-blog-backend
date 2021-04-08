@@ -1,5 +1,7 @@
 package com.luoyu.blog.controller.sys;
 
+import com.luoyu.blog.common.enums.ResponseEnums;
+import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.base.AbstractController;
@@ -121,6 +123,14 @@ public class SysRoleController extends AbstractController {
     @DeleteMapping("/manage/sys/role/delete")
     @RequiresPermissions("sys:role:delete")
     public Response delete(@RequestBody Integer[] roleIds){
+        if (roleIds == null || roleIds.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "roleIds不能为空");
+        }
+
+        if (roleIds.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "roleIds不能超过100个");
+        }
+
         sysRoleService.deleteBatch(roleIds);
         return Response.success();
     }

@@ -123,6 +123,14 @@ public class RecommendController extends AbstractController {
     @RequiresPermissions("operation:recommend:delete")
     @CacheEvict(allEntries = true)
     public Response deleteRecommendsByIds(@RequestBody Integer[] ids){
+        if (ids == null || ids.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
+        }
+
+        if (ids.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能超过100个");
+        }
+
         recommendService.deleteRecommendsByIds(Arrays.asList(ids));
         return Response.success();
     }

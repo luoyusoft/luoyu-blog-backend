@@ -41,11 +41,18 @@ public interface VideoMapper extends BaseMapper<Video> {
     Boolean updateLikeNum(Integer id);
 
     /**
-     * 判断类别下是否有文章
+     * 判断类别下是否有视频
      * @param categoryId
      * @return
      */
     int checkByCategory(Integer categoryId);
+
+    /**
+     * 判断上传文件下是否有视频
+     * @param url
+     * @return
+     */
+    int checkByFile(String url);
 
     /**
      * 查询所有视频列表

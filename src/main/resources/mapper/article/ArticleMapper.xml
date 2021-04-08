@@ -50,8 +50,12 @@
         update article set like_num = like_num + 1 where id = #{id} and publish = true
     </update>
 
-    <select id="checkByCategory" resultType="Integer">
+    <select id="checkByCategory" resultType="java.lang.Integer">
         select count(*) from article where category_id = #{categoryId}
+    </select>
+
+    <select id="checkByFile" resultType="java.lang.String">
+        select count(*) from article where cover = #{url}
     </select>
 
     <select id="selectArticleDTOList" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">

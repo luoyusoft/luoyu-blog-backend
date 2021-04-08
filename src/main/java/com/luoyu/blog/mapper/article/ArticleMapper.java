@@ -48,6 +48,13 @@ public interface ArticleMapper extends BaseMapper<Article> {
     int checkByCategory(Integer categoryId);
 
     /**
+     * 判断上传文件下是否有文章
+     * @param url
+     * @return
+     */
+    int checkByFile(String url);
+
+    /**
      * 查询所有文章列表
      * @return
      */
