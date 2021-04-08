@@ -17,7 +17,7 @@
         id, title, url, avatar,create_time,update_time
     </sql>
 
-    <select id="checkByFile" resultType="java.lang.String">
+    <select id="checkByFile" resultType="java.lang.Integer">
         select count(*) from video where avatar = #{url}
     </select>
 

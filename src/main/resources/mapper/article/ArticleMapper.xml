@@ -54,7 +54,7 @@
         select count(*) from article where category_id = #{categoryId}
     </select>
 
-    <select id="checkByFile" resultType="java.lang.String">
+    <select id="checkByFile" resultType="java.lang.Integer">
         select count(*) from article where cover = #{url}
     </select>
 
