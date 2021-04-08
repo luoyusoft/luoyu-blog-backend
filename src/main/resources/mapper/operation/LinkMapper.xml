@@ -18,7 +18,7 @@
     </sql>
 
     <select id="checkByFile" resultType="java.lang.Integer">
-        select count(*) from video where avatar = #{url}
+        select count(*) from link where avatar = #{url}
     </select>
 
 </mapper>
