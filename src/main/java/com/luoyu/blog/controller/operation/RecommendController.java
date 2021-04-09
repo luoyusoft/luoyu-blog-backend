@@ -138,11 +138,11 @@ public class RecommendController extends AbstractController {
     /********************** portal ********************************/
 
     @RequestMapping("/operation/recommends")
-    @Cacheable(key = "#module")
     public Response listRecommend(@RequestParam("module") Integer module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
+
         List<RecommendVO> recommendList = recommendService.listRecommendVO(module);
         return Response.success(recommendList);
     }
