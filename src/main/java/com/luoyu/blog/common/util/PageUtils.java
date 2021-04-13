@@ -1,4 +1,14 @@
+package com.luoyu.blog.common.util;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.List;
+
 /**
+ * PageUtils
  * Copyright 2018 人人开源 http://www.renren.io
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -12,19 +22,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */
-
-package com.luoyu.blog.common.util;
-
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.util.List;
-
-/**
- * PageUtils
  *
  * @author luoyu
  * @date 2018/10/19 21:51
@@ -58,18 +55,18 @@ public class PageUtils implements Serializable {
 		this.totalCount = totalCount;
 		this.pageSize = pageSize;
 		this.currPage = currPage;
-		this.totalPage = (int) Math.ceil((double)totalCount/pageSize);
+		totalPage = (int) Math.ceil((double)totalCount/pageSize);
 	}
 
 	/**
 	 * 分页
 	 */
 	public PageUtils(IPage<?> page) {
-		this.list = page.getRecords();
-		this.totalCount = (int)page.getTotal();
-		this.pageSize = page.getSize();
-		this.currPage = page.getCurrent();
-		this.totalPage = (int)page.getPages();
+		list = page.getRecords();
+		totalCount = (int)page.getTotal();
+		pageSize = page.getSize();
+		currPage = page.getCurrent();
+		totalPage = (int)page.getPages();
 	}
 	
 }

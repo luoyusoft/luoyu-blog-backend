@@ -53,16 +53,15 @@ public class Query<T> extends LinkedHashMap<String, Object> {
         this.put("order", order);
 
         //mybatis-plus分页
-        this.page = new Page<>(currPage, limit);
+        page = new Page<>(currPage, limit);
 
         //排序
         if(StringUtils.isNotBlank(sidx) && StringUtils.isNotBlank(order)){
             if ("ASC".equalsIgnoreCase(order)){
-                this.page.setAsc(sidx);
+                page.setAsc(sidx);
             }else{
-                this.page.setDesc(sidx);
+                page.setDesc(sidx);
             }
-
         }
     }
 

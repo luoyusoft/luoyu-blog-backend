@@ -21,10 +21,10 @@ import com.luoyu.blog.service.operation.TopService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -39,10 +39,10 @@ import java.util.*;
 @Slf4j
 public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopService {
 
-    @Autowired
+    @Resource
     private ArticleMapper articleMapper;
 
-    @Autowired
+    @Resource
     private VideoMapper videoMapper;
 
     /**
@@ -257,11 +257,11 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
 
     @Override
     public List<TopVO> listTopVO(Integer module) {
-        List<TopVO> topList =this.baseMapper.listTopDTO(module);
+        List<TopVO> topList =baseMapper.listTopDTO(module);
         if (CollectionUtils.isEmpty(topList)){
             return Collections.emptyList();
         }
-        return this.genTopList(topList);
+        return genTopList(topList);
     }
 
     private List<TopVO> genTopList(List<TopVO> topList) {

@@ -48,7 +48,7 @@ public class ChatServiceImpl implements ChatService {
             throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
         }
 
-        User oldUserentity = this.findById(RedisKeyConstants.CHAT_USER_PREFIX + id);
+        User oldUserentity = findById(RedisKeyConstants.CHAT_USER_PREFIX + id);
         if (oldUserentity != null) {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(oldUserentity, userVO);
@@ -66,7 +66,7 @@ public class ChatServiceImpl implements ChatService {
      */
     @Override
     public UserVO login(User user){
-        User oldUserentity = this.findById(user.getId());
+        User oldUserentity = findById(user.getId());
         if (oldUserentity != null) {
             String oldName = oldUserentity.getName();
             boolean isChangeName = false;
@@ -122,7 +122,7 @@ public class ChatServiceImpl implements ChatService {
      */
     @Override
     public UserVO change(User user){
-        User oldUserentity = this.findById(user.getId());
+        User oldUserentity = findById(user.getId());
         if (oldUserentity != null) {
             String oldName = oldUserentity.getName();
             boolean isChangeName = false;
@@ -176,17 +176,17 @@ public class ChatServiceImpl implements ChatService {
     public void pushMessage(String fromId, String toId, String message) {
         Message entity = new Message();
         entity.setMessage(message);
-        entity.setFrom(this.findById(fromId));
+        entity.setFrom(findById(fromId));
         entity.setCreateTime(DateUtils.getNowTimeString());
         if (toId != null) {
             //查询接收方信息
-            entity.setTo(this.findById(toId));
+            entity.setTo(findById(toId));
             //单个用户推送
-            this.push(entity, RedisKeyConstants.CHAT_FROM_PREFIX + fromId + RedisKeyConstants.CHAT_TO_PREFIX + toId);
+            push(entity, RedisKeyConstants.CHAT_FROM_PREFIX + fromId + RedisKeyConstants.CHAT_TO_PREFIX + toId);
         } else {
             //公共消息 -- 群组
             entity.setTo(null);
-            this.push(entity, RedisKeyConstants.CHAT_COMMON_PREFIX + fromId);
+            push(entity, RedisKeyConstants.CHAT_COMMON_PREFIX + fromId);
         }
     }
 
@@ -220,7 +220,7 @@ public class ChatServiceImpl implements ChatService {
             keys.forEach(key -> {
                 if (websocketServerEndpoint.isOnline(key.substring(key.lastIndexOf(":") + 1))){
                     UserVO userVO = new UserVO();
-                    BeanUtils.copyProperties(this.findById(key), userVO);
+                    BeanUtils.copyProperties(findById(key), userVO);
                     list.add(userVO);
                 }
             });
@@ -239,7 +239,7 @@ public class ChatServiceImpl implements ChatService {
                 list.addAll(messageList);
             });
         }
-        this.sort(list);
+        sort(list);
         return list;
     }
 
@@ -262,7 +262,7 @@ public class ChatServiceImpl implements ChatService {
         }
 
         if (list.size() > 0) {
-            this.sort(list);
+            sort(list);
             return list;
         } else {
             return new ArrayList<>();
@@ -280,10 +280,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void clearUser() {
         log.info("清除注册时间超过30天的账户，以及其会话信息");
-        List<UserVO> userVOList = this.onlineList();
+        List<UserVO> userVOList = onlineList();
         userVOList.forEach(user -> {
             if ((DateUtils.getNowTimeLong() - DateUtils.convertTimeToLong(user.getCreateTime())) >= EXPIRES_TIME) {
-                this.delete(user.getId());
+                delete(user.getId());
                 if (redisTemplate.boundValueOps(RedisKeyConstants.CHAT_COMMON_PREFIX + user.getId()).get() != null) {
                     redisTemplate.delete(RedisKeyConstants.CHAT_COMMON_PREFIX + user.getId());
                 }

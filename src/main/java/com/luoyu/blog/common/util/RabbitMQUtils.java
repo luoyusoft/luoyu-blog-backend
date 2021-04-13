@@ -55,7 +55,7 @@ public class RabbitMQUtils implements RabbitTemplate.ConfirmCallback, RabbitTemp
      */
     public void send(String queueName, Object obj){
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
-        this.rabbitTemplate.convertAndSend(queueName, obj, correlationId);
+        rabbitTemplate.convertAndSend(queueName, obj, correlationId);
     }
 
     /**
@@ -65,7 +65,7 @@ public class RabbitMQUtils implements RabbitTemplate.ConfirmCallback, RabbitTemp
      */
     public void sendByRoutingKey(String exChange, String routingKey, Object obj){
         CorrelationData correlationId = new CorrelationData(UUID.randomUUID().toString());
-        this.rabbitTemplate.convertAndSend(exChange, routingKey, obj, correlationId);
+        rabbitTemplate.convertAndSend(exChange, routingKey, obj, correlationId);
     }
 
 }

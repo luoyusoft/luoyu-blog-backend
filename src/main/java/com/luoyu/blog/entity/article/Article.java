@@ -1,15 +1,12 @@
 package com.luoyu.blog.entity.article;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -29,14 +26,12 @@ public class Article extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "文章标题")
-    @NotBlank(message="文章标题不能为空", groups = {AddGroup.class})
     private String title;
 
     @ApiModelProperty(value = "文章描述")
     private String description;
 
     @ApiModelProperty(value = "文章作者")
-    @NotBlank(message="文章作者不能为空", groups = {AddGroup.class})
     private String author;
 
     @ApiModelProperty(value = "文章内容")
@@ -55,11 +50,9 @@ public class Article extends BaseEntity implements Serializable {
     private String cover;
 
     @ApiModelProperty(value = "文章展示类别,0:普通，1：大图片，2：无图片")
-    @NotNull(message="文章展示类别不能为空", groups = {AddGroup.class})
     private Integer coverType;
 
     @ApiModelProperty(value = "文章分类类别（存在多级分类，用逗号隔开）")
-    @NotBlank(message="文章分类类别不能为空", groups = {AddGroup.class})
     private String categoryId;
 
     @ApiModelProperty(value = "发布状态")

@@ -58,7 +58,7 @@ public class ElasticSearchUtils {
      */
     public boolean createIndex(String index) throws Exception {
         // 判断索引是否存在
-        if(this.existIndex(index)){
+        if(existIndex(index)){
            return true;
         }
         // 创建索引
@@ -83,7 +83,7 @@ public class ElasticSearchUtils {
      */
     public boolean deleteIndex(String index) throws Exception {
         // 判断索引是否存在
-        if(!this.existIndex(index)){
+        if(!existIndex(index)){
             return true;
         }
         DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(index);
@@ -98,7 +98,7 @@ public class ElasticSearchUtils {
      * @param content
      */
     public boolean addDocument(String index, String id, String content) throws Exception {
-        if(!this.createIndex(index)){
+        if(!createIndex(index)){
             return false;
         }
 
@@ -159,7 +159,7 @@ public class ElasticSearchUtils {
      * @param id
      */
     public boolean deleteDocument(String index, String id) throws Exception {
-        if(!this.isExistsDocument(index, id)){
+        if(!isExistsDocument(index, id)){
             return true;
         }
 

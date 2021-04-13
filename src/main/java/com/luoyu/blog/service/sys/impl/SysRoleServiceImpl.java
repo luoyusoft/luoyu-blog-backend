@@ -95,7 +95,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         baseMapper.insert(role);
 
         //检查权限是否越权
-        this.checkPrems(role);
+        checkPrems(role);
 
         //保存角色与菜单关系
         sysRoleMenuService.saveOrUpdate(role.getId(), role.getMenuIdList());
@@ -108,7 +108,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         baseMapper.updateById(role);
 
         //检查权限是否越权
-        this.checkPrems(role);
+        checkPrems(role);
 
         //保存角色与菜单关系
         sysRoleMenuService.saveOrUpdate(role.getId(), role.getMenuIdList());

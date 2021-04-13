@@ -204,7 +204,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ArticleVO getArticle(Integer articleId) {
         ArticleVO articleVO = new ArticleVO();
-        Article article = this.baseMapper.selectById(articleId);
+        Article article = baseMapper.selectById(articleId);
         BeanUtils.copyProperties(article, articleVO);
         // 查询所属标签
         articleVO.setTagList(tagService.listByLinkId(articleId, ModuleEnum.ARTICLE.getCode()));
@@ -249,7 +249,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Arrays.stream(ids).forEach(articleId -> {
             tagService.deleteTagLink(articleId, ModuleEnum.ARTICLE.getCode());
         });
-        this.baseMapper.deleteBatchIds(Arrays.asList(ids));
+        baseMapper.deleteBatchIds(Arrays.asList(ids));
 
         recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(ids), ModuleEnum.ARTICLE.getCode());
         // 发送rabbitmq消息同步到es

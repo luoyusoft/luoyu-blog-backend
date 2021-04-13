@@ -49,13 +49,13 @@ public class LogViewAspect {
     @Autowired
     private IPApi ipApi;
 
-    @Autowired
+    @Resource
     private LogViewMapper logViewMapper;
 
-    @Autowired
+    @Resource
     private ArticleMapper articleMapper;
 
-    @Autowired
+    @Resource
     private VideoMapper videoMapper;
 
     @Resource(name = "taskExecutor")
@@ -100,7 +100,7 @@ public class LogViewAspect {
             viewLogEntity.setIp(IPUtils.getIpAddr(request));
             taskExecutor.execute(() ->{
                 //保存日志
-                this.saveViewLog(viewLogEntity, point, stopWatch.getTime());
+                saveViewLog(viewLogEntity, point, stopWatch.getTime());
             });
 
             return result;

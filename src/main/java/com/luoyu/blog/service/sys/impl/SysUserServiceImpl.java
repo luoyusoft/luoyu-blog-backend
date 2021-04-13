@@ -104,7 +104,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         String salt = RandomStringUtils.randomAlphanumeric(20);
         user.setPassword(new Sha256Hash(user.getPassword(), salt).toHex());
         user.setSalt(salt);
-        this.baseMapper.insert(user);
+        baseMapper.insert(user);
 
         //检查角色是否越权
         checkRole(user);
@@ -122,7 +122,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }else{
             user.setPassword(new Sha256Hash(user.getPassword(), user.getSalt()).toHex());
         }
-        this.baseMapper.updateById(user);
+        baseMapper.updateById(user);
 
         //检查角色是否越权
         checkRole(user);

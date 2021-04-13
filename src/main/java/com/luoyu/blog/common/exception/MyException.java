@@ -18,18 +18,18 @@ public class MyException extends RuntimeException {
 
     public MyException(){
         super(ResponseEnums.UNKNOWN.getMsg());
-        this.msg = ResponseEnums.UNKNOWN.getMsg();
+        msg = ResponseEnums.UNKNOWN.getMsg();
     }
 
     public MyException(ResponseEnums responseEnums, Throwable e){
         super(responseEnums.getMsg(), e);
-        this.msg = responseEnums.getMsg();
-        this.code = responseEnums.getCode();
+        msg = responseEnums.getMsg();
+        code = responseEnums.getCode();
     }
 
     public MyException(ResponseEnums responseEnums){
-        this.msg = responseEnums.getMsg();
-        this.code = responseEnums.getCode();
+        msg = responseEnums.getMsg();
+        code = responseEnums.getCode();
     }
 
     public MyException(int code, String msg){

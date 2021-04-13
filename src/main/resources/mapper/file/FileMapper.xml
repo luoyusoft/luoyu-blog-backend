@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.file.FileResourceMapper">
+<mapper namespace="com.luoyu.blog.mapper.file.FileMapper">
 
-    <select id="selectFileResourceByFileMd5AndModule" resultType="com.luoyu.blog.entity.file.FileResource">
+    <select id="selectFileByFileMd5AndModule" resultType="com.luoyu.blog.entity.file.File">
         select *
-        from file_resource
+        from file
         where file_md5 = #{fileMd5}
           and module = #{module}
           and is_chunk = 1
         order by id desc limit 1
     </select>
 
-    <update id="updateFileResourceByFileMd5AndModule" parameterType="com.luoyu.blog.entity.file.FileResource">
-        update file_resource
+    <update id="updateFileByFileMd5AndModule" parameterType="com.luoyu.blog.entity.file.File">
+        update file
         <set>
             <if test="uploadStatus != null">
                 upload_status = #{uploadStatus},
@@ -27,8 +27,8 @@
           and is_chunk = 1
     </update>
 
-    <select id="selectFileResourceByIds" resultType="com.luoyu.blog.entity.file.FileResource">
-        select * from file_resource where
+    <select id="selectFileByIds" resultType="com.luoyu.blog.entity.file.File">
+        select * from file where
         id in
         <foreach item="item" index="index" collection="ids"
                  open="(" separator="," close=")">

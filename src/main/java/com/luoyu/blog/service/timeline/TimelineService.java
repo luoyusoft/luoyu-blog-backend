@@ -8,14 +8,14 @@ import java.util.List;
  * TimeLineService
  *
  * @author luoyu
- * @date 2019/02/24 20:47
- * @description
+ * @date 2019/02/24
+ * @description 时间线
  */
 public interface TimelineService {
 
     /**
      * 获取timeLine数据
-     * @return
+     * @return 时间线列表
      */
     List<Timeline> listTimeLine();
 

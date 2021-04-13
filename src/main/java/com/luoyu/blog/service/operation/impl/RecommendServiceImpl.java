@@ -257,11 +257,11 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
 
     @Override
     public List<RecommendVO> listRecommendVO(Integer module) {
-        List<RecommendVO> recommendList =this.baseMapper.listRecommendDTO(module);
+        List<RecommendVO> recommendList =baseMapper.listRecommendDTO(module);
         if (CollectionUtils.isEmpty(recommendList)){
             return Collections.emptyList();
         }
-        return this.genRecommendList(recommendList);
+        return genRecommendList(recommendList);
     }
 
     private List<RecommendVO> genRecommendList(List<RecommendVO> recommendList) {

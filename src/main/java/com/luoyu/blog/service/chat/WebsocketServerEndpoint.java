@@ -62,17 +62,18 @@ public class WebsocketServerEndpoint {
         websocketServerEndpoints.add(this);
 
         //在线人数+1
-        this.addOnlineCount();
+        addOnlineCount();
 
-        log.info("Websocket有新窗口开始监听：" + id + "，当前在线人数为：" + this.getOnlineCount());
+        log.info("Websocket有新窗口开始监听：" + id + "，当前在线人数为：" + getOnlineCount());
 
-        this.fromId = id;
+        fromId = id;
+
         try {
             User user = chatService.findById(fromId);
             //群发消息
             Map<String, Object> map = new HashMap<>();
             map.put("msg", "用户\"" + user.getName() + "\"已上线");
-            this.sendMore(JsonUtils.objectToJson(map));
+            sendMore(JsonUtils.objectToJson(map));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,9 +90,9 @@ public class WebsocketServerEndpoint {
         websocketServerEndpoints.remove(this);
 
         //在内线人数-1
-        this.subOnLineCount();
+        subOnLineCount();
 
-        log.info("Websocket链接关闭，当前在线人数：" + this.getOnlineCount());
+        log.info("Websocket链接关闭，当前在线人数：" + getOnlineCount());
     }
 
     /**
@@ -106,7 +107,7 @@ public class WebsocketServerEndpoint {
         chatService.pushMessage(fromId, null, message);
 
         //群发消息
-        this.sendMore(this.getData(null, message));
+        sendMore(getData(null, message));
     }
 
     @OnError
@@ -120,7 +121,7 @@ public class WebsocketServerEndpoint {
      * @param message
      */
     private void sendMessage(String message) throws Exception {
-        this.session.getBasicRemote().sendText(message);
+        session.getBasicRemote().sendText(message);
     }
 
     /**
@@ -173,7 +174,7 @@ public class WebsocketServerEndpoint {
                     flag = true;
                     log.info("Websocket：" + entity.getFrom().getId() + "推送消息到窗口：" + toId + " ，推送内容：" + entity.getMessage());
 
-                    endpoint.sendMessage(this.getData(toId, entity.getMessage()));
+                    endpoint.sendMessage(getData(toId, entity.getMessage()));
                     chatService.pushMessage(fromId, toId, entity.getMessage());
                 }
             } catch (Exception e) {

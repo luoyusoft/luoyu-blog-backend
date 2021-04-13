@@ -17,7 +17,7 @@ public class ParamsHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     public ParamsHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
-        this.body = RequestReadUtils.read(request);
+        body = RequestReadUtils.read(request);
     }
 
     public String getBody() {
@@ -54,7 +54,7 @@ public class ParamsHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public BufferedReader getReader(){
-        return new BufferedReader(new InputStreamReader(this.getInputStream()));
+        return new BufferedReader(new InputStreamReader(getInputStream()));
     }
 
 }

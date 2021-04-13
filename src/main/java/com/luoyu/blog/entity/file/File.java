@@ -11,17 +11,17 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 云存储资源表
+ * 文件表
  * </p>
  *
  * @author luoyu
  * @since 2018-11-30
  */
 @Data
-@ApiModel(value="FileResource对象", description="云存储资源表")
+@ApiModel(value="File对象", description="文件表")
 @EqualsAndHashCode(callSuper = false)
-@TableName("file_resource")
-public class FileResource extends BaseEntity implements Serializable {
+@TableName("file")
+public class File extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

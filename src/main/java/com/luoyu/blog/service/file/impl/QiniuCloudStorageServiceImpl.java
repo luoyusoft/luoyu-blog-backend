@@ -4,10 +4,10 @@ import com.luoyu.blog.common.config.CloudStorageProperties;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.DateUtils;
-import com.luoyu.blog.entity.file.FileResource;
-import com.luoyu.blog.entity.file.vo.FileResourceVO;
+import com.luoyu.blog.entity.file.File;
+import com.luoyu.blog.entity.file.vo.FileVO;
 import com.luoyu.blog.service.file.CloudStorageService;
-import com.luoyu.blog.service.file.FileResourceService;
+import com.luoyu.blog.service.file.FileService;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
@@ -39,7 +39,7 @@ public class QiniuCloudStorageServiceImpl extends CloudStorageService {
     private CloudStorageProperties cloudStorageProperties;
 
     @Autowired
-    private FileResourceService fileResourceService;
+    private FileService fileService;
 
     private UploadManager uploadManager;
     private String token;
@@ -58,23 +58,23 @@ public class QiniuCloudStorageServiceImpl extends CloudStorageService {
     }
 
     @Override
-    public FileResourceVO upload(MultipartFile file, Integer fileModule) {
+    public FileVO upload(MultipartFile file, Integer fileModule) {
         try {
             //上传文件
             String fileName = file.getOriginalFilename();
             String suffix = fileName.substring(fileName.lastIndexOf("."));
-            String url = this.uploadSuffix(file.getBytes(), suffix);
-            FileResource fileResource = new FileResource();
+            String url = uploadSuffix(file.getBytes(), suffix);
+            File fileResource = new File();
             fileResource.setModule(fileModule);
             fileResource.setFileName(fileName);
             fileResource.setBucketName(cloudStorageProperties.getQiniuBucketName());
-            fileResource.setStorageType(FileResource.STORAGE_TYPE_QINIUYUN);
+            fileResource.setStorageType(File.STORAGE_TYPE_QINIUYUN);
             fileResource.setUrl(url);
-            fileResourceService.save(fileResource);
-            FileResourceVO fileResourceVO = new FileResourceVO();
-            fileResourceVO.setFileName(fileName);
-            fileResourceVO.setUrl(url);
-            return fileResourceVO;
+            fileService.save(fileResource);
+            FileVO fileVO = new FileVO();
+            fileVO.setFileName(fileName);
+            fileVO.setUrl(url);
+            return fileVO;
         }catch (Exception e){
             throw new MyException(ResponseEnums.OSS_UPLOAD_ERROR.getCode(), e.getMessage());
         }
@@ -118,7 +118,7 @@ public class QiniuCloudStorageServiceImpl extends CloudStorageService {
     public String upload(InputStream inputStream, String path) {
         try {
             byte[] data = IOUtils.toByteArray(inputStream);
-            return this.upload(data, path);
+            return upload(data, path);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new MyException(ResponseEnums.OSS_CONFIG_ERROR.getCode(), e.getMessage());
@@ -127,12 +127,12 @@ public class QiniuCloudStorageServiceImpl extends CloudStorageService {
 
     @Override
     public String uploadSuffix(byte[] data, String suffix) {
-        return upload(data, this.getPath(config.getQiniuPrefix(), suffix));
+        return upload(data, getPath(config.getQiniuPrefix(), suffix));
     }
 
     @Override
     public String uploadSuffix(InputStream inputStream, String suffix) {
-        return upload(inputStream, this.getPath(config.getQiniuPrefix(), suffix));
+        return upload(inputStream, getPath(config.getQiniuPrefix(), suffix));
     }
 
 }

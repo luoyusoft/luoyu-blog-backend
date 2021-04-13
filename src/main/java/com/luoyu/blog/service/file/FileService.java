@@ -2,8 +2,8 @@ package com.luoyu.blog.service.file;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
-import com.luoyu.blog.entity.file.FileResource;
-import com.luoyu.blog.entity.file.vo.FileResourceVO;
+import com.luoyu.blog.entity.file.File;
+import com.luoyu.blog.entity.file.vo.FileVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -11,20 +11,20 @@ import java.util.List;
 
 /**
  * <p>
- * 云存储资源表 服务类
+ * 文件表 服务类
  * </p>
  *
  * @author luoyu
  * @since 2018-11-30
  */
-public interface FileResourceService extends IService<FileResource> {
+public interface FileService extends IService<File> {
 
     /**
      * 上传
      * @param file
      * @param fileModule
      */
-    FileResourceVO upload(MultipartFile file, Integer fileModule);
+    FileVO upload(MultipartFile file, Integer fileModule);
 
     /**
      * 分片上传
@@ -44,29 +44,31 @@ public interface FileResourceService extends IService<FileResource> {
 
     /**
      * 分页查询文件
-     * @param page
-     * @param limit
-     * @param module
+     * @param page page
+     * @param limit limit
+     * @param module module
+     * @param fileName fileName
+     * @param fileMd5 fileMd5
      */
-    PageUtils queryPage(Integer page, Integer limit, Integer module);
+    PageUtils queryPage(Integer page, Integer limit, Integer module, String fileName, String fileMd5);
 
     /**
      * 分片上传文件
-     * @param fileResourceVO
+     * @param fileVO
      */
-    List<FileResourceVO> chunk(FileResourceVO fileResourceVO);
+    List<FileVO> chunk(FileVO fileVO);
 
     /**
      * 分片上传，单个分片成功
-     * @param fileResourceVO
+     * @param fileVO
      */
-    Boolean chunkUploadSuccess(FileResourceVO fileResourceVO);
+    Boolean chunkUploadSuccess(FileVO fileVO);
 
     /**
      * 合并文件并返回文件信息
-     * @param fileResourceVO
+     * @param fileVO
      */
-    String composeFile(FileResourceVO fileResourceVO);
+    String composeFile(FileVO fileVO);
 
     /**
      * 获取文件访问地址

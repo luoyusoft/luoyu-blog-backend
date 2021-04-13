@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author luoyu
  * @date 2019/02/24 20:47
- * @description
+ * @description 时间线
  */
 @Service
 public class TimelineServiceImpl implements TimelineService {
@@ -26,19 +26,19 @@ public class TimelineServiceImpl implements TimelineService {
     @Resource
     private TimelineMapper timelineMapper;
 
-    /**timelineMapper
+    /**
      * 获取timeLine数据
      *
-     * @return
+     * @return 时间线列表
      */
     @Override
     public List<Timeline> listTimeLine() {
         List<Timeline> timelineList = timelineMapper.listTimeline();
-        this.genTimelineMonth(timelineList);
+        genTimelineMonth(timelineList);
         return timelineList;
     }
 
-    private List<Timeline> genTimelineMonth(List<Timeline> timelineList) {
+    private void genTimelineMonth(List<Timeline> timelineList) {
         for(Timeline timeline : timelineList) {
             List<TimelineMonth> timelineMonthList = new ArrayList<>();
            for (int i = Calendar.DECEMBER + 1; i > 0; i--) {
@@ -54,7 +54,6 @@ public class TimelineServiceImpl implements TimelineService {
            }
            timeline.setMonths(timelineMonthList);
         }
-        return timelineList;
     }
 
 }

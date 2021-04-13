@@ -1,14 +1,10 @@
 package com.luoyu.blog.service.file;
 
-import com.luoyu.blog.common.util.DateUtils;
 import com.luoyu.blog.common.config.CloudStorageProperties;
-import com.luoyu.blog.entity.file.vo.FileResourceVO;
-import org.apache.commons.lang.StringUtils;
+import com.luoyu.blog.entity.file.vo.FileVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.util.Date;
-import java.util.UUID;
 
 /**
  * CloudStorageService
@@ -26,7 +22,7 @@ public abstract class CloudStorageService {
      * 文件上传
      * @return        返回http地址
      */
-    public abstract FileResourceVO upload(MultipartFile file, Integer fileModule);
+    public abstract FileVO upload(MultipartFile file, Integer fileModule);
 
     /**
      * 文件上传

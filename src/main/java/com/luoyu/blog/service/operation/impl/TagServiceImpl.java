@@ -66,7 +66,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      */
     @Override
     public List<Tag> listByLinkId(Integer linkId, Integer module) {
-        return this.baseMapper.listByLinkId(linkId, module);
+        return baseMapper.listByLinkId(linkId, module);
     }
 
     /**
@@ -80,7 +80,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         Optional.ofNullable(tagList)
                 .ifPresent(tagListValue -> tagListValue.forEach(tag -> {
                     if (tag.getId() == null) {
-                        this.baseMapper.insert(tag);
+                        baseMapper.insert(tag);
                     }
                     TagLink tagLink = new TagLink(linkId, tag.getId(), module);
                     tagLinkMapper.insert(tagLink);

@@ -57,7 +57,7 @@ public class MinioUtils {
      */
     public boolean createBucket(String bucketName) {
         try {
-            if (!this.bucketExists(bucketName)) {
+            if (!bucketExists(bucketName)) {
                 minioClient.makeBucket(
                         MakeBucketArgs.builder()
                                 .bucket(bucketName)
@@ -188,7 +188,7 @@ public class MinioUtils {
     public void upload(InputStream inputStream, String objectName, String bucketName, String contentType) {
         try {
             // 检查存储桶是否已经存在，不存在则创建
-            this.createBucket(bucketName);
+            createBucket(bucketName);
             // 使用putObject上传一个文件到存储桶中。
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -220,7 +220,7 @@ public class MinioUtils {
                             .object(objectName)
                             .build()
             );
-            inputStream = this.getObject(bucketName, objectName);
+            inputStream = getObject(bucketName, objectName);
             response.setContentType(stat.contentType());
             response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(objectName, String.valueOf(StandardCharsets.UTF_8)));
             IOUtils.copy(inputStream, response.getOutputStream());
@@ -270,7 +270,7 @@ public class MinioUtils {
             for (Result<Item> result : results) {
                 Item item = result.get();
                 MinioItem minioItem = new MinioItem(item);
-                minioItem.setUrl(this.getObjectUrl(bucketName, item.objectName()));
+                minioItem.setUrl(getObjectUrl(bucketName, item.objectName()));
                 list.add(minioItem);
             }
             return list;
@@ -304,7 +304,7 @@ public class MinioUtils {
      */
     public void deleteObjectNames(String bucketName, List<String> objectNames) {
         objectNames.forEach(objectNamesItem -> {
-            this.deleteObjectName(bucketName, objectNamesItem);
+            deleteObjectName(bucketName, objectNamesItem);
         });
     }
 
@@ -346,7 +346,7 @@ public class MinioUtils {
         List<String> urlList = new ArrayList<>(chunkCount);
         for (int i = 1; i <= chunkCount; i++){
             String objectName = objectMD5 + i + ".chunk";
-            urlList.add(this.createUploadUrl(bucketName, objectName, expiry));
+            urlList.add(createUploadUrl(bucketName, objectName, expiry));
         }
         return urlList;
     }
@@ -361,7 +361,7 @@ public class MinioUtils {
      */
     public String createUploadChunkUrl(String bucketName, String objectMD5, Integer partNumber, Integer expiry){
         objectMD5 += "/" + partNumber + ".chunk";
-        return this.createUploadUrl(bucketName, objectMD5, expiry);
+        return createUploadUrl(bucketName, objectMD5, expiry);
     }
 
     /**
@@ -407,7 +407,7 @@ public class MinioUtils {
      * @return objectChunkNameMap
      */
     public Map<Integer, String> mapChunkObjectNames(String bucketName, String ObjectMd5, Boolean sort){
-        List<String> chunkPaths = this.listObjectNames(bucketName,ObjectMd5, sort);
+        List<String> chunkPaths = listObjectNames(bucketName,ObjectMd5, sort);
         if (CollectionUtils.isEmpty(chunkPaths)){
             return null;
         }

@@ -204,7 +204,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     @Override
     public VideoVO getVideo(Integer videoId) {
         VideoVO videoVO = new VideoVO();
-        Video video = this.baseMapper.selectById(videoId);
+        Video video = baseMapper.selectById(videoId);
         BeanUtils.copyProperties(video, videoVO);
         // 查询所属标签
         videoVO.setTagList(tagService.listByLinkId(videoId, ModuleEnum.VIDEO.getCode()));
@@ -249,7 +249,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         Arrays.stream(ids).forEach(videoId -> {
             tagService.deleteTagLink(videoId, ModuleEnum.VIDEO.getCode());
         });
-        this.baseMapper.deleteBatchIds(Arrays.asList(ids));
+        baseMapper.deleteBatchIds(Arrays.asList(ids));
 
         recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(ids), ModuleEnum.VIDEO.getCode());
         // 发送rabbitmq消息同步到es

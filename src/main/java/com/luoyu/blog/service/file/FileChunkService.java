@@ -1,14 +1,8 @@
 package com.luoyu.blog.service.file;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.file.FileChunk;
-import com.luoyu.blog.entity.file.FileResource;
-import com.luoyu.blog.entity.file.vo.FileResourceVO;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**

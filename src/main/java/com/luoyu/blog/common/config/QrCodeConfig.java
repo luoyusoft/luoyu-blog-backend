@@ -57,7 +57,6 @@ public class QrCodeConfig implements Serializable {
      */
     public static Integer logoWidth;
 
-
     /**
      * logo的高
      */

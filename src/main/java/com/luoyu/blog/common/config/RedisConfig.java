@@ -40,7 +40,7 @@ public class RedisConfig {
                 // 默认缓存24小时
                 RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1))
                         .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())),
-                this.getRedisCacheConfigurationMap()
+                getRedisCacheConfigurationMap()
         );
     }
 
