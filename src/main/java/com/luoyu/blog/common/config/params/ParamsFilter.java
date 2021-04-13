@@ -9,7 +9,7 @@ import java.util.List;
 public class ParamsFilter implements Filter {
 
     // 文件传输相关接口不需要二次获取参数
-    private final static List<String> UPLOAD_URLS = Arrays.asList("/manage/file/resource/minio/upload", "/manage/file/resource/qiniuyun/upload", "/manage/file/resource/minio/chunkUpload");
+    private final static List<String> UPLOAD_URLS = Arrays.asList("/manage/file/minio/upload", "/manage/file/qiniuyun/upload", "/manage/file/minio/chunkUpload");
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}
