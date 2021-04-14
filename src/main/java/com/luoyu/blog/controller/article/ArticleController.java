@@ -149,6 +149,24 @@ public class ArticleController {
         return Response.success(queryPageCondition);
     }
 
+    /**
+     * 分页获取首页列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @return 文章列表
+     */
+    @GetMapping("/articles/home")
+    @Cacheable
+    @LogView(module = 0)
+    public Response listHome(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
+        PageUtils queryPageCondition = articleService.queryHomePageCondition(page, limit);
+        return Response.success(queryPageCondition);
+    }
+
+    /**
+     * 获取热读榜
+     * @return 文章列表
+     */
     @GetMapping("/articles/hotread")
     @Cacheable
     @LogView(module = 0)

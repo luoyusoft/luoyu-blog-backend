@@ -292,6 +292,28 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     /**
+     * 分页获取首页列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @return 文章列表
+     */
+    @Override
+    public PageUtils queryHomePageCondition(Integer page, Integer limit) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+
+        Page<ArticleDTO> articleDTOPage = new Query<ArticleDTO>(params).getPage();
+        List<ArticleDTO> articleList = baseMapper.queryHomePageCondition(articleDTOPage, params);
+        if (articleList == null){
+            articleList = new ArrayList<>();
+        }
+        // 封装ArticleVo
+        articleDTOPage.setRecords(articleList);
+        return new PageUtils(articleDTOPage);
+    }
+
+    /**
      * 获取ArticleVo对象
      *
      * @param articleId
@@ -313,7 +335,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     /**
      * 获取热读榜
-     * @return
+     * @return 文章列表
      */
     @Override
     public List<ArticleVO> getHotReadList() {

@@ -153,4 +153,12 @@
         </if>
     </select>
 
+    <select id="queryHomePageCondition" resultMap="WithTagList">
+        select <include refid="homeArticleColumn"/>, 0 as `module`
+        from article
+        where publish = true
+          and id not in (select link_id from recommend where module = 0)
+        order by create_time desc
+    </select>
+
 </mapper>

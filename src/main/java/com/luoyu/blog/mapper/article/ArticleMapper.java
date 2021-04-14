@@ -83,6 +83,14 @@ public interface ArticleMapper extends BaseMapper<Article> {
     List<ArticleDTO> queryPageCondition(Page<ArticleDTO> page, @Param("params") Map<String, Object> params);
 
     /**
+     * 根据条件查询首页分页
+     * @param page
+     * @param params
+     * @return
+     */
+    List<ArticleDTO> queryHomePageCondition(Page<ArticleDTO> page, @Param("params") Map<String, Object> params);
+
+    /**
      * 获取简单的对象
      * @param id
      * @return
@@ -91,7 +99,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
     /**
      * 获取热读榜
-     * @return
+     * @return 文章列表
      */
     List<ArticleDTO> getHotReadList();
 

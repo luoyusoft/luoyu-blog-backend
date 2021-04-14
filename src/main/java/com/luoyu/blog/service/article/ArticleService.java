@@ -86,6 +86,14 @@ public interface ArticleService extends IService<Article> {
     PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read);
 
     /**
+     * 分页获取首页列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @return 文章列表
+     */
+    PageUtils queryHomePageCondition(Integer page, Integer limit);
+
+    /**
      * 获取ArticleVo对象
      * @param articleId
      * @return
@@ -94,7 +102,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 获取热读榜
-     * @return
+     * @return 文章列表
      */
     List<ArticleVO> getHotReadList();
 
