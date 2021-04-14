@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
+import com.luoyu.blog.entity.article.vo.ArticleVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -88,7 +89,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param params
      * @return
      */
-    List<ArticleDTO> queryHomePageCondition(Page<ArticleDTO> page, @Param("params") Map<String, Object> params);
+    List<ArticleVO> queryHomePageCondition(Page<ArticleVO> page, @Param("params") Map<String, Object> params);
 
     /**
      * 获取简单的对象

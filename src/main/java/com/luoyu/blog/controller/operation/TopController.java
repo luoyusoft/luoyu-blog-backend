@@ -1,6 +1,5 @@
 package com.luoyu.blog.controller.operation;
 
-import com.luoyu.blog.common.constants.RedisCacheNames;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -12,8 +11,6 @@ import com.luoyu.blog.entity.operation.Top;
 import com.luoyu.blog.entity.operation.vo.TopVO;
 import com.luoyu.blog.service.operation.TopService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,7 +26,6 @@ import java.util.List;
  * @since 2019-02-22
  */
 @RestController
-@CacheConfig(cacheNames = RedisCacheNames.TOP)
 public class TopController extends AbstractController {
 
     @Resource
@@ -73,7 +69,6 @@ public class TopController extends AbstractController {
      */
     @PostMapping("/manage/operation/top/save")
     @RequiresPermissions("operation:top:save")
-    @CacheEvict(allEntries = true)
     public Response save(@RequestBody Top top){
         if(top.getLinkId() == null || top.getModule() == null || top.getOrderNum() == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "linkId，module，orderNum不能为空");
@@ -89,7 +84,6 @@ public class TopController extends AbstractController {
      */
     @PutMapping("/manage/operation/top/update")
     @RequiresPermissions("operation:top:update")
-    @CacheEvict(allEntries = true)
     public Response update(@RequestBody Top top){
         if(top.getId() == null || top.getLinkId() == null
                 || top.getModule() == null || top.getOrderNum() == null){
@@ -105,7 +99,6 @@ public class TopController extends AbstractController {
      */
     @PutMapping("/manage/operation/top/top/{id}")
     @RequiresPermissions("operation:top:update")
-    @CacheEvict(allEntries = true)
     public Response updateTop(@PathVariable("id") Integer id){
         if(id == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id不能为空");
@@ -120,7 +113,6 @@ public class TopController extends AbstractController {
      */
     @DeleteMapping("/manage/operation/top/delete")
     @RequiresPermissions("operation:top:delete")
-    @CacheEvict(allEntries = true)
     public Response deleteTopsByIds(@RequestBody Integer[] ids){
         if (ids == null || ids.length < 1){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");

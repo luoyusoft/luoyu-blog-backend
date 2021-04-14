@@ -1,8 +1,8 @@
 package com.luoyu.blog.service.search.impl;
 
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
+import com.luoyu.blog.common.constants.ModuleTypeConstants;
 import com.luoyu.blog.common.constants.RabbitMQConstants;
-import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMQUtils;
@@ -157,7 +157,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
             articleVO.setDescription(x.get("description").toString());
             articleVO.setLikeNum(Long.valueOf(x.get("likeNum").toString()));
             articleVO.setTop(false);
-            articleVO.setTagList(tagService.listByLinkId(articleVO.getId(), ModuleEnum.ARTICLE.getCode()));
+            articleVO.setTagList(tagService.listByLinkId(articleVO.getId(), ModuleTypeConstants.ARTICLE));
             articleVOList.add(articleVO);
         }
         return articleVOList;

@@ -1,6 +1,6 @@
 package com.luoyu.blog.controller.operation;
 
-import com.luoyu.blog.common.constants.RedisCacheNames;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -12,8 +12,6 @@ import com.luoyu.blog.entity.operation.Recommend;
 import com.luoyu.blog.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.service.operation.RecommendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +28,6 @@ import java.util.List;
  * @since 2019-02-22
  */
 @RestController
-@CacheConfig(cacheNames = RedisCacheNames.RECOMMEND)
 public class RecommendController extends AbstractController {
 
     @Resource
@@ -38,6 +35,9 @@ public class RecommendController extends AbstractController {
 
     /**
      * 列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @return 推荐列表
      */
     @GetMapping("/manage/operation/recommend/list")
     @RequiresPermissions("operation:recommend:list")
@@ -74,7 +74,6 @@ public class RecommendController extends AbstractController {
      */
     @PostMapping("/manage/operation/recommend/save")
     @RequiresPermissions("operation:recommend:save")
-    @CacheEvict(allEntries = true)
     public Response save(@RequestBody Recommend recommend){
         if(recommend.getLinkId() == null || recommend.getModule() == null || recommend.getOrderNum() == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "linkId，module，orderNum不能为空");
@@ -90,7 +89,6 @@ public class RecommendController extends AbstractController {
      */
     @PutMapping("/manage/operation/recommend/update")
     @RequiresPermissions("operation:recommend:update")
-    @CacheEvict(allEntries = true)
     public Response update(@RequestBody Recommend recommend){
         if(recommend.getId() == null || recommend.getLinkId() == null
                 || recommend.getModule() == null || recommend.getOrderNum() == null){
@@ -106,7 +104,6 @@ public class RecommendController extends AbstractController {
      */
     @PutMapping("/manage/operation/recommend/top/{id}")
     @RequiresPermissions("operation:recommend:update")
-    @CacheEvict(allEntries = true)
     public Response updateTop(@PathVariable("id") Integer id){
         if(id == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id不能为空");
@@ -121,7 +118,6 @@ public class RecommendController extends AbstractController {
      */
     @DeleteMapping("/manage/operation/recommend/delete")
     @RequiresPermissions("operation:recommend:delete")
-    @CacheEvict(allEntries = true)
     public Response deleteRecommendsByIds(@RequestBody Integer[] ids){
         if (ids == null || ids.length < 1){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
@@ -138,6 +134,7 @@ public class RecommendController extends AbstractController {
     /********************** portal ********************************/
 
     @RequestMapping("/operation/recommends")
+    @Cacheable(value = RedisKeyConstants.RECOMMENDS, key = "#module")
     public Response listRecommend(@RequestParam("module") Integer module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");

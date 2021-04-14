@@ -19,9 +19,9 @@ public interface RecommendService extends IService<Recommend> {
 
     /**
      * 分页查询
-     * @param page
-     * @param limit
-     * @return
+     * @param page 页码
+     * @param limit 每页数量
+     * @return 推荐列表
      */
      PageUtils queryPage(Integer page, Integer limit);
 

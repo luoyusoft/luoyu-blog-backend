@@ -3,7 +3,7 @@ package com.luoyu.blog.service.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luoyu.blog.common.enums.ModuleEnum;
+import com.luoyu.blog.common.constants.ModuleTypeConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -59,13 +59,13 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
         IPage<Top> TopPage = baseMapper.selectPage(new Query<Top>(params).getPage(),
                 new QueryWrapper<Top>().orderByAsc("order_num"));
         TopPage.getRecords().forEach(TopPageItem -> {
-            if (ModuleEnum.ARTICLE.getCode() == TopPageItem.getModule()){
+            if (ModuleTypeConstants.ARTICLE.equals(TopPageItem.getModule())){
                 Article article = articleMapper.selectById(TopPageItem.getLinkId());
                 if (article != null){
                     TopPageItem.setTitle(article.getTitle());
                 }
             }
-            if (ModuleEnum.VIDEO.getCode() == TopPageItem.getModule()){
+            if (ModuleTypeConstants.VIDEO.equals(TopPageItem.getModule())){
                 Video video = videoMapper.selectById(TopPageItem.getLinkId());
                 if (video != null){
                     TopPageItem.setTitle(video.getTitle());
@@ -85,7 +85,7 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
     public List<TopVO> select(Integer module, String title) {
         List<TopVO> TopVOList = new ArrayList<>();
 
-        if (ModuleEnum.ARTICLE.getCode() == module){
+        if (ModuleTypeConstants.ARTICLE.equals(module)){
             List<Article> articleList = articleMapper.selectArticleListByTitle(title);
             if (!CollectionUtils.isEmpty(articleList)){
                 articleList.forEach(articleListItem -> {
@@ -98,7 +98,7 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
             }
         }
 
-        if (ModuleEnum.VIDEO.getCode() == module){
+        if (ModuleTypeConstants.VIDEO.equals(module)){
             List<Video> videoList = videoMapper.selectVideoListByTitle(title);
             if (videoList != null && videoList.size() > 0){
                 videoList.forEach(videoListItem -> {
@@ -138,7 +138,7 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
         if (baseMapper.selectTopByOrderNum(top.getOrderNum()) != null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该顺序已被占用");
         }
-        if (ModuleEnum.ARTICLE.getCode() == top.getModule()){
+        if (ModuleTypeConstants.ARTICLE.equals(top.getModule())){
             Article article = articleMapper.selectById(top.getLinkId());
             if(article == null) {
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "置顶内容不存在");
@@ -151,7 +151,7 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
             }
         }
 
-        if (ModuleEnum.VIDEO.getCode() == top.getModule()){
+        if (ModuleTypeConstants.VIDEO.equals(top.getModule())){
             Video video = videoMapper.selectById(top.getLinkId());
             if(video == null) {
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "置顶内容不存在");
@@ -175,7 +175,7 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
         if (existTop != null && !existTop.getId().equals(top.getId())){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该顺序已被占用");
         }
-        if (ModuleEnum.ARTICLE.getCode() == top.getModule()){
+        if (ModuleTypeConstants.ARTICLE.equals(top.getModule())){
             Article article = articleMapper.selectById(top.getLinkId());
             if(article == null) {
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "置顶内容不存在");
@@ -188,7 +188,7 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
             }
         }
 
-        if (ModuleEnum.VIDEO.getCode() == top.getModule()){
+        if (ModuleTypeConstants.VIDEO.equals(top.getModule())){
             Video video = videoMapper.selectById(top.getLinkId());
             if(video == null) {
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "置顶内容不存在");
@@ -266,13 +266,13 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
 
     private List<TopVO> genTopList(List<TopVO> topList) {
         topList.forEach(topVO -> {
-            if(ModuleEnum.ARTICLE.getCode() == topVO.getModule()){
+            if(ModuleTypeConstants.ARTICLE.equals(topVO.getModule())){
                 ArticleDTO simpleArticleDTO = articleMapper.getSimpleArticleDTO(topVO.getLinkId());
                 if (simpleArticleDTO != null){
                     BeanUtils.copyProperties(simpleArticleDTO, topVO);
                 }
             }
-            if(ModuleEnum.VIDEO.getCode() == topVO.getModule()){
+            if(ModuleTypeConstants.VIDEO.equals(topVO.getModule())){
                 VideoDTO simpleVideoDTO = videoMapper.getSimpleVideoDTO(topVO.getLinkId());
                 if (simpleVideoDTO != null){
                     BeanUtils.copyProperties(simpleVideoDTO, topVO);

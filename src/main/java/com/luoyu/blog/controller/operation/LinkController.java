@@ -1,6 +1,6 @@
 package com.luoyu.blog.controller.operation;
 
-import com.luoyu.blog.common.constants.RedisCacheNames;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -29,7 +29,7 @@ import java.util.List;
  * @since 2019-02-14
  */
 @RestController
-@CacheConfig(cacheNames = RedisCacheNames.LINK)
+@CacheConfig(cacheNames = RedisKeyConstants.LINKS)
 public class LinkController extends AbstractController {
 
     @Resource

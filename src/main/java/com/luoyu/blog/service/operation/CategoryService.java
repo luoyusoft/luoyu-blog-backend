@@ -16,6 +16,41 @@ import java.util.List;
 public interface CategoryService extends IService<Category> {
 
     /**
+     * 树状列表
+     * @param module
+     * @return
+     */
+    List<Category> select(Integer module);
+
+    /**
+     * 信息
+     * @param id
+     * @return
+     */
+    Category info(Integer id);
+
+    /**
+     * 保存
+     * @param category
+     * @return
+     */
+    void add(Category category);
+
+    /**
+     * 修改
+     * @param category
+     * @return
+     */
+    void update(Category category);
+
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    void delete(Integer id);
+
+    /**
      * 查询所有菜单
      * @param name
      * @param module
@@ -45,6 +80,6 @@ public interface CategoryService extends IService<Category> {
      * @param module
      * @return
      */
-    List<Category> listCategory(String module);
+    List<Category> getCategoryList(String module);
 
 }

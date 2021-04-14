@@ -5,7 +5,7 @@ package com.luoyu.blog.common.constants;
  *
  * @author luoyu
  * @date 2018/10/20 13:44
- * @description redis baseKey管理常量
+ * @description redis Key常量
  */
 public class RedisKeyConstants {
 
@@ -19,10 +19,59 @@ public class RedisKeyConstants {
      */
     public final static String MANAGE_SYS_USER_TOKEN = "manage:sys:user:token:";
 
+    /********************** portal ********************************/
+
+    public final static String PROFIX = "luoyublog:";
+
     /**
-     * 最热阅读
+     * 文章缓存空间名称
      */
-    public final static String HOST_READ_LIST = "host:read:list:";
+    public final static String ARTICLE = PROFIX + "article";
+
+    /**
+     * 文章列表缓存空间名称
+     */
+    public final static String ARTICLES = PROFIX + "articles";
+
+    /**
+     * 视频缓存空间名称
+     */
+    public final static String VIDEO = PROFIX + "video";
+
+    /**
+     * 视频列表缓存空间名称
+     */
+    public final static String VIDEOS = PROFIX + "videos";
+
+    /**
+     * 友情链接列表
+     */
+    public final static String LINKS = PROFIX + "links";
+
+    /**
+     * 推荐列表
+     */
+    public final static String RECOMMENDS = PROFIX + "recommends";
+
+    /**
+     * 标签列表
+     */
+    public final static String TAGS = PROFIX + "tags";
+
+    /**
+     * 分类列表
+     */
+    public final static String CATEGORYS = PROFIX + "categorys";
+
+    /**
+     * 时光轴
+     */
+    public static final String TIMELINES =  PROFIX + "timelines";
+
+    /**
+     * 搜索
+     */
+    public final static String SEARCHS = PROFIX + "search";
 
     /**
      * 用户数据 Key前缀标识

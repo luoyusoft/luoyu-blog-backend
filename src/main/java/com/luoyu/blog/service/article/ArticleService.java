@@ -95,10 +95,10 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 获取ArticleVo对象
-     * @param articleId
+     * @param id
      * @return
      */
-    ArticleDTO getArticleDTOById(Integer articleId);
+    ArticleDTO getArticleDTOById(Integer id);
 
     /**
      * 获取热读榜

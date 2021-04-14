@@ -1,8 +1,8 @@
 package com.luoyu.blog.service.search.impl;
 
 import com.luoyu.blog.common.constants.ElasticSearchConstants;
+import com.luoyu.blog.common.constants.ModuleTypeConstants;
 import com.luoyu.blog.common.constants.RabbitMQConstants;
-import com.luoyu.blog.common.enums.ModuleEnum;
 import com.luoyu.blog.common.util.ElasticSearchUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.RabbitMQUtils;
@@ -166,7 +166,7 @@ public class VideoEsServerImpl implements VideoEsServer {
             videoVO.setSynopsis(x.get("synopsis").toString());
             videoVO.setLikeNum(Long.valueOf(x.get("likeNum").toString()));
             videoVO.setTop(false);
-            videoVO.setTagList(tagService.listByLinkId(videoVO.getId(), ModuleEnum.VIDEO.getCode()));
+            videoVO.setTagList(tagService.listByLinkId(videoVO.getId(), ModuleTypeConstants.VIDEO));
             videoVOList.add(videoVO);
         }
         return videoVOList;

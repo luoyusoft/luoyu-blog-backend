@@ -1,7 +1,7 @@
 package com.luoyu.blog.controller.article;
 
 import com.luoyu.blog.common.aop.annotation.LogView;
-import com.luoyu.blog.common.constants.RedisCacheNames;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -12,31 +12,23 @@ import com.luoyu.blog.entity.article.vo.ArticleVO;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.service.article.ArticleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Set;
 
 /**
- * ArticleAdminController
+ * ArticleController
  *
  * @author luoyu
  * @date 2018/11/20 20:25
  * @description
  */
 @RestController
-@CacheConfig(cacheNames ={RedisCacheNames.ARTICLE})
 public class ArticleController {
 
     @Resource
     private ArticleService articleService;
-
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 列表
@@ -63,7 +55,6 @@ public class ArticleController {
      */
     @PostMapping("/manage/article/save")
     @RequiresPermissions("article:save")
-    @CacheEvict(allEntries = true)
     public Response saveArticle(@RequestBody ArticleVO article){
         ValidatorUtils.validateEntity(article, AddGroup.class);
         articleService.saveArticle(article);
@@ -76,7 +67,6 @@ public class ArticleController {
      */
     @PutMapping("/manage/article/update")
     @RequiresPermissions("article:update")
-    @CacheEvict(allEntries = true)
     public Response updateArticle(@RequestBody ArticleVO articleVO){
         articleService.updateArticle(articleVO);
         return Response.success();
@@ -87,7 +77,6 @@ public class ArticleController {
      */
     @PutMapping("/manage/article/update/status")
     @RequiresPermissions("article:update")
-    @CacheEvict(allEntries = true)
     public Response updateArticleStatus(@RequestBody ArticleVO articleVO){
         articleService.updateArticleStatus(articleVO);
         return Response.success();
@@ -98,7 +87,6 @@ public class ArticleController {
      */
     @DeleteMapping("/manage/article/delete")
     @RequiresPermissions("article:delete")
-    @CacheEvict(allEntries = true)
     public Response deleteArticles(@RequestBody Integer[] ids) {
         if (ids == null || ids.length < 1){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
@@ -112,24 +100,13 @@ public class ArticleController {
         return Response.success();
     }
 
-    /**
-     * 删除缓存
-     */
-    @DeleteMapping("/manage/article/cache/refresh")
-    @RequiresPermissions("article:cache:refresh")
-    public Response flush() {
-        Set<String> keys = redisTemplate.keys(RedisCacheNames.PROFIX + "*");
-        redisTemplate.delete(keys);
-
-        return Response.success();
-    }
-
     /********************** portal ********************************/
 
-    @GetMapping("/article/{articleId}")
+    @GetMapping("/article/{id}")
+    @Cacheable(value = RedisKeyConstants.ARTICLE, key = "#id")
     @LogView(module = 0)
-    public Response getArticle(@PathVariable Integer articleId){
-        ArticleDTO article = articleService.getArticleDTOById(articleId);
+    public Response getArticle(@PathVariable Integer id){
+        ArticleDTO article = articleService.getArticleDTOById(id);
         return Response.success(article);
     }
 
@@ -140,9 +117,9 @@ public class ArticleController {
     }
 
     @GetMapping("/articles")
-    @Cacheable
+    @Cacheable(value = RedisKeyConstants.ARTICLES)
     @LogView(module = 0)
-    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+    public Response getList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                          @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
                          @RequestParam("like") Boolean like, @RequestParam("read") Boolean read) {
         PageUtils queryPageCondition = articleService.queryPageCondition(page, limit, latest, categoryId, like, read);
@@ -156,9 +133,9 @@ public class ArticleController {
      * @return 文章列表
      */
     @GetMapping("/articles/home")
-    @Cacheable
+    @Cacheable(value = RedisKeyConstants.ARTICLES)
     @LogView(module = 0)
-    public Response listHome(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
+    public Response getHomeList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
         PageUtils queryPageCondition = articleService.queryHomePageCondition(page, limit);
         return Response.success(queryPageCondition);
     }
@@ -168,7 +145,7 @@ public class ArticleController {
      * @return 文章列表
      */
     @GetMapping("/articles/hotread")
-    @Cacheable
+    @Cacheable(value = RedisKeyConstants.ARTICLES, key = "'hostread'")
     @LogView(module = 0)
     public Response getHotReadList(){
         return Response.success(articleService.getHotReadList());

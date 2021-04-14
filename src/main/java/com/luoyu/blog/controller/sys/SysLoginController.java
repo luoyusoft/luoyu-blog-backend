@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,7 @@ public class SysLoginController extends AbstractController {
     @Autowired
     private SysCaptchaService sysCaptchaService;
 
-    @Autowired
+    @Resource
     private SysUserMapper sysUserMapper;
 
     @Autowired

@@ -34,7 +34,7 @@ public interface VideoService extends IService<Video> {
 
     /**
      * 批量删除
-     * @param ids
+     * @param ids 文章id数组
      */
     void deleteVideos(Integer[] ids);
 
@@ -87,10 +87,10 @@ public interface VideoService extends IService<Video> {
 
     /**
      * 获取VideoDTO对象
-     * @param videoId
+     * @param id
      * @return
      */
-    VideoDTO getVideoDTOById(Integer videoId);
+    VideoDTO getVideoDTOById(Integer id);
 
     /**
      * 获取热读榜

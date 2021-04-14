@@ -1,8 +1,8 @@
 package com.luoyu.blog.controller.operation;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.luoyu.blog.common.constants.RedisCacheNames;
-import com.luoyu.blog.common.enums.ModuleEnum;
+import com.luoyu.blog.common.constants.ModuleTypeConstants;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -16,8 +16,6 @@ import com.luoyu.blog.entity.operation.vo.TagVO;
 import com.luoyu.blog.mapper.operation.TagLinkMapper;
 import com.luoyu.blog.service.operation.TagService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +33,6 @@ import java.util.List;
  * @since 2019-01-21
  */
 @RestController
-@CacheConfig(cacheNames = RedisCacheNames.TAG)
 public class TagController extends AbstractController {
 
     @Resource
@@ -79,7 +76,6 @@ public class TagController extends AbstractController {
      */
     @PostMapping("/manage/operation/tag/save")
     @RequiresPermissions("operation:tag:save")
-    @CacheEvict(allEntries = true)
     public Response save(@RequestBody Tag tag){
         ValidatorUtils.validateEntity(tag, AddGroup.class);
         tagService.save(tag);
@@ -92,7 +88,6 @@ public class TagController extends AbstractController {
      */
     @PutMapping("/manage/operation/tag/update")
     @RequiresPermissions("operation:tag:update")
-    @CacheEvict(allEntries = true)
     public Response update(@RequestBody Tag tag){
         ValidatorUtils.validateEntity(tag, AddGroup.class);
         tagService.updateById(tag);
@@ -105,7 +100,6 @@ public class TagController extends AbstractController {
      */
     @DeleteMapping("/manage/operation/tag/delete")
     @RequiresPermissions("operation:tag:delete")
-    @CacheEvict(allEntries = true)
     public Response delete(@RequestBody String[] ids){
         if (ids == null || ids.length < 1){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
@@ -119,7 +113,7 @@ public class TagController extends AbstractController {
             List<TagLink> tagLinkList = tagLinkMapper.selectList(new QueryWrapper<TagLink>().lambda().eq(TagLink::getTagId, id));
             if(!CollectionUtils.isEmpty(tagLinkList)) {
                 TagLink tagLink = tagLinkList.get(0);
-                if (tagLink.getModule().equals(ModuleEnum.ARTICLE.getCode())) {
+                if (tagLink.getModule().equals(ModuleTypeConstants.ARTICLE)) {
                     throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该标签下有文章，无法删除");
                 }
             }
@@ -132,11 +126,12 @@ public class TagController extends AbstractController {
     /********************** portal ********************************/
 
     @GetMapping("/operation/tags")
-    @Cacheable
+    @Cacheable(value = RedisKeyConstants.TAGS, key = "#module")
     public Response listTag(@RequestParam("module") Integer module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
+
         List<TagVO> tagList = tagService.listTagDTO(module);
         return Response.success(tagList);
     }

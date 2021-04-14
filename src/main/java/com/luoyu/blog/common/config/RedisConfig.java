@@ -1,6 +1,6 @@
 package com.luoyu.blog.common.config;
 
-import com.luoyu.blog.common.constants.RedisCacheNames;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -50,9 +50,9 @@ public class RedisConfig {
     private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>(1);
         // 文章、视频默认缓存12小时
-        redisCacheConfigurationMap.put(RedisCacheNames.ARTICLE, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(12))
+        redisCacheConfigurationMap.put(RedisKeyConstants.ARTICLE, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(12))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
-        redisCacheConfigurationMap.put(RedisCacheNames.VIDEO, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(12))
+        redisCacheConfigurationMap.put(RedisKeyConstants.VIDEO, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(12))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())));
         return redisCacheConfigurationMap;
     }

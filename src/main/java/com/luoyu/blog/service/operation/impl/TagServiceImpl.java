@@ -3,21 +3,23 @@ package com.luoyu.blog.service.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luoyu.blog.common.enums.ModuleEnum;
+import com.luoyu.blog.common.constants.ModuleTypeConstants;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.operation.Tag;
 import com.luoyu.blog.entity.operation.TagLink;
 import com.luoyu.blog.entity.operation.vo.TagVO;
-import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.operation.TagLinkMapper;
 import com.luoyu.blog.mapper.operation.TagMapper;
+import com.luoyu.blog.service.cache.CacheServer;
 import com.luoyu.blog.service.operation.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,11 +35,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagService {
 
-    @Autowired
+    @Resource
     private TagLinkMapper tagLinkMapper;
 
     @Autowired
-    private ArticleMapper articleMapper;
+    private CacheServer cacheServer;
+
+    @Resource(name = "taskExecutor")
+    private ThreadPoolTaskExecutor taskExecutor;
 
     /**
      * 分页查询
@@ -85,6 +90,8 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
                     TagLink tagLink = new TagLink(linkId, tag.getId(), module);
                     tagLinkMapper.insert(tagLink);
                 }));
+
+        cleanTagsAllCache(module);
     }
 
     /**
@@ -97,6 +104,17 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         tagLinkMapper.delete(new QueryWrapper<TagLink>().lambda()
                 .eq(linkId != null, TagLink::getLinkId, linkId)
                 .eq(module != null, TagLink::getModule, module));
+
+        cleanTagsAllCache(module);
+    }
+
+    /**
+     * 清除缓存
+     */
+    private void cleanTagsAllCache(Integer module){
+        taskExecutor.execute(() ->{
+            cacheServer.cleanTagsAllCache(module);
+        });
     }
 
     /********************** portal ********************************/
@@ -109,11 +127,11 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Override
     public List<TagVO> listTagDTO(Integer module) {
         List<TagVO> tagVOList = new ArrayList<>();
-        if(ModuleEnum.ARTICLE.getCode() == module){
+        if(ModuleTypeConstants.ARTICLE.equals(module)){
             tagVOList = baseMapper.listTagArticleDTO(module);
             return tagVOList.stream().filter(tagVOListItem -> Integer.parseInt(tagVOListItem.getLinkNum()) > 0).collect(Collectors.toList());
         }
-        if(ModuleEnum.VIDEO.getCode() == module){
+        if(ModuleTypeConstants.VIDEO.equals(module)){
             tagVOList = baseMapper.listTagVideoDTO(module);
             return tagVOList.stream().filter(tagVOListItem -> Integer.parseInt(tagVOListItem.getLinkNum()) > 0).collect(Collectors.toList());
         }
