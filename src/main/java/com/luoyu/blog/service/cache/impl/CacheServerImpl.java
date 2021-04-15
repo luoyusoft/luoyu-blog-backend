@@ -102,6 +102,18 @@ public class CacheServerImpl implements CacheServer {
     }
 
     /**
+     * 清除列表所有缓存
+     */
+    @Override
+    public void cleanListAllCache() {
+        Set<String> keys = redisTemplate.keys(RedisKeyConstants.ARTICLES + ":" + RedisKeyConstants.REDIS_MATCH_PREFIX);
+        keys.addAll(Objects.requireNonNull(redisTemplate.keys(RedisKeyConstants.VIDEOS + ":" + RedisKeyConstants.REDIS_MATCH_PREFIX)));
+        keys.addAll(Objects.requireNonNull(redisTemplate.keys(RedisKeyConstants.SEARCHS + ":" + RedisKeyConstants.REDIS_MATCH_PREFIX)));
+
+        redisTemplate.delete(keys);
+    }
+
+    /**
      * 清除所有缓存
      */
     @Override

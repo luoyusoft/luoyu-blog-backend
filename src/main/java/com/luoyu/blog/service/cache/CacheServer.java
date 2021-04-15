@@ -44,6 +44,11 @@ public interface CacheServer {
     void cleanCategorysAllCache();
 
     /**
+     * 清除列表所有缓存
+     */
+    void cleanListAllCache();
+
+    /**
      * 清除所有缓存
      */
     void cleanAllCache();

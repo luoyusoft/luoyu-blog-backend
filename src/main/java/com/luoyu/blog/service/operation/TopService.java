@@ -32,13 +32,6 @@ public interface TopService extends IService<Top> {
     List<TopVO> select(Integer module, String title);
 
     /**
-     * 批量删除
-     * @param linkIds
-     * @param module
-     */
-    void deleteTopsByLinkIdsAndType(List<Integer> linkIds, int module);
-
-    /**
      * 新增
      * @param top
      */

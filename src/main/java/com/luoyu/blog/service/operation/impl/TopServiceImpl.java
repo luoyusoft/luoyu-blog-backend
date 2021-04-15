@@ -17,10 +17,13 @@ import com.luoyu.blog.entity.video.dto.VideoDTO;
 import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.operation.TopMapper;
 import com.luoyu.blog.mapper.video.VideoMapper;
+import com.luoyu.blog.service.cache.CacheServer;
 import com.luoyu.blog.service.operation.TopService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +47,12 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
 
     @Resource
     private VideoMapper videoMapper;
+
+    @Autowired
+    private CacheServer cacheServer;
+
+    @Resource(name = "taskExecutor")
+    private ThreadPoolTaskExecutor taskExecutor;
 
     /**
      * 分页查询
@@ -115,21 +124,6 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
     }
 
     /**
-     * 批量删除
-     *
-     * @param linkIds
-     * @param module
-     */
-    @Override
-    public void deleteTopsByLinkIdsAndType(List<Integer> linkIds, int module) {
-        for (Integer linkId : linkIds) {
-            baseMapper.delete(new QueryWrapper<Top>().lambda()
-                    .eq(Top::getLinkId,linkId)
-                    .eq(Top::getModule,module));
-        }
-    }
-
-    /**
      * 新增
      * @param top
      */
@@ -163,6 +157,8 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
                 baseMapper.updateTopOrderNumByLinkIdAndType(top);
             }
         }
+
+        cleanListAllCache();
     }
 
     /**
@@ -200,6 +196,8 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
                 baseMapper.updateTopOrderNumByLinkIdAndType(top);
             }
         }
+
+        cleanListAllCache();
     }
 
     /**
@@ -220,6 +218,8 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
         if(!baseMapper.updateTopOrderNumById(Top.ORDER_NUM_TOP, id)){
             throw new MyException(ResponseEnums.UPDATE_FAILR.getCode(), "更新数据失败");
         }
+
+        cleanListAllCache();
     }
 
     /**
@@ -232,6 +232,8 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
             baseMapper.delete(new QueryWrapper<Top>().lambda()
                     .eq(Top::getId,id));
         }
+
+        cleanListAllCache();
     }
 
     /**
@@ -251,6 +253,15 @@ public class TopServiceImpl extends ServiceImpl<TopMapper, Top> implements TopSe
     @Override
     public Integer selectTopMaxOrderNum() {
         return baseMapper.selectTopMaxOrderNum();
+    }
+
+    /**
+     * 清除缓存
+     */
+    private void cleanListAllCache(){
+        taskExecutor.execute(() ->{
+            cacheServer.cleanListAllCache();
+        });
     }
 
     /********************** portal ********************************/
