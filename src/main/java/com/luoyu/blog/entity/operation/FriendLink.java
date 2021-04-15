@@ -21,9 +21,9 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Link对象", description="友链")
-@TableName("link")
-public class Link extends BaseEntity implements Serializable {
+@ApiModel(value="FriendLink对象", description="友链")
+@TableName("friend_link")
+public class FriendLink extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,10 @@ public class Link extends BaseEntity implements Serializable {
     @NotBlank(message = "链接地址不能为空", groups = {AddGroup.class})
     private String url;
 
-    @ApiModelProperty(value = "头像")
+    @ApiModelProperty(value = "链接头像")
     private String avatar;
+
+    @ApiModelProperty(value = "链接简介")
+    private String description;
 
 }

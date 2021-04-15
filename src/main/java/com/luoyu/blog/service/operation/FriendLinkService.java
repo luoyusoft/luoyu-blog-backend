@@ -2,7 +2,7 @@ package com.luoyu.blog.service.operation;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
-import com.luoyu.blog.entity.operation.Link;
+import com.luoyu.blog.entity.operation.FriendLink;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @author luoyu
  * @since 2019-02-14
  */
-public interface LinkService extends IService<Link> {
+public interface FriendLinkService extends IService<FriendLink> {
 
     /**
      * 分页查询
@@ -38,6 +38,6 @@ public interface LinkService extends IService<Link> {
      * 获取link列表
      * @return
      */
-    List<Link> listLink();
+    List<FriendLink> listFriendLink();
 
 }

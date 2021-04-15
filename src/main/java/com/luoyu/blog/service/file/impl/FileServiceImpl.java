@@ -16,7 +16,7 @@ import com.luoyu.blog.mapper.file.FileMapper;
 import com.luoyu.blog.service.article.ArticleService;
 import com.luoyu.blog.service.file.FileChunkService;
 import com.luoyu.blog.service.file.FileService;
-import com.luoyu.blog.service.operation.LinkService;
+import com.luoyu.blog.service.operation.FriendLinkService;
 import com.luoyu.blog.service.video.VideoService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.util.CollectionUtils;
@@ -62,7 +62,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
     private VideoService videoService;
 
     @Autowired
-    private LinkService linkService;
+    private FriendLinkService friendLinkService;
 
     @Value("${minio.base.url}")
     private String minioBaseUrl;
@@ -394,7 +394,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
             }
 
             // 检测友链
-            if (linkService.checkByFile(fileListItem.getUrl())){
+            if (friendLinkService.checkByFile(fileListItem.getUrl())){
                 failList.add(fileListItem.getId());
                 continue;
             }

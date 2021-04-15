@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.operation.LinkMapper">
+<mapper namespace="com.luoyu.blog.mapper.operation.FriendLinkMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.luoyu.blog.entity.operation.Link">
+    <resultMap id="BaseResultMap" type="com.luoyu.blog.entity.operation.FriendLink">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="url" property="url" />
         <result column="avatar" property="avatar" />
+        <result column="description" property="description" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, url, avatar,create_time,update_time
+        id, title, url, avatar,description,create_time,update_time
     </sql>
 
     <select id="checkByFile" resultType="java.lang.Integer">
-        select count(*) from link where avatar = #{url}
+        select count(*) from friendLink where avatar = #{url}
     </select>
 
 </mapper>

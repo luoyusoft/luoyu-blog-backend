@@ -3,11 +3,11 @@ package com.luoyu.blog.service.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luoyu.blog.entity.operation.Link;
+import com.luoyu.blog.entity.operation.FriendLink;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
-import com.luoyu.blog.service.operation.LinkService;
-import com.luoyu.blog.mapper.operation.LinkMapper;
+import com.luoyu.blog.service.operation.FriendLinkService;
+import com.luoyu.blog.mapper.operation.FriendLinkMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Service
 @Slf4j
-public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements LinkService {
+public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendLink> implements FriendLinkService {
 
     /**
      * 分页查询
@@ -41,8 +41,8 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
         params.put("title", title);
-        IPage<Link> linkPage = baseMapper.selectPage(new Query<Link>(params).getPage(),
-                new QueryWrapper<Link>().lambda().like(StringUtils.isNotEmpty(title),Link::getTitle,title));
+        IPage<FriendLink> linkPage = baseMapper.selectPage(new Query<FriendLink>(params).getPage(),
+                new QueryWrapper<FriendLink>().lambda().like(StringUtils.isNotEmpty(title), FriendLink::getTitle,title));
         return new PageUtils(linkPage);
     }
 
@@ -64,7 +64,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
      * @return
      */
     @Override
-    public List<Link> listLink() {
+    public List<FriendLink> listFriendLink() {
         return baseMapper.selectList(null);
     }
 

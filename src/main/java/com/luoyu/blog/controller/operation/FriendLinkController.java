@@ -8,8 +8,8 @@ import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
-import com.luoyu.blog.entity.operation.Link;
-import com.luoyu.blog.service.operation.LinkService;
+import com.luoyu.blog.entity.operation.FriendLink;
+import com.luoyu.blog.service.operation.FriendLinkService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,41 +29,41 @@ import java.util.List;
  * @since 2019-02-14
  */
 @RestController
-@CacheConfig(cacheNames = RedisKeyConstants.LINKS)
-public class LinkController extends AbstractController {
+@CacheConfig(cacheNames = RedisKeyConstants.FRIENDLINKS)
+public class FriendLinkController extends AbstractController {
 
     @Resource
-    private LinkService linkService;
+    private FriendLinkService friendLinkService;
 
     /**
      * 列表
      */
-    @GetMapping("/manage/operation/link/list")
-    @RequiresPermissions("operation:link:list")
+    @GetMapping("/manage/operation/friendlink/list")
+    @RequiresPermissions("operation:friendlink:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("title") String title){
-        PageUtils linkPage = linkService.queryPage(page, limit, title);
+        PageUtils linkPage = friendLinkService.queryPage(page, limit, title);
         return Response.success(linkPage);
     }
 
     /**
      * 信息
      */
-    @GetMapping("/manage/operation/link/info/{id}")
-    @RequiresPermissions("operation:link:info")
+    @GetMapping("/manage/operation/friendlink/info/{id}")
+    @RequiresPermissions("operation:friendlink:info")
     public Response info(@PathVariable("id") String id){
-       Link link = linkService.getById(id);
-        return Response.success(link);
+       FriendLink friendLink = friendLinkService.getById(id);
+        return Response.success(friendLink);
     }
 
     /**
      * 保存
      */
-    @PostMapping("/manage/operation/link/save")
-    @RequiresPermissions("operation:link:save")
+    @PostMapping("/manage/operation/friendlink/save")
+    @RequiresPermissions("operation:friendlink:save")
     @CacheEvict(allEntries = true)
-    public Response save(@RequestBody Link link){
-        ValidatorUtils.validateEntity(link, AddGroup.class);
-        linkService.save(link);
+    public Response save(@RequestBody FriendLink friendLink){
+        ValidatorUtils.validateEntity(friendLink, AddGroup.class);
+        friendLinkService.save(friendLink);
 
         return Response.success();
     }
@@ -71,19 +71,19 @@ public class LinkController extends AbstractController {
     /**
      * 修改
      */
-    @PutMapping("/manage/operation/link/update")
-    @RequiresPermissions("operation:link:update")
+    @PutMapping("/manage/operation/friendlink/update")
+    @RequiresPermissions("operation:friendlink:update")
     @CacheEvict(allEntries = true)
-    public Response update(@RequestBody Link link){
-        linkService.updateById(link);
+    public Response update(@RequestBody FriendLink friendLink){
+        friendLinkService.updateById(friendLink);
         return Response.success();
     }
 
     /**
      * 删除
      */
-    @DeleteMapping("/manage/operation/link/delete")
-    @RequiresPermissions("operation:link:delete")
+    @DeleteMapping("/manage/operation/friendlink/delete")
+    @RequiresPermissions("operation:friendlink:delete")
     @CacheEvict(allEntries = true)
     public Response delete(@RequestBody String[] ids){
         if (ids == null || ids.length < 1){
@@ -94,17 +94,17 @@ public class LinkController extends AbstractController {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能超过100个");
         }
 
-        linkService.removeByIds(Arrays.asList(ids));
+        friendLinkService.removeByIds(Arrays.asList(ids));
         return Response.success();
     }
 
     /********************** portal ********************************/
 
-    @RequestMapping("/operation/links")
+    @RequestMapping("/operation/friendlinks")
     @Cacheable
-    public Response listLink() {
-        List<Link> linkList = linkService.listLink();
-        return Response.success(linkList);
+    public Response listFriendLink() {
+        List<FriendLink> friendLinkList = friendLinkService.listFriendLink();
+        return Response.success(friendLinkList);
     }
 
 }

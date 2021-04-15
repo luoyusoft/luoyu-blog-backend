@@ -46,7 +46,7 @@ public class RedisKeyConstants {
     /**
      * 友情链接列表
      */
-    public final static String LINKS = PROFIX + "links";
+    public final static String FRIENDLINKS = PROFIX + "friendlinks";
 
     /**
      * 推荐列表
