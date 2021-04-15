@@ -5,6 +5,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -52,6 +56,10 @@ public class Knife4jConfig implements WebMvcConfigurer {
                 .select()
                 //此处添加需要扫描接口的包路径
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                .apis(RequestHandlerSelectors.withMethodAnnotation(PostMapping.class))
+                .apis(RequestHandlerSelectors.withMethodAnnotation(GetMapping.class))
+                .apis(RequestHandlerSelectors.withMethodAnnotation(PutMapping.class))
+                .apis(RequestHandlerSelectors.withMethodAnnotation(DeleteMapping.class))
                 .paths(PathSelectors.any())
                 .build()
                 // 配置header参数

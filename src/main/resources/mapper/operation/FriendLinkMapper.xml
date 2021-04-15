@@ -19,7 +19,7 @@
     </sql>
 
     <select id="checkByFile" resultType="java.lang.Integer">
-        select count(*) from friendLink where avatar = #{url}
+        select count(*) from friend_link where avatar = #{url}
     </select>
 
 </mapper>
