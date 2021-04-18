@@ -1,7 +1,5 @@
 package com.luoyu.blog.common.aop.annotation;
 
-import org.springframework.core.annotation.Order;
-
 import java.lang.annotation.*;
 
 /**
@@ -14,7 +12,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Order(-1)
 public @interface LogView {
 
      // 0：article，1：video，2：聊天室

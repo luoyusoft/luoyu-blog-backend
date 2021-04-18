@@ -52,12 +52,6 @@ public class LogViewAspect {
     @Resource
     private LogViewMapper logViewMapper;
 
-    @Resource
-    private ArticleMapper articleMapper;
-
-    @Resource
-    private VideoMapper videoMapper;
-
     @Resource(name = "taskExecutor")
     private ThreadPoolTaskExecutor taskExecutor;
 
