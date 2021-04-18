@@ -5,6 +5,7 @@ import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
+import com.luoyu.blog.entity.article.vo.HomeArticleInfoVO;
 
 import java.util.List;
 
@@ -16,6 +17,12 @@ import java.util.List;
  * @description
  */
 public interface ArticleService extends IService<Article> {
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    HomeArticleInfoVO getHomeArticleInfoVO();
 
     /**
      * 分页查询文章列表

@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.api.IPApi;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
+import com.luoyu.blog.entity.article.vo.HomeArticleInfoVO;
 import com.luoyu.blog.entity.log.LogView;
+import com.luoyu.blog.entity.log.vo.HomeLogInfoVO;
 import com.luoyu.blog.entity.sys.IPInfo;
 import com.luoyu.blog.mapper.log.LogViewMapper;
 import com.luoyu.blog.service.log.LogViewService;
@@ -15,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +37,27 @@ public class LogViewServiceImpl extends ServiceImpl<LogViewMapper, LogView> impl
 
     @Autowired
     private IPApi ipApi;
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    @Override
+    public HomeLogInfoVO getHommeLogInfoVO() {
+        Integer allPV = baseMapper.selectAllPV(null);
+        Integer allUV = baseMapper.selectAllUV(null);
+        // 当天零点
+        LocalDateTime createTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        Integer todayPV = baseMapper.selectAllPV(createTime);
+        Integer todayUV = baseMapper.selectAllUV(createTime);
+
+        HomeLogInfoVO homeLogInfoVO = new HomeLogInfoVO();
+        homeLogInfoVO.setAllPV(allPV);
+        homeLogInfoVO.setAllUV(allUV);
+        homeLogInfoVO.setTodayPV(todayPV);
+        homeLogInfoVO.setTodayUV(todayUV);
+        return homeLogInfoVO;
+    }
 
     /**
      * 分页查询日志

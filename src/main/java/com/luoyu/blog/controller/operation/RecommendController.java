@@ -9,6 +9,7 @@ import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.Recommend;
+import com.luoyu.blog.entity.operation.vo.HomeRecommendInfoVO;
 import com.luoyu.blog.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.service.operation.RecommendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -32,6 +33,15 @@ public class RecommendController extends AbstractController {
 
     @Resource
     private RecommendService recommendService;
+
+    /**
+     * 获取首页信息
+     */
+    @GetMapping("/manage/operation/recommend/homeinfo")
+    public Response getHomeRecommendInfoVO() {
+        HomeRecommendInfoVO homeRecommendInfoVO = recommendService.getHomeRecommendInfoVO();
+        return Response.success(homeRecommendInfoVO);
+    }
 
     /**
      * 列表

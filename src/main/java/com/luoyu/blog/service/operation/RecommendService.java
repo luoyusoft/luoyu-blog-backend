@@ -3,6 +3,8 @@ package com.luoyu.blog.service.operation;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.operation.Recommend;
+import com.luoyu.blog.entity.operation.vo.HomeFriendLinkInfoVO;
+import com.luoyu.blog.entity.operation.vo.HomeRecommendInfoVO;
 import com.luoyu.blog.entity.operation.vo.RecommendVO;
 
 import java.util.List;
@@ -16,6 +18,12 @@ import java.util.List;
  * @since 2019-02-22
  */
 public interface RecommendService extends IService<Recommend> {
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    HomeRecommendInfoVO getHomeRecommendInfoVO();
 
     /**
      * 分页查询

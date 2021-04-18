@@ -9,6 +9,7 @@ import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.AbstractController;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.FriendLink;
+import com.luoyu.blog.entity.operation.vo.HomeFriendLinkInfoVO;
 import com.luoyu.blog.service.operation.FriendLinkService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
@@ -34,6 +35,15 @@ public class FriendLinkController extends AbstractController {
 
     @Resource
     private FriendLinkService friendLinkService;
+
+    /**
+     * 获取首页信息
+     */
+    @GetMapping("/manage/operation/friendlink/homeinfo")
+    public Response getHommeFriendLinkInfoVO() {
+        HomeFriendLinkInfoVO homeFriendLinkInfoVO = friendLinkService.getHommeFriendLinkInfoVO();
+        return Response.success(homeFriendLinkInfoVO);
+    }
 
     /**
      * 列表

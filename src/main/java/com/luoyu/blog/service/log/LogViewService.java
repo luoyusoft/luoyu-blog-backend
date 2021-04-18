@@ -3,6 +3,7 @@ package com.luoyu.blog.service.log;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.log.LogView;
+import com.luoyu.blog.entity.log.vo.HomeLogInfoVO;
 
 /**
  * LogViewService
@@ -12,6 +13,12 @@ import com.luoyu.blog.entity.log.LogView;
  * @description
  */
 public interface LogViewService extends IService<LogView> {
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    HomeLogInfoVO getHommeLogInfoVO();
 
     /**
      * 分页查询日志

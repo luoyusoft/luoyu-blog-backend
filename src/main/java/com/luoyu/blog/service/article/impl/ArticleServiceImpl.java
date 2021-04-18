@@ -13,6 +13,7 @@ import com.luoyu.blog.common.util.RabbitMQUtils;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
+import com.luoyu.blog.entity.article.vo.HomeArticleInfoVO;
 import com.luoyu.blog.entity.gitalk.InitGitalkRequest;
 import com.luoyu.blog.entity.operation.Category;
 import com.luoyu.blog.entity.operation.Recommend;
@@ -65,6 +66,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Resource(name = "taskExecutor")
     private ThreadPoolTaskExecutor taskExecutor;
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    @Override
+    public HomeArticleInfoVO getHomeArticleInfoVO() {
+        Integer publishCount = baseMapper.selectPublishCount();
+        Integer allCount = baseMapper.selectAllCount();
+
+        HomeArticleInfoVO homeArticleInfoVO = new HomeArticleInfoVO();
+        homeArticleInfoVO.setPublishCount(publishCount);
+        homeArticleInfoVO.setAllCount(allCount);
+        return homeArticleInfoVO;
+    }
 
     /**
      * 分页查询文章列表

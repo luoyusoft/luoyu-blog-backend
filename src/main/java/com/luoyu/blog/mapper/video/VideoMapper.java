@@ -20,6 +20,18 @@ import java.util.Map;
 public interface VideoMapper extends BaseMapper<Video> {
 
     /**
+     * 获取已发布视频数量
+     * @return 已发布视频数量
+     */
+    Integer selectPublishCount();
+
+    /**
+     * 获取所有视频数量
+     * @return 所有视频数量
+     */
+    Integer selectAllCount();
+
+    /**
      * 查询列表
      *
      * @param page
@@ -45,14 +57,14 @@ public interface VideoMapper extends BaseMapper<Video> {
      * @param categoryId
      * @return
      */
-    int checkByCategory(Integer categoryId);
+    Integer checkByCategory(Integer categoryId);
 
     /**
      * 判断上传文件下是否有视频
      * @param url
      * @return
      */
-    int checkByFile(String url);
+    Integer checkByFile(String url);
 
     /**
      * 查询所有视频列表

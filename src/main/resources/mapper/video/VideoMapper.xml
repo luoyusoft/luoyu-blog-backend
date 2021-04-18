@@ -42,6 +42,14 @@
         to_star,score,screenwriter,synopsis,create_time,update_time,publish,watch_num,comment_num,like_num
     </sql>
 
+    <select id="selectPublishCount" resultType="java.lang.Integer">
+        select count(*) from video where publish = true
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from video
+    </select>
+
     <select id="listVideoDTO" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
         select <include refid="manageVideoColumn"/> from video
         <where>

@@ -11,6 +11,7 @@ import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.article.Article;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.operation.Recommend;
+import com.luoyu.blog.entity.operation.vo.HomeRecommendInfoVO;
 import com.luoyu.blog.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.entity.video.Video;
 import com.luoyu.blog.entity.video.dto.VideoDTO;
@@ -53,6 +54,17 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
 
     @Resource(name = "taskExecutor")
     private ThreadPoolTaskExecutor taskExecutor;
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    @Override
+    public HomeRecommendInfoVO getHomeRecommendInfoVO() {
+        HomeRecommendInfoVO homeRecommendInfoVO = new HomeRecommendInfoVO();
+        homeRecommendInfoVO.setCount(baseMapper.selectCount());
+        return homeRecommendInfoVO;
+    }
 
     /**
      * 分页查询

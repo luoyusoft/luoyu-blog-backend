@@ -1,7 +1,9 @@
 package com.luoyu.blog.controller.log;
 
 import com.luoyu.blog.common.util.PageUtils;
+import com.luoyu.blog.entity.article.vo.HomeArticleInfoVO;
 import com.luoyu.blog.entity.base.Response;
+import com.luoyu.blog.entity.log.vo.HomeLogInfoVO;
 import com.luoyu.blog.service.log.LogViewService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,15 @@ public class LogViewController {
 
     @Autowired
     private LogViewService logViewService;
+
+    /**
+     * 获取首页信息
+     */
+    @GetMapping("/manage/log/homeinfo")
+    public Response getHommeLogInfoVO() {
+        HomeLogInfoVO hommeLogInfoVO = logViewService.getHommeLogInfoVO();
+        return Response.success(hommeLogInfoVO);
+    }
 
     /**
      * 获取列表

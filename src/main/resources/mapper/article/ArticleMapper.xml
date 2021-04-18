@@ -32,6 +32,14 @@
        id,title,description,author,read_num,like_num,comment_num,cover,cover_type,create_time,update_time,publish,category_id
     </sql>
 
+    <select id="selectPublishCount" resultType="java.lang.Integer">
+        select count(*) from article where publish = true
+    </select>
+
+    <select id="selectAllCount" resultType="java.lang.Integer">
+        select count(*) from article
+    </select>
+
     <select id="listArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
         select <include refid="manageArticleColumn"/> from article
         <where>

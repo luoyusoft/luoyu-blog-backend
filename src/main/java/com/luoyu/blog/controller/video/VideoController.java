@@ -9,6 +9,7 @@ import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.video.dto.VideoDTO;
+import com.luoyu.blog.entity.video.vo.HomeVideoInfoVO;
 import com.luoyu.blog.entity.video.vo.VideoVO;
 import com.luoyu.blog.service.video.VideoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,6 +30,15 @@ public class VideoController {
 
     @Resource
     private VideoService videoService;
+
+    /**
+     * 获取首页信息
+     */
+    @GetMapping("/manage/video/homeinfo")
+    public Response getHommeVideoInfoVO() {
+        HomeVideoInfoVO homeVideoInfoVO = videoService.getHommeVideoInfoVO();
+        return Response.success(homeVideoInfoVO);
+    }
 
     /**
      * 列表

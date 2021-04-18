@@ -21,6 +21,18 @@ import java.util.Map;
 public interface ArticleMapper extends BaseMapper<Article> {
 
     /**
+     * 获取已发布文章数量
+     * @return 已发布文章数量
+     */
+    Integer selectPublishCount();
+
+    /**
+     * 获取所有文章数量
+     * @return 所有文章数量
+     */
+    Integer selectAllCount();
+
+    /**
      * 查询列表
      *
      * @param page
@@ -46,14 +58,14 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param categoryId
      * @return
      */
-    int checkByCategory(Integer categoryId);
+    Integer checkByCategory(Integer categoryId);
 
     /**
      * 判断上传文件下是否有文章
      * @param url
      * @return
      */
-    int checkByFile(String url);
+    Integer checkByFile(String url);
 
     /**
      * 查询所有文章列表

@@ -2,6 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.luoyu.blog.mapper.log.LogViewMapper">
 
+    <select id="selectAllPV" resultType="java.lang.Integer">
+        select count(*)
+        from log_view
+        <if test="createTime != null">
+            where create_time > #{createTime}
+        </if>
+    </select>
+
+    <select id="selectAllUV" resultType="java.lang.Integer">
+        select count(distinct ip,border_name,border_version,device_manufacturer,device_type,os_version)
+        from log_view
+        <if test="createTime != null">
+            where create_time > #{createTime}
+        </if>
+    </select>
+
     <select id="selectMaxId" resultType="java.lang.Integer">
         select id
         from log_view

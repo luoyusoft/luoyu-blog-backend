@@ -18,6 +18,12 @@ import java.util.List;
 public interface RecommendMapper extends BaseMapper<Recommend> {
 
     /**
+     * 获取总量
+     * @return 总量
+     */
+    Integer selectCount();
+
+    /**
      * 获取
      * @return
      */

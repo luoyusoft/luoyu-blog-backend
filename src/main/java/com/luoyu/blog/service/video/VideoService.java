@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.video.Video;
 import com.luoyu.blog.entity.video.dto.VideoDTO;
+import com.luoyu.blog.entity.video.vo.HomeVideoInfoVO;
 import com.luoyu.blog.entity.video.vo.VideoVO;
 
 import java.util.List;
@@ -16,6 +17,12 @@ import java.util.List;
  * @description
  */
 public interface VideoService extends IService<Video> {
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    HomeVideoInfoVO getHommeVideoInfoVO();
 
     /**
      * 分页查询视频列表

@@ -15,6 +15,7 @@ import com.luoyu.blog.entity.operation.Category;
 import com.luoyu.blog.entity.operation.Recommend;
 import com.luoyu.blog.entity.video.Video;
 import com.luoyu.blog.entity.video.dto.VideoDTO;
+import com.luoyu.blog.entity.video.vo.HomeVideoInfoVO;
 import com.luoyu.blog.entity.video.vo.VideoVO;
 import com.luoyu.blog.mapper.video.VideoMapper;
 import com.luoyu.blog.service.cache.CacheServer;
@@ -59,6 +60,21 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     @Resource(name = "taskExecutor")
     private ThreadPoolTaskExecutor taskExecutor;
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    @Override
+    public HomeVideoInfoVO getHommeVideoInfoVO() {
+        Integer publishCount = baseMapper.selectPublishCount();
+        Integer allCount = baseMapper.selectAllCount();
+
+        HomeVideoInfoVO homeVideoInfoVO = new HomeVideoInfoVO();
+        homeVideoInfoVO.setPublishCount(publishCount);
+        homeVideoInfoVO.setAllCount(allCount);
+        return homeVideoInfoVO;
+    }
 
     /**
      * 分页查询文章列表

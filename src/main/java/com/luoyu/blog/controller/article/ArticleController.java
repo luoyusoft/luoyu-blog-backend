@@ -9,6 +9,7 @@ import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.article.dto.ArticleDTO;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
+import com.luoyu.blog.entity.article.vo.HomeArticleInfoVO;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.service.article.ArticleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -31,6 +32,15 @@ public class ArticleController {
     private ArticleService articleService;
 
     /**
+     * 获取首页信息
+     */
+    @GetMapping("/manage/article/homeinfo")
+    public Response getHomeArticleInfoVO() {
+        HomeArticleInfoVO homeArticleInfoVO = articleService.getHomeArticleInfoVO();
+        return Response.success(homeArticleInfoVO);
+    }
+
+    /**
      * 列表
      */
     @GetMapping("/manage/article/list")
@@ -46,8 +56,8 @@ public class ArticleController {
     @GetMapping("/manage/article/info/{articleId}")
     @RequiresPermissions("article:list")
     public Response info(@PathVariable("articleId") Integer articleId) {
-        ArticleVO article = articleService.getArticle(articleId);
-        return Response.success(article);
+        ArticleVO articleVO = articleService.getArticle(articleId);
+        return Response.success(articleVO);
     }
 
     /**

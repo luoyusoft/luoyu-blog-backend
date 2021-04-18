@@ -7,6 +7,10 @@
         id, link_id, module, order_num,create_time,update_time
     </sql>
 
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(*) from friend_link
+    </select>
+
     <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
       select * from recommend where module = #{module} and link_id = #{linkId}
     </select>

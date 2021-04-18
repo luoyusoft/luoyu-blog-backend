@@ -3,7 +3,7 @@
 <mapper namespace="com.luoyu.blog.mapper.file.FileChunkMapper">
 
     <select id="checkIsUploadAllChunkByFileMd5" resultType="java.lang.Integer">
-        select count(1)
+        select count(*)
         from file_chunk
         where file_md5 = #{fileMd5}
           and upload_status = #{uploadStatus}

@@ -3,11 +3,12 @@ package com.luoyu.blog.service.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.luoyu.blog.entity.operation.FriendLink;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
-import com.luoyu.blog.service.operation.FriendLinkService;
+import com.luoyu.blog.entity.operation.FriendLink;
+import com.luoyu.blog.entity.operation.vo.HomeFriendLinkInfoVO;
 import com.luoyu.blog.mapper.operation.FriendLinkMapper;
+import com.luoyu.blog.service.operation.FriendLinkService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,17 @@ import java.util.Map;
 @Service
 @Slf4j
 public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendLink> implements FriendLinkService {
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    @Override
+    public HomeFriendLinkInfoVO getHommeFriendLinkInfoVO() {
+        HomeFriendLinkInfoVO homeFriendLinkInfoVO = new HomeFriendLinkInfoVO();
+        homeFriendLinkInfoVO.setCount(baseMapper.selectCount());
+        return homeFriendLinkInfoVO;
+    }
 
     /**
      * 分页查询

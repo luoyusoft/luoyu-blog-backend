@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luoyu.blog.entity.log.LogView;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -15,6 +16,16 @@ import java.util.List;
  * @since 2019-02-15
  */
 public interface LogViewMapper extends BaseMapper<LogView> {
+
+    /*
+     * 获取总PV
+     */
+    Integer selectAllPV(LocalDateTime createTime);
+
+    /*
+     * 获取总UV
+     */
+    Integer selectAllUV(LocalDateTime createTime);
 
     /*
      * 查询最大的id

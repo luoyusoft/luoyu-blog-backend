@@ -3,6 +3,7 @@ package com.luoyu.blog.service.operation;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.entity.operation.FriendLink;
+import com.luoyu.blog.entity.operation.vo.HomeFriendLinkInfoVO;
 
 import java.util.List;
 
@@ -15,6 +16,12 @@ import java.util.List;
  * @since 2019-02-14
  */
 public interface FriendLinkService extends IService<FriendLink> {
+
+    /**
+     * 获取首页信息
+     * @return 首页信息
+     */
+    HomeFriendLinkInfoVO getHommeFriendLinkInfoVO();
 
     /**
      * 分页查询

@@ -16,8 +16,14 @@ public interface FriendLinkMapper extends BaseMapper<FriendLink> {
     /**
      * 判断上传文件下是否有友链
      * @param url
-     * @return
+     * @return 上传文件下友链数量
      */
-    int checkByFile(String url);
+    Integer checkByFile(String url);
+
+    /**
+     * 获取总量
+     * @return 总量
+     */
+    Integer selectCount();
 
 }
