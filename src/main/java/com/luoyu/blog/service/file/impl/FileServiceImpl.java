@@ -87,7 +87,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
             }else if (suffix.equals(".gif") || suffix.equals(".jpg") || suffix.equals(".png")){
                 bucketName = File.BUCKET_NAME_IMG;
             }else {
-                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "暂不支持该文件格式");
+                bucketName = File.BUCKET_NAME_OTHER;
+//                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "暂不支持该文件格式");
             }
 
             File fileResource = new File();
@@ -157,7 +158,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
         }else if (suffix.equals(".gif") || suffix.equals(".jpg") || suffix.equals(".png")){
             bucketName = File.BUCKET_NAME_IMG;
         }else {
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "不存在该文件类型");
+            bucketName = File.BUCKET_NAME_OTHER;
+//            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "不存在该文件类型");
         }
 
         minioUtils.download(response, bucketName, fileName);
@@ -225,7 +227,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
         }else if (suffix.equals(".gif") || suffix.equals(".jpg") || suffix.equals(".png")){
             bucketName = File.BUCKET_NAME_IMG;
         }else {
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "暂不支持该文件格式");
+            bucketName = File.BUCKET_NAME_OTHER;
+//            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "暂不支持该文件格式");
         }
         List<String> uploadUrls = minioUtils.createUploadChunkUrlList(bucketName, fileVO.getFileMd5(), fileVO.getChunkCount(), 604800);
         List<FileVO> fileVOList = new ArrayList<>();
@@ -302,7 +305,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
         }else if (suffix.equals(".gif") || suffix.equals(".jpg") || suffix.equals(".png")){
             bucketName = File.BUCKET_NAME_IMG;
         }else {
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "暂不支持该文件格式");
+            bucketName = File.BUCKET_NAME_OTHER;
+//            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "暂不支持该文件格式");
         }
         // 根据md5获取所有分片文件名称(minio的文件名称 = 文件path)
         List<String> chunks = minioUtils.listObjectNames(bucketName, fileVO.getFileMd5(), true);

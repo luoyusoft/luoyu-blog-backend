@@ -29,6 +29,8 @@ public class File extends BaseEntity implements Serializable {
 
     public static final String BUCKET_NAME_VIDEO = "video";
 
+    public static final String BUCKET_NAME_OTHER = "other";
+
     public static final String STORAGE_TYPE_QINIUYUN = "qiniuyun";
 
     public static final String STORAGE_TYPE_MINIO = "minio";
