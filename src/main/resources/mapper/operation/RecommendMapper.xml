@@ -8,7 +8,7 @@
     </sql>
 
     <select id="selectCount" resultType="java.lang.Integer">
-        select count(*) from friend_link
+        select count(*) from recommend
     </select>
 
     <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
