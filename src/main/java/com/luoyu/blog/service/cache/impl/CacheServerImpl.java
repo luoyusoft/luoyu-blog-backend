@@ -32,6 +32,7 @@ public class CacheServerImpl implements CacheServer {
     public void cleanVideosCache(Integer[] ids) {
         Set<String> keys = redisTemplate.keys(RedisKeyConstants.VIDEOS + ":" + RedisKeyConstants.REDIS_MATCH_PREFIX);
         keys.addAll(Objects.requireNonNull(redisTemplate.keys(RedisKeyConstants.SEARCHS + ":" + RedisKeyConstants.REDIS_MATCH_PREFIX)));
+        keys.addAll(Objects.requireNonNull(redisTemplate.keys(RedisKeyConstants.RECOMMENDS + ":" + ModuleTypeConstants.VIDEO)));
 
         if (ids != null && ids.length > 0){
             Arrays.stream(ids).forEach(videoId -> {
@@ -52,6 +53,7 @@ public class CacheServerImpl implements CacheServer {
         Set<String> keys = redisTemplate.keys(RedisKeyConstants.ARTICLES + ":" + RedisKeyConstants.REDIS_MATCH_PREFIX);
         keys.addAll(Objects.requireNonNull(redisTemplate.keys(RedisKeyConstants.TIMELINES + ":" + RedisKeyConstants.REDIS_MATCH_PREFIX)));
         keys.addAll(Objects.requireNonNull(redisTemplate.keys(RedisKeyConstants.SEARCHS + ":" + RedisKeyConstants.REDIS_MATCH_PREFIX)));
+        keys.addAll(Objects.requireNonNull(redisTemplate.keys(RedisKeyConstants.RECOMMENDS + ":" + ModuleTypeConstants.ARTICLE)));
 
         if (ids != null && ids.length > 0){
             Arrays.stream(ids).forEach(videoId -> {
