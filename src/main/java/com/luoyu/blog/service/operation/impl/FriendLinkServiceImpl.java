@@ -3,6 +3,7 @@ package com.luoyu.blog.service.operation.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.operation.FriendLink;
@@ -11,6 +12,8 @@ import com.luoyu.blog.mapper.operation.FriendLinkMapper;
 import com.luoyu.blog.service.operation.FriendLinkService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,6 +28,7 @@ import java.util.Map;
  * @author luoyu
  * @since 2019-02-14
  */
+@CacheConfig(cacheNames = RedisKeyConstants.FRIENDLINKS)
 @Service
 @Slf4j
 public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendLink> implements FriendLinkService {
@@ -75,6 +79,7 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
      *
      * @return
      */
+    @Cacheable
     @Override
     public List<FriendLink> listFriendLink() {
         return baseMapper.selectList(null);

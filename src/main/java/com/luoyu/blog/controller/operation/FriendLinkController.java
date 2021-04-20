@@ -14,7 +14,6 @@ import com.luoyu.blog.service.operation.FriendLinkService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -111,7 +110,6 @@ public class FriendLinkController extends AbstractController {
     /********************** portal ********************************/
 
     @RequestMapping("/operation/friendlinks")
-    @Cacheable
     public Response listFriendLink() {
         List<FriendLink> friendLinkList = friendLinkService.listFriendLink();
         return Response.success(friendLinkList);

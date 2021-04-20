@@ -1,7 +1,6 @@
 package com.luoyu.blog.controller.video;
 
 import com.luoyu.blog.common.aop.annotation.LogView;
-import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -13,7 +12,6 @@ import com.luoyu.blog.entity.video.vo.HomeVideoInfoVO;
 import com.luoyu.blog.entity.video.vo.VideoVO;
 import com.luoyu.blog.service.video.VideoService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -114,7 +112,6 @@ public class VideoController {
 
     @GetMapping("/video/{id}")
     @LogView(module = 1)
-    @Cacheable(value = RedisKeyConstants.VIDEO, key = "#id")
     public Response getVideo(@PathVariable Integer id){
         VideoDTO videoDTO = videoService.getVideoDTOById(id);
         return Response.success(videoDTO);
@@ -127,7 +124,6 @@ public class VideoController {
     }
 
     @GetMapping("/videos")
-    @Cacheable(value = RedisKeyConstants.VIDEOS)
     @LogView(module = 1)
     public Response getList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                          @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
@@ -137,7 +133,6 @@ public class VideoController {
     }
 
     @GetMapping("/videos/hotwatch")
-    @Cacheable(value = RedisKeyConstants.VIDEOS, key = "'hotwatch'")
     @LogView(module = 1)
     public Response getHotWatchList(){
         return Response.success(videoService.getHotWatchList());

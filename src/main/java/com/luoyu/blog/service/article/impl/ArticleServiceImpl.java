@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.constants.GitalkConstants;
 import com.luoyu.blog.common.constants.ModuleTypeConstants;
 import com.luoyu.blog.common.constants.RabbitMQConstants;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
@@ -28,6 +29,7 @@ import com.luoyu.blog.service.operation.TopService;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -315,6 +317,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @param read
      * @return
      */
+    @Cacheable(value = RedisKeyConstants.ARTICLES)
     @Override
     public PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read) {
         Map<String, Object> params = new HashMap<>();
@@ -343,6 +346,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @param limit 每页数量
      * @return 文章列表
      */
+    @Cacheable(value = RedisKeyConstants.ARTICLES)
     @Override
     public PageUtils queryHomePageCondition(Integer page, Integer limit) {
         Map<String, Object> params = new HashMap<>();
@@ -384,6 +388,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @param id
      * @return
      */
+    @Cacheable(value = RedisKeyConstants.ARTICLE, key = "#id")
     @Override
     public ArticleDTO getArticleDTOById(Integer id) {
         Article article = baseMapper.selectArticleById(id);
@@ -402,6 +407,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * 获取热读榜
      * @return 文章列表
      */
+    @Cacheable(value = RedisKeyConstants.ARTICLES, key = "'hostread'")
     @Override
     public List<ArticleVO> getHotReadList() {
         List<ArticleDTO> articleDTOList = baseMapper.getHotReadList();

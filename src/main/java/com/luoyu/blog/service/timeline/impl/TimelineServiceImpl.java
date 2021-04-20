@@ -1,11 +1,14 @@
 package com.luoyu.blog.service.timeline.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.entity.timeline.Timeline;
 import com.luoyu.blog.entity.timeline.TimelineMonth;
 import com.luoyu.blog.entity.timeline.TimelinePost;
 import com.luoyu.blog.mapper.timeline.TimelineMapper;
 import com.luoyu.blog.service.timeline.TimelineService;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,6 +23,7 @@ import java.util.List;
  * @date 2019/02/24 20:47
  * @description 时间线
  */
+@CacheConfig(cacheNames ={RedisKeyConstants.TIMELINES})
 @Service
 public class TimelineServiceImpl implements TimelineService {
 
@@ -31,6 +35,7 @@ public class TimelineServiceImpl implements TimelineService {
      *
      * @return 时间线列表
      */
+    @Cacheable
     @Override
     public List<Timeline> listTimeLine() {
         List<Timeline> timelineList = timelineMapper.listTimeline();

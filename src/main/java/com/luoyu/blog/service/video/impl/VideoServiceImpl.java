@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.constants.GitalkConstants;
 import com.luoyu.blog.common.constants.ModuleTypeConstants;
 import com.luoyu.blog.common.constants.RabbitMQConstants;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
@@ -25,6 +26,7 @@ import com.luoyu.blog.service.operation.TagService;
 import com.luoyu.blog.service.video.VideoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -310,6 +312,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
      * @param watch
      * @return
      */
+    @Cacheable(value = RedisKeyConstants.VIDEOS)
     @Override
     public PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean watch) {
         Map<String, Object> params = new HashMap<>();
@@ -338,6 +341,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
      * @param id
      * @return
      */
+    @Cacheable(value = RedisKeyConstants.VIDEO, key = "#id")
     @Override
     public VideoDTO getVideoDTOById(Integer id) {
         Video video = baseMapper.selectVideoById(id);
@@ -356,6 +360,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
      * 获取热观榜
      * @return
      */
+    @Cacheable(value = RedisKeyConstants.VIDEOS, key = "'hotwatch'")
     @Override
     public List<VideoVO> getHotWatchList() {
         List<VideoDTO> videoDTOList = baseMapper.getHotWatchList();

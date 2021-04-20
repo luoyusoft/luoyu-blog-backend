@@ -8,9 +8,7 @@ import com.luoyu.blog.common.util.IPUtils;
 import com.luoyu.blog.common.util.JsonUtils;
 import com.luoyu.blog.common.util.UserAgentUtils;
 import com.luoyu.blog.entity.sys.IPInfo;
-import com.luoyu.blog.mapper.article.ArticleMapper;
 import com.luoyu.blog.mapper.log.LogViewMapper;
-import com.luoyu.blog.mapper.video.VideoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.StopWatch;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,6 +18,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +38,7 @@ import java.time.LocalDateTime;
 @Aspect
 @Component
 @Slf4j
+@Order(-1)
 public class LogViewAspect {
 
     private static final String PROFILES_ACTIVE_PRO = "prod";

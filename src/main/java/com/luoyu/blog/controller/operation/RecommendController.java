@@ -1,6 +1,5 @@
 package com.luoyu.blog.controller.operation;
 
-import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -13,7 +12,6 @@ import com.luoyu.blog.entity.operation.vo.HomeRecommendInfoVO;
 import com.luoyu.blog.entity.operation.vo.RecommendVO;
 import com.luoyu.blog.service.operation.RecommendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -144,7 +142,6 @@ public class RecommendController extends AbstractController {
     /********************** portal ********************************/
 
     @RequestMapping("/operation/recommends")
-    @Cacheable(value = RedisKeyConstants.RECOMMENDS, key = "#module")
     public Response listRecommend(@RequestParam("module") Integer module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");

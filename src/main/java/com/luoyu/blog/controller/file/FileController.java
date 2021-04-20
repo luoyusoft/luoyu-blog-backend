@@ -84,8 +84,8 @@ public class FileController {
     @GetMapping("/manage/file/list")
     @RequiresPermissions("file:list")
     public Response listTimeline(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("module") Integer module,
-                                 @RequestParam("fileName") String fileName, @RequestParam("fileMd5") String fileMd5) {
-        PageUtils logViewPage = fileService.queryPage(page, limit, module, fileName, fileMd5);
+                                 @RequestParam("fileName") String fileName, @RequestParam("fileMd5") String fileMd5, @RequestParam("url") String url) {
+        PageUtils logViewPage = fileService.queryPage(page, limit, module, fileName, fileMd5, url);
         return Response.success(logViewPage);
     }
 

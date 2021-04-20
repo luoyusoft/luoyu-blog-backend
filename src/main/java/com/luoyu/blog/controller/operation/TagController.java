@@ -2,7 +2,6 @@ package com.luoyu.blog.controller.operation;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.luoyu.blog.common.constants.ModuleTypeConstants;
-import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -16,7 +15,6 @@ import com.luoyu.blog.entity.operation.vo.TagVO;
 import com.luoyu.blog.mapper.operation.TagLinkMapper;
 import com.luoyu.blog.service.operation.TagService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -126,7 +124,6 @@ public class TagController extends AbstractController {
     /********************** portal ********************************/
 
     @GetMapping("/operation/tags")
-    @Cacheable(value = RedisKeyConstants.TAGS, key = "#module")
     public Response listTag(@RequestParam("module") Integer module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");

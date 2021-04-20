@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyu.blog.common.constants.ModuleTypeConstants;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.operation.Tag;
@@ -16,6 +17,7 @@ import com.luoyu.blog.service.operation.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -124,6 +126,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      *
      * @return
      */
+    @Cacheable(value = RedisKeyConstants.TAGS, key = "#module")
     @Override
     public List<TagVO> listTagDTO(Integer module) {
         List<TagVO> tagVOList = new ArrayList<>();

@@ -172,9 +172,10 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
      * @param module module
      * @param fileName fileName
      * @param fileMd5 fileMd5
+     * @param url url
      */
     @Override
-    public PageUtils queryPage(Integer page, Integer limit, Integer module, String fileName, String fileMd5) {
+    public PageUtils queryPage(Integer page, Integer limit, Integer module, String fileName, String fileMd5, String url) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
@@ -184,6 +185,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
                         .eq(module != null, File::getModule, module)
                         .like(!StringUtils.isEmpty(fileName), File::getFileName, fileName)
                         .like(!StringUtils.isEmpty(fileMd5), File::getFileMd5, fileMd5)
+                        .like(!StringUtils.isEmpty(url), File::getUrl, url)
                         .orderByDesc(File::getCreateTime)
         );
         return new PageUtils(fileResourceIPage);

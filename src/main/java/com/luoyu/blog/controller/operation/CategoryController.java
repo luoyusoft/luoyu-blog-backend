@@ -1,6 +1,5 @@
 package com.luoyu.blog.controller.operation;
 
-import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.validator.ValidatorUtils;
@@ -10,7 +9,6 @@ import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.operation.Category;
 import com.luoyu.blog.service.operation.CategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -96,7 +94,6 @@ public class CategoryController extends AbstractController {
     /********************** portal ********************************/
 
     @GetMapping("/operation/categories")
-    @Cacheable(value = RedisKeyConstants.CATEGORYS, key = "#module")
     public Response getCategoryList(@RequestParam("module") String module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");

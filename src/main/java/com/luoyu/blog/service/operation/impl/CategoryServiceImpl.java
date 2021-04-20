@@ -2,6 +2,7 @@ package com.luoyu.blog.service.operation.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.CategoryRankEnum;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
@@ -13,6 +14,7 @@ import com.luoyu.blog.service.cache.CacheServer;
 import com.luoyu.blog.service.operation.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -226,6 +228,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
      * @param module
      * @return
      */
+    @Cacheable(value = RedisKeyConstants.CATEGORYS, key = "#module")
     @Override
     public List<Category> getCategoryList(String module) {
         return baseMapper.selectList(new QueryWrapper<Category>().lambda()

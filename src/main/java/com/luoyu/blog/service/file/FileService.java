@@ -49,8 +49,9 @@ public interface FileService extends IService<File> {
      * @param module module
      * @param fileName fileName
      * @param fileMd5 fileMd5
+     * @param url url
      */
-    PageUtils queryPage(Integer page, Integer limit, Integer module, String fileName, String fileMd5);
+    PageUtils queryPage(Integer page, Integer limit, Integer module, String fileName, String fileMd5, String url);
 
     /**
      * 分片上传文件

@@ -1,6 +1,7 @@
 package com.luoyu.blog.service.search.impl;
 
 import com.luoyu.blog.common.constants.ModuleTypeConstants;
+import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.entity.article.vo.ArticleVO;
 import com.luoyu.blog.entity.operation.vo.TopVO;
 import com.luoyu.blog.entity.search.vo.SearchListVO;
@@ -12,6 +13,7 @@ import com.luoyu.blog.service.search.VideoEsServer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,6 +31,7 @@ public class SearchServerImpl implements SearchServer {
     @Autowired
     private TopService topService;
 
+    @Cacheable(value = RedisKeyConstants.SEARCHS, key = "#keyword")
     @Override
     public SearchListVO searchList(String keyword) throws Exception {
         // 处理文章

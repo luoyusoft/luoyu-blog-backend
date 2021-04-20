@@ -1,7 +1,6 @@
 package com.luoyu.blog.controller.article;
 
 import com.luoyu.blog.common.aop.annotation.LogView;
-import com.luoyu.blog.common.constants.RedisKeyConstants;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
@@ -13,7 +12,6 @@ import com.luoyu.blog.entity.article.vo.HomeArticleInfoVO;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.service.article.ArticleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -113,7 +111,6 @@ public class ArticleController {
     /********************** portal ********************************/
 
     @GetMapping("/article/{id}")
-    @Cacheable(value = RedisKeyConstants.ARTICLE, key = "#id")
     @LogView(module = 0)
     public Response getArticle(@PathVariable Integer id){
         ArticleDTO article = articleService.getArticleDTOById(id);
@@ -127,7 +124,6 @@ public class ArticleController {
     }
 
     @GetMapping("/articles")
-    @Cacheable(value = RedisKeyConstants.ARTICLES)
     @LogView(module = 0)
     public Response getList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                          @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
@@ -143,7 +139,6 @@ public class ArticleController {
      * @return 文章列表
      */
     @GetMapping("/articles/home")
-    @Cacheable(value = RedisKeyConstants.ARTICLES)
     @LogView(module = 0)
     public Response getHomeList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
         PageUtils queryPageCondition = articleService.queryHomePageCondition(page, limit);
@@ -155,7 +150,6 @@ public class ArticleController {
      * @return 文章列表
      */
     @GetMapping("/articles/hotread")
-    @Cacheable(value = RedisKeyConstants.ARTICLES, key = "'hostread'")
     @LogView(module = 0)
     public Response getHotReadList(){
         return Response.success(articleService.getHotReadList());
