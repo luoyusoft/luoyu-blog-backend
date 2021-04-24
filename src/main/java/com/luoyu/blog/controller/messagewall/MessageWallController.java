@@ -3,6 +3,7 @@ package com.luoyu.blog.controller.messagewall;
 import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
+import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
 import com.luoyu.blog.entity.base.Response;
@@ -39,13 +40,32 @@ public class MessageWallController {
     }
 
     /**
-     * 分页获取留言列表
+     * 后台分页获取留言列表
      */
-    @PostMapping("/manage/messagewalls")
+    @GetMapping("/manage/messagewalls")
     @RequiresPermissions("messagewall:list")
-    public Response manageGetMessageWallList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("name") String name){
-        MessageWallListVO messageWallListVO = messageWallService.manageGetMessageWallList(page, limit, name);
-        return Response.success(messageWallListVO);
+    public Response manageGetMessageWalls(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+                                          @RequestParam("name") String name, @RequestParam("floorNum") Integer floorNum){
+        PageUtils messageWallPage = messageWallService.manageGetMessageWalls(page, limit, name, floorNum);
+        return Response.success(messageWallPage);
+    }
+
+    /**
+     * 后台批量删除
+     */
+    @DeleteMapping("/manage/messagewall")
+    @RequiresPermissions("messagewall:delete")
+    public Response manageDeleteMessageWallList(@RequestBody Integer[] ids) {
+        if (ids == null || ids.length < 1){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能为空");
+        }
+
+        if (ids.length > 100){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "ids不能超过100个");
+        }
+
+        messageWallService.manageDeleteMessageWalls(ids);
+        return Response.success();
     }
 
     /********************** portal ********************************/

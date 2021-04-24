@@ -1,11 +1,13 @@
 package com.luoyu.blog.mapper.messagewall;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.luoyu.blog.entity.messagewall.MessageWall;
 import com.luoyu.blog.entity.messagewall.vo.MessageWallVO;
 import io.lettuce.core.dynamic.annotation.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,12 +22,11 @@ public interface MessageWallMapper extends BaseMapper<MessageWall> {
     /**
      * 分页获取留言列表
      *
-     * @param min min
-     * @param max max
-     * @param name name
+     * @param page page
+     * @param params params
      * @return 列表
      */
-    List<MessageWallVO> selectMessageWallVOList(@Param("min") Integer min, @Param("max") Integer max, @Param("name") String name);
+    List<MessageWallVO> selectMessageWallVOs(Page<MessageWallVO> page, @Param("params") Map<String, Object> params);
 
     /**
      * 获取最大楼层数
