@@ -34,4 +34,9 @@ public class LogTypeConstants {
      */
     public static final Integer TIMELINE = 4;
 
+    /**
+     * 留言墙模块
+     */
+    public static final Integer MESSAGEWALL = 5;
+
 }

@@ -9,8 +9,7 @@ create table category
     update_time datetime default CURRENT_TIMESTAMP not null comment '更新时间',
     constraint operation_category_id_uindex
         unique (id)
-)
-    comment '类别';
+) engine InnoDB default charset utf8mb4 comment '类别';
 
 alter table category
     add primary key (id);

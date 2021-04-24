@@ -32,15 +32,15 @@ import java.util.List;
 public class PageUtils implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	//总记录数
+	// 总记录数
 	private long totalCount;
-	//每页记录数
+	// 每页记录数
 	private long pageSize;
-	//总页数
+	// 总页数
 	private long totalPage;
-	//当前页数
+	// 当前页数
 	private long currPage;
-	//列表数据
+	// 列表数据
 	private List<?> list;
 	
 	/**

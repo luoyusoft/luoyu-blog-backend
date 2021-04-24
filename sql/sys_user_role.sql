@@ -6,5 +6,4 @@ create table sys_user_role
     role_id     int                                not null comment '角色id',
     create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time datetime default CURRENT_TIMESTAMP not null comment '更新时间'
-)
-    comment '用户与角色对应关系';
+) engine InnoDB default charset utf8mb4 comment '用户与角色对应关系';

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.luoyu.blog.mapper.messagewall.MessageWallMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.luoyu.blog.entity.messagewall.MessageWall">
+        <id column="id" property="id" />
+        <result column="floor_num" property="floorNum" />
+        <result column="reply_id" property="replyId" />
+        <result column="name" property="name" />
+        <result column="email" property="email" />
+        <result column="comment" property="comment" />
+        <result column="profile" property="profile" />
+        <result column="website" property="website" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <select id="selectMessageWallVOList" resultType="com.luoyu.blog.entity.messagewall.vo.MessageWallVO">
+        select a.*, b.name as replyName
+        from message_wall a
+        left join message_wall b on a.reply_id = b.id
+        where a.floor_num &gt;= #{min}
+        and a.floor_num &lt;= #{max}
+        <if test="name!=null and name !=''">
+            and a.name like concat('%',#{name},'%')
+        </if>
+        order by update_time desc
+    </select>
+
+    <select id="selectMaxFloorNum" resultType="java.lang.Integer">
+        select max(floor_num) from message_wall
+    </select>
+
+    <select id="selectMessageWallCount" resultType="java.lang.Integer">
+        select count(*) from message_wall
+    </select>
+
+    <select id="haveMoreFloor" resultType="java.lang.Boolean" parameterType="java.lang.Integer">
+        select count(*) from message_wall where floor_num > #{floorNum}
+    </select>
+
+    <select id="selectMessageWallVOListByFloor" resultType="com.luoyu.blog.entity.messagewall.vo.MessageWallVO">
+        select a.*, b.name as replyName
+        from message_wall a
+                 left join message_wall b on a.reply_id = b.id
+        where a.floor_num &gt;= #{minFloorNum}
+          and a.floor_num &lt;= #{maxFloorNum}
+        order by a.floor_num desc, a.id asc
+    </select>
+
+</mapper>

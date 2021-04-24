@@ -11,5 +11,4 @@ create table sys_menu
     order_num   int                                not null comment '排序',
     create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time datetime default CURRENT_TIMESTAMP not null comment '更新时间'
-)
-    comment '菜单';
+) engine InnoDB default charset utf8mb4 comment '菜单';

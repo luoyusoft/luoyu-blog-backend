@@ -15,5 +15,4 @@ create table file
     upload_status tinyint(1)                         null comment '上传状态（0：部分成功，1：成功）',
     create_time   datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP not null comment '更新时间'
-)
-    comment '云存储资源表';
+) engine InnoDB default charset utf8mb4 comment '云存储资源表';

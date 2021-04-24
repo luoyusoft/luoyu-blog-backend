@@ -11,5 +11,4 @@ create table top
         unique (order_num),
     constraint unidx_top_link_id_type
         unique (link_id, module)
-)
-    comment '置顶';
+) engine InnoDB default charset utf8mb4 comment '置顶';

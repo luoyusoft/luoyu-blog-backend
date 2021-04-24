@@ -7,5 +7,4 @@ create table tag_link
     module      int                                not null comment '所属模块',
     create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time datetime default CURRENT_TIMESTAMP not null comment '更新时间'
-)
-    comment '标签多对多维护表';
+) engine InnoDB default charset utf8mb4 comment '标签多对多维护表';

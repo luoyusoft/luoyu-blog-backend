@@ -8,5 +8,4 @@ create table file_chunk
     chunk_number  int                                null comment '分片序号',
     create_time   datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP not null comment '更新时间'
-)
-    comment '云存储分片表';
+) engine InnoDB default charset utf8mb4 comment '云存储分片表';

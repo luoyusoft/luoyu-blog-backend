@@ -8,5 +8,4 @@ create table friend_link
     description varchar(256)                       null comment '链接简介',
     create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time datetime default CURRENT_TIMESTAMP not null comment '更新时间'
-)
-    comment '友链';
+) engine InnoDB default charset utf8mb4 comment '友链';

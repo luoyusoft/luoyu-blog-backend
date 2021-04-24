@@ -23,5 +23,4 @@ create table video
     like_num          int        default 0                 not null comment '点赞量',
     create_time       datetime   default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time       datetime   default CURRENT_TIMESTAMP not null comment '更新时间'
-)
-    comment '视频表';
+) engine InnoDB default charset utf8mb4 comment '视频表';
