@@ -3,6 +3,7 @@ package com.luoyu.blog.controller.messagewall;
 import com.luoyu.blog.common.aop.annotation.LogView;
 import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.common.exception.MyException;
+import com.luoyu.blog.common.util.FormatUtils;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.validator.ValidatorUtils;
 import com.luoyu.blog.common.validator.group.AddGroup;
@@ -10,6 +11,8 @@ import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.messagewall.MessageWall;
 import com.luoyu.blog.entity.messagewall.vo.MessageWallListVO;
 import com.luoyu.blog.service.messagewall.MessageWallService;
+import io.netty.util.internal.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +81,16 @@ public class MessageWallController {
     public Response addMessageWall(@RequestBody MessageWall messageWall){
         ValidatorUtils.validateEntity(messageWall, AddGroup.class);
         messageWallService.addMessageWall(messageWall);
+        if (!StringUtils.isEmpty(messageWall.getEmail())){
+            if(!FormatUtils.checkEmail(messageWall.getEmail())){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "邮箱格式不对");
+            }
+        }
+        if (!StringUtils.isEmpty(messageWall.getWebsite())){
+            if(!messageWall.getWebsite().startsWith("https://") && !messageWall.getWebsite().startsWith("http://")){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "网址格式不对");
+            }
+        }
 
         return Response.success();
     }
