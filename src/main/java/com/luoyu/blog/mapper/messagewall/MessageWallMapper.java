@@ -6,6 +6,7 @@ import com.luoyu.blog.entity.messagewall.MessageWall;
 import com.luoyu.blog.entity.messagewall.vo.MessageWallVO;
 import io.lettuce.core.dynamic.annotation.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -21,10 +22,9 @@ public interface MessageWallMapper extends BaseMapper<MessageWall> {
 
     /**
      * 分页获取留言列表
-     *
-     * @param page page
-     * @param params params
-     * @return 列表
+     * @param page 页码
+     * @param params 参数
+     * @return 留言列表
      */
     List<MessageWallVO> selectMessageWallVOs(Page<MessageWallVO> page, @Param("params") Map<String, Object> params);
 
@@ -41,16 +41,24 @@ public interface MessageWallMapper extends BaseMapper<MessageWall> {
     Integer selectMessageWallCount();
 
     /**
+     * 获取今天留言数
+     * @param createTime 今天零点时间
+     * @return 今天留言数
+     */
+    Integer selectTodayCount(LocalDateTime createTime);
+
+    /**
      * 是否有更多楼层
+     * @param floorNum 最大楼层数
      * @return 是否有更多楼层
      */
     Boolean haveMoreFloor(@Param("floorNum") Integer floorNum);
 
     /**
      * 按楼层分页获取留言列表
-     * @param minFloorNum minFloorNum
-     * @param maxFloorNum maxFloorNum
-     * @return 列表
+     * @param minFloorNum 最小楼层
+     * @param maxFloorNum 最大楼层
+     * @return 留言列表
      */
     List<MessageWallVO> selectMessageWallVOListByFloor(@Param("minFloorNum") Integer minFloorNum, @Param("maxFloorNum") Integer maxFloorNum);
 

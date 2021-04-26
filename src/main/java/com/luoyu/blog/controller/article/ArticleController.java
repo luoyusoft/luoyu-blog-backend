@@ -33,6 +33,7 @@ public class ArticleController {
      * 获取首页信息
      */
     @GetMapping("/manage/article/homeinfo")
+    @RequiresPermissions("article:list")
     public Response getHomeArticleInfoVO() {
         HomeArticleInfoVO homeArticleInfoVO = articleService.getHomeArticleInfoVO();
         return Response.success(homeArticleInfoVO);

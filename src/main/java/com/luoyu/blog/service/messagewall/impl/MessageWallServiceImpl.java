@@ -7,6 +7,7 @@ import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.common.util.PageUtils;
 import com.luoyu.blog.common.util.Query;
 import com.luoyu.blog.entity.messagewall.MessageWall;
+import com.luoyu.blog.entity.messagewall.vo.HomeMessageWallInfoVO;
 import com.luoyu.blog.entity.messagewall.vo.MessageWallListVO;
 import com.luoyu.blog.entity.messagewall.vo.MessageWallVO;
 import com.luoyu.blog.mapper.messagewall.MessageWallMapper;
@@ -14,8 +15,10 @@ import com.luoyu.blog.service.messagewall.MessageWallService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -44,8 +47,23 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
     private String messageWallDefaultManageWebsite;
 
     /**
+     * 后台获取首页信息
+     * @return 首页信息
+     */
+    @Override
+    public HomeMessageWallInfoVO manageGetHomeMessageWallInfoVO() {
+        // 当天零点
+        LocalDateTime createTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        HomeMessageWallInfoVO homeMessageWallInfoVO = new HomeMessageWallInfoVO();
+        homeMessageWallInfoVO.setMaxFloorNum(baseMapper.selectMaxFloorNum());
+        homeMessageWallInfoVO.setAllCount(baseMapper.selectMessageWallCount());
+        homeMessageWallInfoVO.setTodayCount(baseMapper.selectTodayCount(createTime));
+        return homeMessageWallInfoVO;
+    }
+
+    /**
      * 后台新增留言
-     * @param messageWall messageWall
+     * @param messageWall 留言
      */
     @Override
     public void manageAddMessageWall(MessageWall messageWall) {
@@ -67,13 +85,12 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
     }
 
     /**
-     * 后台分页查询文章列表
-     *
-     * @param page page
-     * @param limit limit
-     * @param name name
-     * @param floorNum floorNum
-     * @return PageUtils
+     * 后台分页查询留言列表
+     * @param page 页码
+     * @param limit 页数
+     * @param name 昵称
+     * @param floorNum 楼层数
+     * @return 留言列表
      */
     @Override
     public PageUtils manageGetMessageWalls(Integer page, Integer limit, String name, Integer floorNum) {
@@ -94,7 +111,6 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
      * @param ids ids
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void manageDeleteMessageWalls(Integer[] ids) {
         baseMapper.deleteBatchIds(Arrays.asList(ids));
     }
@@ -103,7 +119,7 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
 
     /**
      * 新增留言
-     * @param messageWall messageWall
+     * @param messageWall 留言
      */
     @Override
     public void addMessageWall(MessageWall messageWall) {
@@ -123,9 +139,9 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
 
     /**
      * 按楼层分页获取留言列表
-     * @param page page
-     * @param limit limit
-     * @return MessageWallListVO
+     * @param page 页码
+     * @param limit 页数
+     * @return 留言列表
      */
     @Override
     public MessageWallListVO getMessageWallListByFloor(Integer page, Integer limit) {

@@ -1,7 +1,6 @@
 package com.luoyu.blog.controller.log;
 
 import com.luoyu.blog.common.util.PageUtils;
-import com.luoyu.blog.entity.article.vo.HomeArticleInfoVO;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.log.vo.HomeLogInfoVO;
 import com.luoyu.blog.service.log.LogViewService;
@@ -28,6 +27,7 @@ public class LogViewController {
      * 获取首页信息
      */
     @GetMapping("/manage/log/homeinfo")
+    @RequiresPermissions("log:list")
     public Response getHommeLogInfoVO() {
         HomeLogInfoVO hommeLogInfoVO = logViewService.getHommeLogInfoVO();
         return Response.success(hommeLogInfoVO);

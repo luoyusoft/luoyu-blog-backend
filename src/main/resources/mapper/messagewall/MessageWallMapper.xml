@@ -39,6 +39,12 @@
         select count(*) from message_wall
     </select>
 
+    <select id="selectTodayCount" resultType="java.lang.Integer">
+        select count(*)
+        from message_wall
+        where create_time > #{createTime}
+    </select>
+
     <select id="haveMoreFloor" resultType="java.lang.Boolean" parameterType="java.lang.Integer">
         select count(*) from message_wall where floor_num > #{floorNum}
     </select>

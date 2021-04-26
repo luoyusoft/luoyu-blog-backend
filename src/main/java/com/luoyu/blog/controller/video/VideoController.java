@@ -33,6 +33,7 @@ public class VideoController {
      * 获取首页信息
      */
     @GetMapping("/manage/video/homeinfo")
+    @RequiresPermissions("video:list")
     public Response getHommeVideoInfoVO() {
         HomeVideoInfoVO homeVideoInfoVO = videoService.getHommeVideoInfoVO();
         return Response.success(homeVideoInfoVO);
