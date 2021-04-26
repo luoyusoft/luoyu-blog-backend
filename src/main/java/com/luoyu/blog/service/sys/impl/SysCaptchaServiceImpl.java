@@ -38,7 +38,7 @@ public class SysCaptchaServiceImpl implements SysCaptchaService {
      */
     @Override
     public BufferedImage getCaptcha(String uuid) {
-        if(StringUtils.isEmpty(uuid)){
+        if(StringUtils.isBlank(uuid)){
             throw new MyException(ResponseEnums.NO_UUID);
         }
         //生成文字验证码
@@ -57,7 +57,7 @@ public class SysCaptchaServiceImpl implements SysCaptchaService {
      */
     @Override
     public boolean validate(String uuid, String code) {
-        if(StringUtils.isEmpty(uuid)|| StringUtils.isEmpty(code)){
+        if(StringUtils.isBlank(uuid)|| StringUtils.isBlank(code)){
             return false;
         }
         // 从redis中取

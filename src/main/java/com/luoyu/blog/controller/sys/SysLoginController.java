@@ -1,7 +1,6 @@
 package com.luoyu.blog.controller.sys;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IOUtils;
 import com.luoyu.blog.common.exception.MyException;
 import com.luoyu.blog.entity.base.Response;
 import com.luoyu.blog.entity.base.AbstractController;
@@ -11,6 +10,7 @@ import com.luoyu.blog.common.enums.ResponseEnums;
 import com.luoyu.blog.mapper.sys.SysUserMapper;
 import com.luoyu.blog.service.sys.SysCaptchaService;
 import com.luoyu.blog.service.sys.SysUserTokenService;
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

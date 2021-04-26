@@ -1,25 +1,17 @@
 package com.luoyu.blog.common.config;
 
-import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 import java.util.List;
 
@@ -32,9 +24,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * @description Knife4j配置
  */
 @Configuration
-@EnableSwagger2
-@EnableKnife4j
-@Import(BeanValidatorPluginsConfiguration.class)
+@EnableSwagger2WebMvc
 public class Knife4jConfig implements WebMvcConfigurer {
 
     @Override
@@ -51,33 +41,22 @@ public class Knife4jConfig implements WebMvcConfigurer {
     @Bean("createRestApi")
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
+                .apiInfo(new ApiInfoBuilder()
+                        .title("LuoYu Blog Knife4j 接口文档")
+                        .description("LuoYu Blog Knife4j 接口文档")
+                        .contact(new Contact("Jinhx", "https://luoyublog.com", "jinhx128@163.com"))
+                        .version("1.0.0")
+                        .termsOfServiceUrl("http://luoyublog.com/doc.html")
+                        .build())
                 .groupName("1.0.0 版本")
                 .select()
                 //此处添加需要扫描接口的包路径
-                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.withMethodAnnotation(PostMapping.class))
-                .apis(RequestHandlerSelectors.withMethodAnnotation(GetMapping.class))
-                .apis(RequestHandlerSelectors.withMethodAnnotation(PutMapping.class))
-                .apis(RequestHandlerSelectors.withMethodAnnotation(DeleteMapping.class))
+                .apis(RequestHandlerSelectors.basePackage("com.luoyu.blog.controller"))
+//                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build()
                 // 配置header参数
                 .securitySchemes(security());
-    }
-
-    /**
-     * @author jinhaoxun
-     * @description 配置Knife4j页面显示内容
-     * @return Docket
-     */
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("LuoYu Blog Knife4j 接口文档")
-                .description("LuoYu Blog Knife4j 接口文档")
-                .version("1.0.0")
-                .termsOfServiceUrl("http://localhost:9998/doc.html")
-                .build();
     }
 
     private List<ApiKey> security() {
