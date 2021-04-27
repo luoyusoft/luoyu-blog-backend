@@ -352,7 +352,7 @@
                             <!-- 指定镜像端口 , 这里没用docfile的操作 -->
                             <port>8800</port>
                             <port>9999</port>
-                            <port>25</port>
+                            <port>465</port>
                         </ports>
                     </container>
                 </configuration>
