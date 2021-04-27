@@ -105,7 +105,6 @@ public class MessageWallController {
     @PostMapping("/messagewall")
     public Response addMessageWall(@RequestBody MessageWall messageWall){
         ValidatorUtils.validateEntity(messageWall, AddGroup.class);
-        messageWallService.addMessageWall(messageWall);
         if (!StringUtils.isEmpty(messageWall.getEmail())){
             if(!FormatUtils.checkEmail(messageWall.getEmail())){
                 throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "邮箱格式不对");
@@ -131,6 +130,8 @@ public class MessageWallController {
         if (messageWall.getComment().length() > 2000){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "内容长度不能大于2000");
         }
+
+        messageWallService.addMessageWall(messageWall);
 
         return Response.success();
     }
