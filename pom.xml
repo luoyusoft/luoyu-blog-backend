@@ -274,7 +274,6 @@
             <artifactId>hutool-all</artifactId>
             <version>${cn.hutool.version}</version>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>
@@ -282,7 +281,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2.2.3.RELEASE</version>
+                <version>2.2.5.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -295,7 +294,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.3.3.RELEASE</version>
+                <version>2.3.10.RELEASE</version>
                 <configuration>
                     <fork>true</fork>
                     <addResources>true</addResources>
@@ -347,6 +346,7 @@
                             <arg>--spring.cloud.nacos.config.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
                             <arg>--spring.cloud.nacos.discovery.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
                             <arg>--log.file=/usr/local/project/luoyublog-backend/log</arg>
+                            <arg>--logging.file.name=/usr/local/project/luoyublog-backend/log/luoyublog-backend-all.log</arg>
                         </args>
                         <ports>
                             <!-- 指定镜像端口 , 这里没用docfile的操作 -->
