@@ -13,7 +13,7 @@ server:
   port: 8800
   servlet:
     #映射项目路径
-    context-path: /api/luoyublog
+    context-path: /api
 
 spring:
   application:

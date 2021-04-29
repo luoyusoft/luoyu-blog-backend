@@ -1,5 +1,5 @@
-[![](https://img.shields.io/badge/个人博客-在线地址-green.svg)](https://luoyublog.com)
-[![](https://img.shields.io/badge/后台管理系统-在线地址-blue.svg)](https://luoyublog.com/manage)
+[![](https://img.shields.io/badge/个人博客-在线地址-green.svg)](https://jinhx.cc)
+[![](https://img.shields.io/badge/后台管理系统-在线地址-blue.svg)](https://jinhx.cc/manage)
 
 # LuoYu Blog
 
@@ -47,9 +47,9 @@ docker run -dit --name luoyublog -v /usr/local/docker/luoyublog/log:/usr/local/p
 
 会持续更新，欢迎大家Star，感谢！
 
-> 个人博客-->【<b><a href="https://luoyublog.com"> https://luoyublog.com </a></b>】
+> 个人博客-->【<b><a href="https://jinhx.cc"> https://jinhx.cc </a></b>】
 
-> 后台管理系统-->【<b><a href="https://luoyublog.com/manage"> https://luoyublog.com/manage </a></b>】
+> 后台管理系统-->【<b><a href="https://jinhx.cc/manage"> https://jinhx.cc/manage </a></b>】
 >
 > 后台管理系统-->游客账号：guest，密码：guest
 
@@ -65,8 +65,8 @@ docker run -dit --name luoyublog -v /usr/local/docker/luoyublog/log:/usr/local/p
 
 |序号|文章标题|
 |:---:|:---|
-|01|[IDEA2020年最新全家桶通用激活码分享（持续更新）](https://luoyublog.com/article/37)|
+|01|[IDEA2020年最新全家桶通用激活码分享（持续更新）](https://jinhx.cc/article/37)|
 
 ## 关于作者
 
-【<b>个人博客</b>】    【<b><a href="https://luoyublog.com"> https://luoyublog.com </a></b>】
+【<b>个人博客</b>】    【<b><a href="https://jinhx.cc"> https://jinhx.cc </a></b>】

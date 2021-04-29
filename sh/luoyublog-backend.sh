@@ -1,5 +1,5 @@
 #!/bin/bash
-curl https://luoyublog.com/api/luoyublog/actuator/shutdown -X POST
+curl https://jinhx.cc/api/actuator/shutdown -X POST
 sleep 20
 docker rm luoyublog
 docker rmi luoyusoft/luoyublog:latest
