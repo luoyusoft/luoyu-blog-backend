@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 @Slf4j
 @Component
-@ServerEndpoint(value = "/chat/{id}")
+@ServerEndpoint(value = "/chat/ws/{id}")
 public class WebsocketServerEndpoint {
 
     private static ChatService chatService;
