@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.video.VideoMapper">
+<mapper namespace="com.jinhx.blog.mapper.video.VideoMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.luoyu.blog.entity.video.Video">
+    <resultMap id="BaseResultMap" type="com.jinhx.blog.entity.video.Video">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="alternate_name" property="alternateName" />
@@ -28,8 +28,8 @@
         <result column="update_time" property="updateTime" />
     </resultMap>
 
-    <resultMap id="WithTagList" type="com.luoyu.blog.entity.video.vo.VideoVO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id, module=module}" select="com.luoyu.blog.mapper.operation.TagMapper.listByLinkId"/>
+    <resultMap id="WithTagList" type="com.jinhx.blog.entity.video.vo.VideoVO" extends="BaseResultMap">
+        <association property="tagList" column="{linkId=id, module=module}" select="com.jinhx.blog.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <sql id="homeVideoColumn">
@@ -50,7 +50,7 @@
         select count(*) from video
     </select>
 
-    <select id="listVideoDTO" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
+    <select id="listVideoDTO" resultType="com.jinhx.blog.entity.video.dto.VideoDTO">
         select <include refid="manageVideoColumn"/> from video
         <where>
             <if test="params.title!=null and params.title !=''">
@@ -76,11 +76,11 @@
         select count(*) from video where video_url = #{url} or cover = #{url}
     </select>
 
-    <select id="selectVideoDTOList" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
+    <select id="selectVideoDTOList" resultType="com.jinhx.blog.entity.video.dto.VideoDTO">
         select <include refid="homeVideoColumn"/> from video where publish = true
     </select>
 
-    <select id="selectVideoListByTitle" parameterType="java.lang.String" resultType="com.luoyu.blog.entity.video.Video">
+    <select id="selectVideoListByTitle" parameterType="java.lang.String" resultType="com.jinhx.blog.entity.video.Video">
         select id, title
         from video
         where publish = true
@@ -90,7 +90,7 @@
         order by id desc
     </select>
 
-    <update id="updateVideoById" parameterType="com.luoyu.blog.entity.video.Video">
+    <update id="updateVideoById" parameterType="com.jinhx.blog.entity.video.Video">
         update video
         <set>
             <if test="title!=null and title!=''">
@@ -159,15 +159,15 @@
 
     <!-- *************************** portal ****************************** -->
 
-    <select id="getSimpleVideoDTO" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
+    <select id="getSimpleVideoDTO" resultType="com.jinhx.blog.entity.video.dto.VideoDTO">
         select <include refid="homeVideoColumn"/> from video where id = #{id} and publish = true
     </select>
 
-    <select id="getHotWatchList" resultType="com.luoyu.blog.entity.video.dto.VideoDTO">
+    <select id="getHotWatchList" resultType="com.jinhx.blog.entity.video.dto.VideoDTO">
         select <include refid="homeVideoColumn"/> from video where and publish = true order by watch_num desc limit 5
     </select>
 
-    <select id="selectVideoById" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.video.Video">
+    <select id="selectVideoById" parameterType="java.lang.Integer" resultType="com.jinhx.blog.entity.video.Video">
         select *
         from video
         where id = #{id} and publish = true

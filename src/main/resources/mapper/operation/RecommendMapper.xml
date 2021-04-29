@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.operation.RecommendMapper">
+<mapper namespace="com.jinhx.blog.mapper.operation.RecommendMapper">
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
@@ -11,15 +11,15 @@
         select count(*) from recommend
     </select>
 
-    <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
+    <select id="selectRecommendByLinkIdAndType" parameterType="java.lang.Integer" resultType="com.jinhx.blog.entity.operation.Recommend">
       select * from recommend where module = #{module} and link_id = #{linkId}
     </select>
 
-    <select id="selectRecommendByOrderNum" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.Recommend">
+    <select id="selectRecommendByOrderNum" parameterType="java.lang.Integer" resultType="com.jinhx.blog.entity.operation.Recommend">
       select * from recommend where order_num = #{orderNum}
     </select>
 
-    <select id="selectRecommends" resultType="com.luoyu.blog.entity.operation.Recommend">
+    <select id="selectRecommends" resultType="com.jinhx.blog.entity.operation.Recommend">
         select * from recommend order by order_num desc
     </select>
 
@@ -31,7 +31,7 @@
         </foreach>
     </update>
 
-    <update id="updateRecommendOrderNumByLinkIdAndType" parameterType="com.luoyu.blog.entity.operation.Recommend">
+    <update id="updateRecommendOrderNumByLinkIdAndType" parameterType="com.jinhx.blog.entity.operation.Recommend">
       update recommend
       set order_num = #{orderNum}
       where module = #{module} and link_id = #{linkId}
@@ -49,7 +49,7 @@
 
     <!-- *************************** portal ****************************** -->
 
-    <select id="listRecommendDTO" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.operation.vo.RecommendVO">
+    <select id="listRecommendDTO" parameterType="java.lang.Integer" resultType="com.jinhx.blog.entity.operation.vo.RecommendVO">
         select <include refid="Base_Column_List"/> from recommend where module = #{module} order by order_num asc
     </select>
 

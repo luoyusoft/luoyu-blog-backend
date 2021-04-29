@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.article.ArticleMapper">
+<mapper namespace="com.jinhx.blog.mapper.article.ArticleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.luoyu.blog.entity.article.Article">
+    <resultMap id="BaseResultMap" type="com.jinhx.blog.entity.article.Article">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="description" property="description" />
@@ -20,8 +20,8 @@
         <result column="publish" property="publish" />
     </resultMap>
 
-    <resultMap id="WithTagList" type="com.luoyu.blog.entity.article.vo.ArticleVO" extends="BaseResultMap">
-        <association property="tagList" column="{linkId=id, module=module}" select="com.luoyu.blog.mapper.operation.TagMapper.listByLinkId"/>
+    <resultMap id="WithTagList" type="com.jinhx.blog.entity.article.vo.ArticleVO" extends="BaseResultMap">
+        <association property="tagList" column="{linkId=id, module=module}" select="com.jinhx.blog.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
     <sql id="homeArticleColumn">
@@ -40,7 +40,7 @@
         select count(*) from article
     </select>
 
-    <select id="listArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
+    <select id="listArticleDTO" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
         select <include refid="manageArticleColumn"/> from article
         <where>
             <if test="params.title!=null and params.title !=''">
@@ -66,11 +66,11 @@
         select count(*) from article where cover = #{url}
     </select>
 
-    <select id="selectArticleDTOList" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
+    <select id="selectArticleDTOList" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
         select <include refid="homeArticleColumn"/> from article where publish = true
     </select>
 
-    <select id="selectArticleListByTitle" parameterType="java.lang.String" resultType="com.luoyu.blog.entity.article.Article">
+    <select id="selectArticleListByTitle" parameterType="java.lang.String" resultType="com.jinhx.blog.entity.article.Article">
         select id, title
         from article
         where publish = true
@@ -80,7 +80,7 @@
         order by id desc
     </select>
 
-    <update id="updateArticleById" parameterType="com.luoyu.blog.entity.article.Article">
+    <update id="updateArticleById" parameterType="com.jinhx.blog.entity.article.Article">
         update article
         <set>
             <if test="title!=null and title!=''">
@@ -128,15 +128,15 @@
 
     <!-- *************************** portal ****************************** -->
 
-    <select id="getSimpleArticleDTO" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
+    <select id="getSimpleArticleDTO" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
         select <include refid="homeArticleColumn"/> from article where id = #{id} and publish = true
     </select>
 
-    <select id="getHotReadList" resultType="com.luoyu.blog.entity.article.dto.ArticleDTO">
+    <select id="getHotReadList" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
         select <include refid="homeArticleColumn"/> from article where publish = true order by read_num desc limit 5
     </select>
 
-    <select id="selectArticleById" parameterType="java.lang.Integer" resultType="com.luoyu.blog.entity.article.Article">
+    <select id="selectArticleById" parameterType="java.lang.Integer" resultType="com.jinhx.blog.entity.article.Article">
         select *
         from article
         where id = #{id} and publish = true

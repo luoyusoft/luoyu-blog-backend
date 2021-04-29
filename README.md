@@ -1,7 +1,7 @@
 [![](https://img.shields.io/badge/个人博客-在线地址-green.svg)](https://jinhx.cc)
 [![](https://img.shields.io/badge/后台管理系统-在线地址-blue.svg)](https://jinhx.cc/manage)
 
-# LuoYu Blog
+# Blog
 
 > 基于SpringBoot 2.x + Vue 2.x搭建的前后端分离的个人博客，包括后台管理系统。
 
@@ -40,7 +40,7 @@
 ## 部署
 
 ```
-docker run -dit --name luoyublog -v /usr/local/docker/luoyublog/log:/usr/local/project/luoyublog/log -p 8800:8800 -p 9999:9999 luoyusoft/luoyublog:latest
+docker run -dit --name blog -v /usr/local/docker/blog/log:/usr/local/project/blog/log -p 8800:8800 -p 9999:9999 jinhx128/blog:latest
 ```
 
 ## 在线地址
@@ -57,9 +57,9 @@ docker run -dit --name luoyublog -v /usr/local/docker/luoyublog/log:/usr/local/p
 
 会持续更新，欢迎大家Star，感谢！
 
-> 个人博客-->【<b><a href="https://github.com/luoyusoft/luoyublog-frontend"> https://github.com/luoyusoft/luoyublog-frontend </a></b>】
+> 个人博客-->【<b><a href="https://github.com/Jinhx128/blog-frontend"> https://github.com/Jinhx128/blog-frontend </a></b>】
 
-> 后台管理系统-->【<b><a href="https://github.com/luoyusoft/luoyublog-manage-frontend"> https://github.com/luoyusoft/luoyublog-manage-frontend </a></b>】
+> 后台管理系统-->【<b><a href="https://github.com/Jinhx128/blog-manage-frontend"> https://github.com/Jinhx128/blog-manage-frontend </a></b>】
 
 ## 参考教程
 

@@ -9,13 +9,13 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.luoyu</groupId>
-    <artifactId>luoyublog</artifactId>
+    <groupId>com.jinhx</groupId>
+    <artifactId>blog</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>luoyublog</name>
-    <description>LuoYuBlog</description>
+    <name>blog</name>
+    <description>Blog</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -316,7 +316,7 @@
                     <!-- 最后生成的镜像配置 -->
                     <to>
                         <!-- push docer-hub官方仓库。用户名/镜像名：版本号 -->
-                        <image>luoyusoft/${project.name}</image>
+                        <image>jinhx128/${project.name}</image>
                         <!-- 如果是阿里云的容器镜像仓库，则使用容器的配置 前缀/命名空间/仓库名 -->
                         <!--<image>registry.cn-chengdu.aliyuncs.com/renbaojia/ctfo</image>-->
                         <tags>
@@ -325,7 +325,7 @@
                         </tags>
                         <auth>
                             <!--在docker-hub或者阿里云上的账号和密码-->
-                            <username>luoyusoft</username>
+                            <username>jinhx128</username>
                             <password>token123456</password>
                         </auth>
                     </to>
@@ -338,15 +338,15 @@
                             <!--                            <jvmFlag>-Xmy:flag=jib-rules</jvmFlag>-->
                         </jvmFlags>
                         <!-- springboot项目的入口类 -->
-                        <mainClass>com.luoyu.blog.LuoYuBlogApplication</mainClass>
+                        <mainClass>com.jinhx.blog.BlogApplication</mainClass>
                         <!--修改镜像默认时间，否则会导致镜像内时区问题-->
                         <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                         <args>
                             <arg>--spring.profiles.active=prod</arg>
                             <arg>--spring.cloud.nacos.config.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
                             <arg>--spring.cloud.nacos.discovery.namespace=21a1c6a2-2945-43ad-90e0-83b5707790e4</arg>
-                            <arg>--log.file=/usr/local/project/luoyublog-backend/log</arg>
-                            <arg>--logging.file.name=/usr/local/project/luoyublog-backend/log/luoyublog-backend-all.log</arg>
+                            <arg>--log.file=/usr/local/project/blog/log</arg>
+                            <arg>--logging.file.name=/usr/local/project/blog/log/blog-all.log</arg>
                         </args>
                         <ports>
                             <!-- 指定镜像端口 , 这里没用docfile的操作 -->

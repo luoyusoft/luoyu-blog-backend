@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.file.FileChunkMapper">
+<mapper namespace="com.jinhx.blog.mapper.file.FileChunkMapper">
 
     <select id="checkIsUploadAllChunkByFileMd5" resultType="java.lang.Integer">
         select count(*)
@@ -9,14 +9,14 @@
           and upload_status = #{uploadStatus}
     </select>
 
-    <select id="selectFileChunksByFileMd5" resultType="com.luoyu.blog.entity.file.FileChunk">
+    <select id="selectFileChunksByFileMd5" resultType="com.jinhx.blog.entity.file.FileChunk">
         select *
         from file_chunk
         where file_md5 = #{fileMd5}
         order by chunk_number asc
     </select>
 
-    <update id="updateFileChunkByFileMd5AndChunkNumber" parameterType="com.luoyu.blog.entity.file.FileChunk">
+    <update id="updateFileChunkByFileMd5AndChunkNumber" parameterType="com.jinhx.blog.entity.file.FileChunk">
         update file_chunk
         <set>
             <if test="uploadStatus != null">
@@ -28,7 +28,7 @@
           and chunk_number = #{chunkNumber}
     </update>
 
-    <insert id="insertFileChunk" parameterType="com.luoyu.blog.entity.file.FileChunk">
+    <insert id="insertFileChunk" parameterType="com.jinhx.blog.entity.file.FileChunk">
         insert into file_chunk(file_md5, upload_url, upload_status, chunk_number)
         values (#{fileMd5}, #{uploadUrl}, #{uploadStatus}, #{chunkNumber})
     </insert>

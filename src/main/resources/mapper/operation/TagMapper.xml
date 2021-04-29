@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.operation.TagMapper">
+<mapper namespace="com.jinhx.blog.mapper.operation.TagMapper">
 
     <delete id="deleteTagLink">
         delete from tag_link
         where link_id = #{linkId} and module = #{module}
     </delete>
 
-    <select id="listByLinkId" resultType="com.luoyu.blog.entity.operation.Tag">
+    <select id="listByLinkId" resultType="com.jinhx.blog.entity.operation.Tag">
         select bt.* from tag bt left join tag_link bat on bt.id=bat.tag_id
         <where>
             <if test="linkId!=null">
@@ -21,7 +21,7 @@
 
     <!-- *************************** portal ****************************** -->
 
-    <select id="listTagArticleDTO" resultType="com.luoyu.blog.entity.operation.vo.TagVO">
+    <select id="listTagArticleDTO" resultType="com.jinhx.blog.entity.operation.vo.TagVO">
         select t.name, sum(t.num) as linkNum
         from (
                  select distinct t.module,
@@ -39,7 +39,7 @@
         order by linkNum desc
     </select>
 
-    <select id="listTagVideoDTO" resultType="com.luoyu.blog.entity.operation.vo.TagVO">
+    <select id="listTagVideoDTO" resultType="com.jinhx.blog.entity.operation.vo.TagVO">
         select t.name, sum(t.num) as linkNum
         from (
                  select distinct t.module,

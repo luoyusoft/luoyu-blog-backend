@@ -9,13 +9,13 @@ spring:
         server-addr: 39.108.255.214:38848
         namespace: f22549fc-d57f-4844-9387-1d8383035df5
         group: group-1
-        prefix: luoyublog-backend
+        prefix: blog
         file-extension: yml
       discovery:
         server-addr: 39.108.255.214:38848
         namespace: f22549fc-d57f-4844-9387-1d8383035df5
         group: group-1
-        service: luoyublog-backend
+        service: blog
         metadata:
           management:
             context-path: ${server.servlet.context-path}/actuator
@@ -23,7 +23,7 @@ spring:
 logging:
   config: classpath:logback-spring.xml
   file:
-    name: /Users/luoyu/Documents/log/luoyublog-backend/luoyublog-backend-all.log
+    name: /Users/luoyu/Documents/log/blog/blog-all.log
 
 log:
-  file: /Users/luoyu/Documents/log/luoyublog-backend
+  file: /Users/luoyu/Documents/log/blog

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.log.LogViewMapper">
+<mapper namespace="com.jinhx.blog.mapper.log.LogViewMapper">
 
     <select id="selectAllPV" resultType="java.lang.Integer">
         select count(*)
@@ -27,7 +27,7 @@
         order by id desc limit 1
     </select>
 
-    <update id="updateLogViewById" parameterType="com.luoyu.blog.entity.log.LogView">
+    <update id="updateLogViewById" parameterType="com.jinhx.blog.entity.log.LogView">
         update log_view
         <set>
             <if test="country != null and country != ''">
@@ -44,7 +44,7 @@
         where id = #{id}
     </update>
 
-    <select id="selectLogViewsByPage" resultType="com.luoyu.blog.entity.log.LogView" parameterType="java.lang.Integer">
+    <select id="selectLogViewsByPage" resultType="com.jinhx.blog.entity.log.LogView" parameterType="java.lang.Integer">
         select *
         from log_view
         where id &gt;= #{start} and id &lt; #{end} and (country is null or region is null or city is null)

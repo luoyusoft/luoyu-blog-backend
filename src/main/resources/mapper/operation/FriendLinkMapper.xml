@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.luoyu.blog.mapper.operation.FriendLinkMapper">
+<mapper namespace="com.jinhx.blog.mapper.operation.FriendLinkMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.luoyu.blog.entity.operation.FriendLink">
+    <resultMap id="BaseResultMap" type="com.jinhx.blog.entity.operation.FriendLink">
         <id column="id" property="id" />
         <result column="title" property="title" />
         <result column="url" property="url" />
