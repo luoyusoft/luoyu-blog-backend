@@ -19,7 +19,6 @@ create table video
     synopsis          varchar(2048)                        null comment '剧情简介',
     publish           tinyint(1) default 0                 null comment '是否发布',
     watch_num         int        default 0                 not null comment '观看量',
-    comment_num       int        default 0                 not null comment '评论量',
     like_num          int        default 0                 not null comment '点赞量',
     create_time       datetime   default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time       datetime   default CURRENT_TIMESTAMP not null comment '更新时间'

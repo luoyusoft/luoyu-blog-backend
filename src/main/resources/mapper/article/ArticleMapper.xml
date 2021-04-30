@@ -101,9 +101,6 @@
             <if test="readNum!=null">
                 read_num = #{readNum},
             </if>
-            <if test="commentNum!=null">
-                comment_num = #{commentNum},
-            </if>
             <if test="likeNum!=null">
                 like_num = #{likeNum},
             </if>

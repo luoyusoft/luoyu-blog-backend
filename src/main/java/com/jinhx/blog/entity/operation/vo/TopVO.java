@@ -22,8 +22,6 @@ public class TopVO extends Top {
 
     private Long watchNum;
 
-    private Long commentNum;
-
     private Long likeNum;
 
     private String cover;

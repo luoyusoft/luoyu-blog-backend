@@ -88,7 +88,4 @@ public class Video extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "点赞量")
     private Long likeNum;
 
-    @ApiModelProperty(value = "观看量")
-    private Long commentNum;
-
 }

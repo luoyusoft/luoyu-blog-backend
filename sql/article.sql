@@ -8,7 +8,6 @@ create table article
     content        longtext                             null comment '文章内容',
     content_format longtext                             null comment 'html的content',
     read_num       int        default 0                 not null comment '阅读量',
-    comment_num    int        default 0                 not null comment '评论量',
     like_num       int        default 0                 not null comment '点赞量',
     cover_type     int                                  null comment '文章展示类别（1:普通，2：大图片，3：无图片）',
     cover          varchar(1024)                        null comment '封面',

@@ -160,7 +160,6 @@ public class VideoEsServerImpl implements VideoEsServer {
             videoVO.setCreateTime(LocalDateTime.parse(x.get("createTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             videoVO.setUpdateTime(LocalDateTime.parse(x.get("updateTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             videoVO.setWatchNum(Long.valueOf(x.get("watchNum").toString()));
-            videoVO.setCommentNum(Long.valueOf(x.get("commentNum").toString()));
             videoVO.setTitle(x.get("title").toString());
             videoVO.setAuthor(x.get("author").toString());
             videoVO.setSynopsis(x.get("synopsis").toString());

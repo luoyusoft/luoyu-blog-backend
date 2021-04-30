@@ -23,7 +23,6 @@
         <result column="publish" property="publish" />
         <result column="watch_num" property="watchNum" />
         <result column="like_num" property="likeNum" />
-        <result column="comment_num" property="commentNum" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
@@ -143,9 +142,6 @@
             </if>
             <if test="watchNum!=null">
                 watch_num = #{watchNum},
-            </if>
-            <if test="commentNum!=null">
-                comment_num = #{commentNum},
             </if>
             <if test="likeNum!=null">
                 like_num = #{likeNum},

@@ -22,8 +22,6 @@ public class RecommendVO extends Recommend {
 
     private Long watchNum;
 
-    private Long commentNum;
-
     private Long likeNum;
 
     private String cover;
