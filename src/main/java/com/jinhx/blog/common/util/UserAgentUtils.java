@@ -10,7 +10,7 @@ import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 
 /**
- * @author  luoyu
+ * @author luoyu
  * @version 1.0
  * @parameter
  */

@@ -15,32 +15,32 @@
 ## 主要模块
 
 ```
-主要包括：文章模块，视频模块，聊天室，时光轴...
+主要包括：首页，文章，视频，时光轴，留言墙，关于，聊天室（暂不设配移动端），友链...
 ```
 
 ## 主要技术栈
 
 |        Name         |    Version    |
 | :-----------------: | :-----------: |
-|     SpringBoot      | 2.3.4.RELEASE |
-| SpringCloud Alibaba | 2.2.3.RELEASE |
-|    MyBatis-Plius    |     3.3.1     |
-|    Apache Shiro     |     1.4.0     |
+|     SpringBoot      | 2.3.10.RELEASE|
+| SpringCloud Alibaba | 2.2.5.RELEASE |
+|    MyBatis-Plius    |     3.4.2     |
+|    Apache Shiro     |     1.7.1     |
 |      WebSocket      | 2.3.4.RELEASE |
 |         JDK         |      1.8      |
 |        MySQL        |      5.7      |
 |    ElasticSearch    |     7.7.0     |
 |       Xxl-Job       |     2.2.0     |
-|        Minio        |    3.0.10     |
+|        Minio        |     8.1.0     |
 |        Nacos        |     1.3.2     |
-|      RabbitMQ       |     3.7.4     |
+|      RabbitMQ       |     3.8.5     |
 |        Redis        |      5.0      |
 |       Docker        |   19.03.13    |
 
 ## 部署
 
 ```
-docker run -dit --name blog -v /usr/local/docker/blog/log:/usr/local/project/blog/log -p 8800:8800 -p 9999:9999 jinhx128/blog:latest
+docker run -dit --name blog -v /usr/local/docker/blog/log:/usr/local/project/blog/log -v /etc/localtime:/etc/localtime:ro -p 8800:8800 -p 9999:9999 -p 465:465 jinhx128/blog:latest
 ```
 
 ## 在线地址

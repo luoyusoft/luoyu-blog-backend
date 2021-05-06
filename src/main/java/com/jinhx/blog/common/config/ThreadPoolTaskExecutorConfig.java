@@ -49,7 +49,7 @@ public class ThreadPoolTaskExecutorConfig {
     private String threadNamePrefix;
 
     /**
-     * @author  luoyu
+     * @author luoyu
      * @description 线程池配置，bean的名称，默认为首字母小写的方法名taskExecutor
      * @return ThreadPoolTaskExecutor
      */

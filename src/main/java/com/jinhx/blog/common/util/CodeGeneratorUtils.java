@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * @description: 代码生成器
- * @author: luoyu
- * @date: 2020/2/13 上午10:06
- * @version: 1.0.0
+ * @description 代码生成器
+ * @author luoyu
+ * @date 2020/2/13 上午10:06
+ * @version 1.0.0
  */
 // 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class CodeGeneratorUtils {
