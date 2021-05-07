@@ -83,6 +83,11 @@ public interface RecommendService extends IService<Recommend> {
 
     /********************** portal ********************************/
 
-    List<RecommendVO> listRecommendVO(Integer module);
+    /**
+     * 获取推荐列表
+     * @param module 模块
+     * @return 推荐列表
+     */
+    List<RecommendVO> listRecommends(Integer module);
 
 }

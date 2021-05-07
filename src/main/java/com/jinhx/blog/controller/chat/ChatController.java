@@ -37,13 +37,15 @@ public class ChatController {
     @Autowired
     private WebsocketServerEndpoint websocketServerEndpoint;
 
+    /********************** portal ********************************/
+
     /**
-     * 初始化接口
-     *
-     * @return
+     * 新增用户
+     * @param request request
+     * @return 用户信息
      */
-    @PostMapping("/init")
-    public Response init(HttpServletRequest request) throws Exception {
+    @PostMapping("/user")
+    public Response insertUser(HttpServletRequest request) throws Exception {
         String ip = IPUtils.getIpAddr(request);
         String borderName = UserAgentUtils.getBorderName(request);
         String browserVersion = UserAgentUtils.getBrowserVersion(request);
@@ -53,18 +55,18 @@ public class ChatController {
 
         String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
 
-        return chatService.init(id);
+        return chatService.insertUser(id);
     }
 
     /**
-     * 登录接口
-     *
-     * @param user
-     * @return
+     * 用户登录
+     * @param request request
+     * @param user 用户对象
+     * @return 用户信息
      */
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     @LogView(module = 2)
-    public Response login(HttpServletRequest request, @RequestBody User user) throws Exception {
+    public Response userLogin(HttpServletRequest request, @RequestBody User user) throws Exception {
         if (user == null || StringUtils.isEmpty(user.getName()) || StringUtils.isEmpty(user.getAvatar())){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "名称，头像不能为空");
         }
@@ -91,17 +93,17 @@ public class ChatController {
         user.setDeviceType(devicetype);
         user.setOsVersion(osVersion);
 
-        return Response.success(chatService.login(user));
+        return Response.success(chatService.userLogin(user));
     }
 
     /**
-     * 修改接口
-     *
-     * @param user
-     * @return
+     * 用户登录
+     * @param request request
+     * @param user 用户对象
+     * @return 用户信息
      */
-    @PutMapping("/change")
-    public Response change(HttpServletRequest request, @RequestBody User user) throws Exception {
+    @PutMapping("/user")
+    public Response updateUser(HttpServletRequest request, @RequestBody User user) throws Exception {
         if (user == null || StringUtils.isEmpty(user.getId())
                 || (StringUtils.isEmpty(user.getName()) && StringUtils.isEmpty(user.getAvatar()))){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id，名称，头像不能为空");
@@ -133,18 +135,17 @@ public class ChatController {
         user.setDeviceType(devicetype);
         user.setOsVersion(osVersion);
 
-        return Response.success(chatService.change(user));
+        return Response.success(chatService.updateUser(user));
     }
 
     /**
      * 获取当前窗口用户信息
-     *
-     * @param id
-     * @return
+     * @param id id
+     * @return 当前窗口用户信息
      */
-    @GetMapping("/{id}")
-    public Response info(@PathVariable("id") String id) {
-        User user = chatService.findById(id);
+    @GetMapping("/user/{id}")
+    public Response getUser(@PathVariable("id") String id) {
+        User user = chatService.getUser(id);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         return Response.success(userVO);
@@ -152,13 +153,11 @@ public class ChatController {
 
     /**
      * 向指定窗口推送消息
-     *
      * @param toId    接收方ID
-     * @param message 消息
-     * @return
+     * @param message 消息对象
      */
-    @PostMapping("/push/{toId}")
-    public Response push(@PathVariable("toId") String toId, @RequestBody Message message) {
+    @PostMapping("/message/{toId}")
+    public Response insertMessage(@PathVariable("toId") String toId, @RequestBody Message message) {
         WebsocketServerEndpoint endpoint = new WebsocketServerEndpoint();
         endpoint.sendTo(toId, message);
         return Response.success();
@@ -166,34 +165,31 @@ public class ChatController {
 
     /**
      * 获取在线用户列表
-     *
-     * @return
+     * @return 在线用户列表
      */
-    @GetMapping("/online/list")
-    public Response onlineList() {
-        return Response.success(chatService.onlineList());
+    @GetMapping("/listonlineusers")
+    public Response listOnlineUsers() {
+        return Response.success(chatService.listOnlineUsers());
     }
 
     /**
-     * 获取公共聊天消息内容
-     *
-     * @return
+     * 获取公共聊天消息列表
+     * @return 消息列表
      */
-    @GetMapping("/common")
-    public Response commonList() {
-        return Response.success(chatService.commonList());
+    @GetMapping("/listcommonmessages")
+    public Response listCommonMessages() {
+        return Response.success(chatService.listCommonMessages());
     }
 
     /**
-     * 获取指定用户的聊天消息内容
-     *
-     * @param fromId 该用户ID
-     * @param toId   哪个窗口
-     * @return
+     * 获取指定用户的聊天消息列表
+     * @param fromId 推送方ID
+     * @param toId   接收方ID
+     * @return 消息列表
      */
-    @GetMapping("/self/{fromId}/{toId}")
-    public Response selfList(@PathVariable("fromId") String fromId, @PathVariable("toId") String toId) {
-        List<Message> list = chatService.selfList(fromId, toId);
+    @GetMapping("/listmessages/{fromId}/{toId}")
+    public Response listMessages(@PathVariable("fromId") String fromId, @PathVariable("toId") String toId) {
+        List<Message> list = chatService.listMessages(fromId, toId);
         return Response.success(list);
     }
 

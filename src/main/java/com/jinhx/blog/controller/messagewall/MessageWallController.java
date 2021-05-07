@@ -100,10 +100,11 @@ public class MessageWallController {
 
     /**
      * 新增留言
-     * @param messageWall 留言
+     * @param messageWall 留言对象
+     * @return Response
      */
     @PostMapping("/messagewall")
-    public Response addMessageWall(@RequestBody MessageWall messageWall){
+    public Response insertMessageWall(@RequestBody MessageWall messageWall){
         ValidatorUtils.validateEntity(messageWall, AddGroup.class);
         if (!StringUtils.isEmpty(messageWall.getEmail())){
             if(!FormatUtils.checkEmail(messageWall.getEmail())){
@@ -131,7 +132,7 @@ public class MessageWallController {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "内容长度不能大于2000");
         }
 
-        messageWallService.addMessageWall(messageWall);
+        messageWallService.insertMessageWall(messageWall);
 
         return Response.success();
     }
@@ -142,14 +143,13 @@ public class MessageWallController {
      * @param limit 页数
      * @return 留言列表
      */
-    @GetMapping("/messagewalls")
+    @GetMapping("/messagewall/listmessagewalls")
     @LogView(module = 5)
-    public Response getMessageWallListByFloor(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
+    public Response listMessageWalls(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
         if (page < 1 || limit < 1){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "page，limit不能小于1");
         }
-
-        MessageWallListVO messageWallListVO = messageWallService.getMessageWallListByFloor(page, limit);
+        MessageWallListVO messageWallListVO = messageWallService.listMessageWalls(page, limit);
         return Response.success(messageWallListVO);
     }
 

@@ -141,13 +141,18 @@ public class RecommendController extends AbstractController {
 
     /********************** portal ********************************/
 
-    @RequestMapping("/operation/recommends")
-    public Response listRecommend(@RequestParam("module") Integer module) {
+    /**
+     * 获取推荐列表
+     * @param module 模块
+     * @return 推荐列表
+     */
+    @RequestMapping("/operation/listrecommends")
+    public Response listRecommends(@RequestParam("module") Integer module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
 
-        List<RecommendVO> recommendList = recommendService.listRecommendVO(module);
+        List<RecommendVO> recommendList = recommendService.listRecommends(module);
         return Response.success(recommendList);
     }
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * TimeLineController
+ * TimelineController
  *
  * @author luoyu
  * @date 2019/02/24 20:46

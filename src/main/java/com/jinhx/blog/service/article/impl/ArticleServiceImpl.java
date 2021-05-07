@@ -307,19 +307,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     /********************** portal ********************************/
 
     /**
-     * 分页分类获取列表
-     *
-     * @param page
-     * @param limit
-     * @param latest
-     * @param categoryId
-     * @param like
-     * @param read
-     * @return
+     * 分页获取文章列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @param categoryId 分类
+     * @param latest 时间排序
+     * @param like 点赞量排序
+     * @param read 阅读量排序
+     * @return 文章列表
      */
     @Cacheable(value = RedisKeyConstants.ARTICLES)
     @Override
-    public PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read) {
+    public PageUtils listArticles(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
@@ -335,20 +334,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (articleList == null){
             articleList = new ArrayList<>();
         }
-        // 封装ArticleVo
         articleDTOPage.setRecords(articleList);
         return new PageUtils(articleDTOPage);
     }
 
     /**
-     * 分页获取首页列表
+     * 分页获取首页文章列表
      * @param page 页码
      * @param limit 每页数量
-     * @return 文章列表
+     * @return 首页文章列表
      */
     @Cacheable(value = RedisKeyConstants.ARTICLES)
     @Override
-    public PageUtils queryHomePageCondition(Integer page, Integer limit) {
+    public PageUtils listHomeArticles(Integer page, Integer limit) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
@@ -383,14 +381,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     /**
-     * 获取ArticleVo对象
-     *
-     * @param id
-     * @return
+     * 获取ArticleDTO对象
+     * @param id id
+     * @return ArticleDTO
      */
     @Cacheable(value = RedisKeyConstants.ARTICLE, key = "#id")
     @Override
-    public ArticleDTO getArticleDTOById(Integer id) {
+    public ArticleDTO getArticleDTO(Integer id) {
         Article article = baseMapper.selectArticleById(id);
         if (article == null){
             return null;
@@ -405,11 +402,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     /**
      * 获取热读榜
-     * @return 文章列表
+     * @return 热读文章列表
      */
     @Cacheable(value = RedisKeyConstants.ARTICLES, key = "'hostread'")
     @Override
-    public List<ArticleVO> getHotReadList() {
+    public List<ArticleVO> listHotReadArticles() {
         List<ArticleDTO> articleDTOList = baseMapper.getHotReadList();
         List<ArticleVO> articleVOList = new ArrayList<>();
         articleDTOList.forEach(articleDTOListItem -> {
@@ -420,8 +417,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return articleVOList;
     }
 
+    /**
+     * 文章点赞
+     * @param id id
+     * @return 点赞结果
+     */
     @Override
-    public Boolean likeArticle(Integer id) {
+    public Boolean updateArticle(Integer id) {
         return baseMapper.updateLikeNum(id);
     }
 

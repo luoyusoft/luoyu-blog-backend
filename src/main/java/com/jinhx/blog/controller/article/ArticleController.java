@@ -111,49 +111,69 @@ public class ArticleController {
 
     /********************** portal ********************************/
 
+    /**
+     * 获取ArticleDTO对象
+     * @param id id
+     * @return ArticleDTO
+     */
     @GetMapping("/article/{id}")
     @LogView(module = 0)
     public Response getArticle(@PathVariable Integer id){
-        ArticleDTO article = articleService.getArticleDTOById(id);
+        ArticleDTO article = articleService.getArticleDTO(id);
         return Response.success(article);
     }
 
-    @PutMapping("/article/like/{id}")
+    /**
+     * 文章点赞
+     * @param id id
+     * @return 点赞结果
+     */
+    @PutMapping("/article/{id}")
     @LogView(module = 0)
-    public Response likeArticle(@PathVariable Integer id) {
-        return Response.success(articleService.likeArticle(id));
+    public Response updateArticle(@PathVariable Integer id) {
+        return Response.success(articleService.updateArticle(id));
     }
 
-    @GetMapping("/articles")
+    /**
+     * 分页获取文章列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @param categoryId 分类
+     * @param latest 时间排序
+     * @param like 点赞量排序
+     * @param read 阅读量排序
+     * @return 文章列表
+     */
+    @GetMapping("/article/listarticles")
     @LogView(module = 0)
-    public Response getList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+    public Response listArticles(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                          @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
                          @RequestParam("like") Boolean like, @RequestParam("read") Boolean read) {
-        PageUtils queryPageCondition = articleService.queryPageCondition(page, limit, latest, categoryId, like, read);
+        PageUtils queryPageCondition = articleService.listArticles(page, limit, latest, categoryId, like, read);
         return Response.success(queryPageCondition);
     }
 
     /**
-     * 分页获取首页列表
+     * 分页获取首页文章列表
      * @param page 页码
      * @param limit 每页数量
-     * @return 文章列表
+     * @return 首页文章列表
      */
-    @GetMapping("/articles/home")
+    @GetMapping("/article/listhomearticles")
     @LogView(module = 0)
-    public Response getHomeList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
-        PageUtils queryPageCondition = articleService.queryHomePageCondition(page, limit);
+    public Response listHomeArticles(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
+        PageUtils queryPageCondition = articleService.listHomeArticles(page, limit);
         return Response.success(queryPageCondition);
     }
 
     /**
      * 获取热读榜
-     * @return 文章列表
+     * @return 热读文章列表
      */
-    @GetMapping("/articles/hotread")
+    @GetMapping("/article/listhotreadarticles")
     @LogView(module = 0)
-    public Response getHotReadList(){
-        return Response.success(articleService.getHotReadList());
+    public Response listHotReadArticles(){
+        return Response.success(articleService.listHotReadArticles());
     }
 
 }

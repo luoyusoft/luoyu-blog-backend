@@ -122,13 +122,13 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     /********************** portal ********************************/
 
     /**
-     * 获取tagVoList
-     *
-     * @return
+     * 获取标签列表
+     * @param module 模块
+     * @return 标签列表
      */
     @Cacheable(value = RedisKeyConstants.TAGS, key = "#module")
     @Override
-    public List<TagVO> listTagDTO(Integer module) {
+    public List<TagVO> listTags(Integer module) {
         List<TagVO> tagVOList = new ArrayList<>();
         if(ModuleTypeConstants.ARTICLE.equals(module)){
             tagVOList = baseMapper.listTagArticleDTO(module);

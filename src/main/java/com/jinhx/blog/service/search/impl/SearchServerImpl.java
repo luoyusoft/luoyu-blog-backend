@@ -31,9 +31,14 @@ public class SearchServerImpl implements SearchServer {
     @Autowired
     private TopService topService;
 
+    /**
+     * 搜索，包括文章，视频
+     * @param keyword 关键字
+     * @return 搜索结果，包括文章，视频
+     */
     @Cacheable(value = RedisKeyConstants.SEARCHS, key = "#keyword")
     @Override
-    public SearchListVO searchList(String keyword) throws Exception {
+    public SearchListVO search(String keyword) throws Exception {
         // 处理文章
         List<ArticleVO> articleVOList = articleEsServer.searchArticleList(keyword);
         List<TopVO> articleTopVOs = topService.listTopVO(ModuleTypeConstants.ARTICLE);

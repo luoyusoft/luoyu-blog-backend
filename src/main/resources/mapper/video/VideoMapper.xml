@@ -31,14 +31,10 @@
         <association property="tagList" column="{linkId=id, module=module}" select="com.jinhx.blog.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
-    <sql id="homeVideoColumn">
-        id,title,alternate_name,cover,video_url,author,production_region,director,release_time,duration,language,
-        to_star,score,screenwriter,synopsis,create_time,update_time,watch_num,comment_num,like_num
-    </sql>
-
-    <sql id="manageVideoColumn">
+    <!-- 查询所有结果列 -->
+    <sql id="AllColumn">
        id,title,alternate_name,cover,video_url,author,category_id,production_region,director,release_time,duration,language,
-        to_star,score,screenwriter,synopsis,create_time,update_time,publish,watch_num,comment_num,like_num
+        to_star,score,screenwriter,synopsis,watch_num,like_num,publish,create_time,update_time
     </sql>
 
     <select id="selectPublishCount" resultType="java.lang.Integer">
@@ -50,7 +46,7 @@
     </select>
 
     <select id="listVideoDTO" resultType="com.jinhx.blog.entity.video.dto.VideoDTO">
-        select <include refid="manageVideoColumn"/> from video
+        select <include refid="AllColumn"/> from video
         <where>
             <if test="params.title!=null and params.title !=''">
                 title like concat('%',#{params.title},'%') or alternate_name like concat('%',#{params.title},'%')
@@ -76,10 +72,10 @@
     </select>
 
     <select id="selectVideoDTOList" resultType="com.jinhx.blog.entity.video.dto.VideoDTO">
-        select <include refid="homeVideoColumn"/> from video where publish = true
+        select <include refid="AllColumn"/> from video where publish = true
     </select>
 
-    <select id="selectVideoListByTitle" parameterType="java.lang.String" resultType="com.jinhx.blog.entity.video.Video">
+    <select id="selectVideoListByTitle" parameterType="java.lang.String" resultMap="BaseResultMap">
         select id, title
         from video
         where publish = true
@@ -156,21 +152,21 @@
     <!-- *************************** portal ****************************** -->
 
     <select id="getSimpleVideoDTO" resultType="com.jinhx.blog.entity.video.dto.VideoDTO">
-        select <include refid="homeVideoColumn"/> from video where id = #{id} and publish = true
+        select <include refid="AllColumn"/> from video where id = #{id} and publish = true
     </select>
 
     <select id="getHotWatchList" resultType="com.jinhx.blog.entity.video.dto.VideoDTO">
-        select <include refid="homeVideoColumn"/> from video where and publish = true order by watch_num desc limit 5
+        select <include refid="AllColumn"/> from video where and publish = true order by watch_num desc limit 5
     </select>
 
-    <select id="selectVideoById" parameterType="java.lang.Integer" resultType="com.jinhx.blog.entity.video.Video">
-        select *
+    <select id="selectVideoById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="AllColumn"/>
         from video
         where id = #{id} and publish = true
     </select>
 
     <select id="queryPageCondition" resultMap="WithTagList">
-        select <include refid="homeVideoColumn"/> , 1 as `module` from video
+        select <include refid="AllColumn"/> , 1 as `module` from video
         <where>
             publish = true
             <if test="params.categoryId !=null and params.categoryId != ''">

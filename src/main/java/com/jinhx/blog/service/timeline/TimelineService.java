@@ -5,7 +5,7 @@ import com.jinhx.blog.entity.timeline.Timeline;
 import java.util.List;
 
 /**
- * TimeLineService
+ * TimelineService
  *
  * @author luoyu
  * @date 2019/02/24
@@ -14,9 +14,9 @@ import java.util.List;
 public interface TimelineService {
 
     /**
-     * 获取timeLine数据
+     * 获取时间线列表
      * @return 时间线列表
      */
-    List<Timeline> listTimeLine();
+    List<Timeline> listTimelines();
 
 }

@@ -42,9 +42,9 @@ public interface FriendLinkService extends IService<FriendLink> {
     /********************** portal ********************************/
 
     /**
-     * 获取link列表
-     * @return
+     * 获取友链列表
+     * @return 友链列表
      */
-    List<FriendLink> listFriendLink();
+    List<FriendLink> listFriendLinks();
 
 }

@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * TimeLineServiceImpl
+ * TimelineServiceImpl
  *
  * @author luoyu
  * @date 2019/02/24 20:47
@@ -31,18 +31,22 @@ public class TimelineServiceImpl implements TimelineService {
     private TimelineMapper timelineMapper;
 
     /**
-     * 获取timeLine数据
-     *
+     * 获取时间线列表
      * @return 时间线列表
      */
     @Cacheable
     @Override
-    public List<Timeline> listTimeLine() {
+    public List<Timeline> listTimelines() {
         List<Timeline> timelineList = timelineMapper.listTimeline();
         genTimelineMonth(timelineList);
         return timelineList;
     }
 
+    /**
+     * 数据转换
+     * @param timelineList 时间线列表
+     * @return 时间线列表
+     */
     private void genTimelineMonth(List<Timeline> timelineList) {
         for(Timeline timeline : timelineList) {
             List<TimelineMonth> timelineMonthList = new ArrayList<>();

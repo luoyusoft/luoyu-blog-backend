@@ -111,32 +111,56 @@ public class VideoController {
 
     /********************** portal ********************************/
 
+    /**
+     * 获取VideoDTO对象
+     * @param id id
+     * @return VideoDTO
+     */
     @GetMapping("/video/{id}")
     @LogView(module = 1)
     public Response getVideo(@PathVariable Integer id){
-        VideoDTO videoDTO = videoService.getVideoDTOById(id);
+        VideoDTO videoDTO = videoService.getVideoDTO(id);
         return Response.success(videoDTO);
     }
 
-    @PutMapping("/video/like/{id}")
+    /**
+     * 视频点赞
+     * @param id id
+     * @return 点赞结果
+     */
+    @PutMapping("/video/{id}")
     @LogView(module = 1)
-    public Response likeVideo(@PathVariable Integer id) {
-        return Response.success(videoService.likeVideo(id));
+    public Response updateVideo(@PathVariable Integer id) {
+        return Response.success(videoService.updateVideo(id));
     }
 
-    @GetMapping("/videos")
+    /**
+     * 分页获取视频列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @param categoryId 分类
+     * @param latest 时间排序
+     * @param like 点赞量排序
+     * @param watch 观看量排序
+     * @return 视频列表
+     */
+    @GetMapping("/video/listvideos")
     @LogView(module = 1)
-    public Response getList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+    public Response listVideos(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                          @RequestParam("latest") Boolean latest, @RequestParam("categoryId") Integer categoryId,
                          @RequestParam("like") Boolean like, @RequestParam("watch") Boolean watch) {
-        PageUtils queryPageCondition = videoService.queryPageCondition(page, limit, latest, categoryId, like, watch);
+        PageUtils queryPageCondition = videoService.listVideos(page, limit, latest, categoryId, like, watch);
         return Response.success(queryPageCondition);
     }
 
-    @GetMapping("/videos/hotwatch")
+    /**
+     * 获取热观榜
+     * @return 热观视频列表
+     */
+    @GetMapping("/videos/listhotwatchvideos")
     @LogView(module = 1)
-    public Response getHotWatchList(){
-        return Response.success(videoService.getHotWatchList());
+    public Response listHotWatchVideos(){
+        return Response.success(videoService.listHotWatchVideos());
     }
 
 }

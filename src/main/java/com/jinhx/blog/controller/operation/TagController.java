@@ -123,13 +123,17 @@ public class TagController extends AbstractController {
 
     /********************** portal ********************************/
 
-    @GetMapping("/operation/tags")
-    public Response listTag(@RequestParam("module") Integer module) {
+    /**
+     * 获取标签列表
+     * @param module 模块
+     * @return 标签列表
+     */
+    @GetMapping("/operation/listtags")
+    public Response listTags(@RequestParam("module") Integer module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
-
-        List<TagVO> tagList = tagService.listTagDTO(module);
+        List<TagVO> tagList = tagService.listTags(module);
         return Response.success(tagList);
     }
 

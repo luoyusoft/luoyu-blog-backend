@@ -16,7 +16,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.time.LocalDateTime;
 
 /**
- * TimeLineData
+ * TimelineData
  *
  * @author luoyu
  * @date 2019/02/24 20:39

@@ -47,9 +47,9 @@ public interface MessageWallService extends IService<MessageWall> {
 
     /**
      * 新增留言
-     * @param messageWall 留言
+     * @param messageWall 留言对象
      */
-    void addMessageWall(MessageWall messageWall);
+    void insertMessageWall(MessageWall messageWall);
 
     /**
      * 按楼层分页获取留言列表
@@ -57,6 +57,6 @@ public interface MessageWallService extends IService<MessageWall> {
      * @param limit 页数
      * @return 留言列表
      */
-    MessageWallListVO getMessageWallListByFloor(Integer page, Integer limit);
+    MessageWallListVO listMessageWalls(Integer page, Integer limit);
 
 }

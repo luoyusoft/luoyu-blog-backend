@@ -109,9 +109,13 @@ public class FriendLinkController extends AbstractController {
 
     /********************** portal ********************************/
 
-    @RequestMapping("/operation/friendlinks")
-    public Response listFriendLink() {
-        List<FriendLink> friendLinkList = friendLinkService.listFriendLink();
+    /**
+     * 获取友链列表
+     * @return 友链列表
+     */
+    @RequestMapping("/operation/listfriendlinks")
+    public Response listFriendLinks() {
+        List<FriendLink> friendLinkList = friendLinkService.listFriendLinks();
         return Response.success(friendLinkList);
     }
 

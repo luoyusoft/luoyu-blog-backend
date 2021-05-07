@@ -16,6 +16,11 @@
         <result column="update_time" property="updateTime" />
     </resultMap>
 
+    <!-- 查询所有结果列 -->
+    <sql id="AllColumn">
+        id,floor_num,reply_id,name,email,comment,profile,website,create_time,update_time
+    </sql>
+
     <select id="selectMessageWallVOs" resultType="com.jinhx.blog.entity.messagewall.vo.MessageWallVO">
         select a.*, b.name as replyName
         from message_wall a

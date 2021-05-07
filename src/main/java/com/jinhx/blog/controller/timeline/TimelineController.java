@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * TimeLineController
+ * TimelineController
  *
  * @author luoyu
  * @date 2019/02/24
@@ -25,10 +25,14 @@ public class TimelineController {
 
     /********************** portal ********************************/
 
-    @GetMapping("/timeline")
+    /**
+     * 获取时间线列表
+     * @return 时间线列表
+     */
+    @GetMapping("/timeline/listtimelines")
     @LogView(module = 4)
-    public Response listTimeline() {
-        List<Timeline> timelineList = timelineService.listTimeLine();
+    public Response listTimelines() {
+        List<Timeline> timelineList = timelineService.listTimelines();
         return Response.success(timelineList);
     }
 

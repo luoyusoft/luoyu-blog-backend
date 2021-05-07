@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * TimeLineMapper
+ * TimelineMapper
  *
  * @author luoyu
  * @date 2019/02/24 20:53

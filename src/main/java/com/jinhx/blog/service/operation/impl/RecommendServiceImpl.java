@@ -292,16 +292,26 @@ public class RecommendServiceImpl extends ServiceImpl<RecommendMapper, Recommend
 
     /********************** portal ********************************/
 
+    /**
+     * 获取推荐列表
+     * @param module 模块
+     * @return 推荐列表
+     */
     @Cacheable(value = RedisKeyConstants.RECOMMENDS, key = "#module")
     @Override
-    public List<RecommendVO> listRecommendVO(Integer module) {
-        List<RecommendVO> recommendList =baseMapper.listRecommendDTO(module);
+    public List<RecommendVO> listRecommends(Integer module) {
+        List<RecommendVO> recommendList = baseMapper.listRecommendDTO(module);
         if (CollectionUtils.isEmpty(recommendList)){
             return Collections.emptyList();
         }
         return genRecommendList(recommendList);
     }
 
+    /**
+     * 数据转换
+     * @param recommendList 推荐列表
+     * @return 推荐列表
+     */
     private List<RecommendVO> genRecommendList(List<RecommendVO> recommendList) {
         recommendList.forEach(recommendVO -> {
             if(ModuleTypeConstants.ARTICLE.equals(recommendVO.getModule())){

@@ -14,22 +14,19 @@
         <result column="like_num" property="likeNum" />
         <result column="cover_type" property="coverType" />
         <result column="cover" property="cover" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
         <result column="category_id" property="categoryId" />
         <result column="publish" property="publish" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
     </resultMap>
 
     <resultMap id="WithTagList" type="com.jinhx.blog.entity.article.vo.ArticleVO" extends="BaseResultMap">
         <association property="tagList" column="{linkId=id, module=module}" select="com.jinhx.blog.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
-    <sql id="homeArticleColumn">
-        id,title,description,author,read_num,like_num,comment_num,cover,cover_type,create_time,update_time
-    </sql>
-
-    <sql id="manageArticleColumn">
-       id,title,description,author,read_num,like_num,comment_num,cover,cover_type,create_time,update_time,publish,category_id
+    <!-- 查询所有结果列 -->
+    <sql id="AllColumn">
+       id,title,description,author,content,content_format,read_num,like_num,cover,cover_type,category_id,publish,create_time,update_time
     </sql>
 
     <select id="selectPublishCount" resultType="java.lang.Integer">
@@ -41,7 +38,7 @@
     </select>
 
     <select id="listArticleDTO" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
-        select <include refid="manageArticleColumn"/> from article
+        select <include refid="AllColumn"/> from article
         <where>
             <if test="params.title!=null and params.title !=''">
                 and title like concat('%',#{params.title},'%')
@@ -67,10 +64,10 @@
     </select>
 
     <select id="selectArticleDTOList" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
-        select <include refid="homeArticleColumn"/> from article where publish = true
+        select <include refid="AllColumn"/> from article where publish = true
     </select>
 
-    <select id="selectArticleListByTitle" parameterType="java.lang.String" resultType="com.jinhx.blog.entity.article.Article">
+    <select id="selectArticleListByTitle" parameterType="java.lang.String" resultMap="BaseResultMap">
         select id, title
         from article
         where publish = true
@@ -126,21 +123,21 @@
     <!-- *************************** portal ****************************** -->
 
     <select id="getSimpleArticleDTO" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
-        select <include refid="homeArticleColumn"/> from article where id = #{id} and publish = true
+        select <include refid="AllColumn"/> from article where id = #{id} and publish = true
     </select>
 
     <select id="getHotReadList" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
-        select <include refid="homeArticleColumn"/> from article where publish = true order by read_num desc limit 5
+        select <include refid="AllColumn"/> from article where publish = true order by read_num desc limit 5
     </select>
 
-    <select id="selectArticleById" parameterType="java.lang.Integer" resultType="com.jinhx.blog.entity.article.Article">
-        select *
+    <select id="selectArticleById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="AllColumn"/>
         from article
         where id = #{id} and publish = true
     </select>
 
     <select id="queryPageCondition" resultMap="WithTagList">
-        select <include refid="homeArticleColumn"/> , 0 as `module` from article
+        select <include refid="AllColumn"/> , 0 as `module` from article
         <where>
             publish = true
             <if test="params.categoryId !=null and params.categoryId != ''">
@@ -159,7 +156,7 @@
     </select>
 
     <select id="queryHomePageCondition" resultMap="WithTagList">
-        select <include refid="homeArticleColumn"/>, 0 as `module`
+        select <include refid="AllColumn"/>, 0 as `module`
         from article
         where publish = true
           and id not in (select link_id from recommend where module = 0)

@@ -81,42 +81,43 @@ public interface ArticleService extends IService<Article> {
     /********************** portal ********************************/
 
     /**
-     * 分页分类获取列表
-     * @param page
-     * @param limit
-     * @param latest
-     * @param categoryId
-     * @param like
-     * @param read
-     * @return
-     */
-    PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read);
-
-    /**
-     * 分页获取首页列表
+     * 分页获取文章列表
      * @param page 页码
      * @param limit 每页数量
+     * @param categoryId 分类
+     * @param latest 时间排序
+     * @param like 点赞量排序
+     * @param read 阅读量排序
      * @return 文章列表
      */
-    PageUtils queryHomePageCondition(Integer page, Integer limit);
+    PageUtils listArticles(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean read);
 
     /**
-     * 获取ArticleVo对象
-     * @param id
-     * @return
+     * 分页获取首页文章列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @return 首页文章列表
      */
-    ArticleDTO getArticleDTOById(Integer id);
+    PageUtils listHomeArticles(Integer page, Integer limit);
+
+    /**
+     * 获取ArticleDTO对象
+     * @param id id
+     * @return ArticleDTO
+     */
+    ArticleDTO getArticleDTO(Integer id);
 
     /**
      * 获取热读榜
-     * @return 文章列表
+     * @return 热读文章列表
      */
-    List<ArticleVO> getHotReadList();
+    List<ArticleVO> listHotReadArticles();
 
     /**
-     * 更新点赞
-     * @return
+     * 文章点赞
+     * @param id id
+     * @return 点赞结果
      */
-    Boolean likeArticle(Integer id);
+    Boolean updateArticle(Integer id);
 
 }

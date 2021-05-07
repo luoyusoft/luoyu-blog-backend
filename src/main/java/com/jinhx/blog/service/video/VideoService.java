@@ -81,34 +81,35 @@ public interface VideoService extends IService<Video> {
     /********************** portal ********************************/
 
     /**
-     * 分页分类获取列表
-     * @param page
-     * @param limit
-     * @param latest
-     * @param categoryId
-     * @param like
-     * @param watch
-     * @return
+     * 分页获取视频列表
+     * @param page 页码
+     * @param limit 每页数量
+     * @param categoryId 分类
+     * @param latest 时间排序
+     * @param like 点赞量排序
+     * @param watch 观看量排序
+     * @return 视频列表
      */
-    PageUtils queryPageCondition(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean watch);
+    PageUtils listVideos(Integer page, Integer limit, Boolean latest, Integer categoryId, Boolean like, Boolean watch);
 
     /**
      * 获取VideoDTO对象
-     * @param id
-     * @return
+     * @param id id
+     * @return VideoDTO
      */
-    VideoDTO getVideoDTOById(Integer id);
+    VideoDTO getVideoDTO(Integer id);
 
     /**
-     * 获取热读榜
-     * @return
+     * 获取热观榜
+     * @return 热观视频列表
      */
-    List<VideoVO> getHotWatchList();
+    List<VideoVO> listHotWatchVideos();
 
     /**
-     * 更新点赞
-     * @return
+     * 视频点赞
+     * @param id id
+     * @return 点赞结果
      */
-    Boolean likeVideo(Integer id);
+    Boolean updateVideo(Integer id);
 
 }

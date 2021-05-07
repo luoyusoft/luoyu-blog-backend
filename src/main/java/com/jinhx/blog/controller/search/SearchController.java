@@ -25,14 +25,14 @@ public class SearchController {
     /********************** portal ********************************/
 
     /**
-     * 搜索
-     * @param keyword
-     * @return
+     * 搜索，包括文章，视频
+     * @param keyword 关键字
+     * @return 搜索结果，包括文章，视频
      */
     @GetMapping("/search")
     @LogView(module = 3)
-    public Response searchList(@RequestParam(value = "keyword", required = false) String keyword) throws Exception {
-        SearchListVO searchListVO = searchServer.searchList(keyword);
+    public Response search(@RequestParam(value = "keyword", required = false) String keyword) throws Exception {
+        SearchListVO searchListVO = searchServer.search(keyword);
         return Response.success(searchListVO);
     }
 

@@ -93,12 +93,17 @@ public class CategoryController extends AbstractController {
 
     /********************** portal ********************************/
 
-    @GetMapping("/operation/categories")
-    public Response getCategoryList(@RequestParam("module") String module) {
+    /**
+     * 获取分类列表
+     * @param module 模块
+     * @return 分类列表
+     */
+    @GetMapping("/operation/listcategories")
+    public Response listCategories(@RequestParam("module") String module) {
         if (module == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "module不能为空");
         }
-        List<Category> categoryList = categoryService.getCategoryList(module);
+        List<Category> categoryList = categoryService.listCategories(module);
         return Response.success(categoryList);
     }
 

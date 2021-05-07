@@ -119,10 +119,10 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
 
     /**
      * 新增留言
-     * @param messageWall 留言
+     * @param messageWall 留言对象
      */
     @Override
-    public void addMessageWall(MessageWall messageWall) {
+    public void insertMessageWall(MessageWall messageWall) {
         // 新楼层
         if (MessageWall.REPLY_ID_LAYER_MASTER.equals(messageWall.getReplyId()) || messageWall.getReplyId() == null){
             messageWall.setReplyId(MessageWall.REPLY_ID_LAYER_MASTER);
@@ -144,7 +144,7 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
      * @return 留言列表
      */
     @Override
-    public MessageWallListVO getMessageWallListByFloor(Integer page, Integer limit) {
+    public MessageWallListVO listMessageWalls(Integer page, Integer limit) {
         MessageWallListVO messageWallListVO = new MessageWallListVO();
         messageWallListVO.setTotalCount(baseMapper.selectMessageWallCount());
         Integer maxFloorNum = baseMapper.selectMaxFloorNum() - (page - 1) * limit;

@@ -56,9 +56,10 @@ public interface TagService extends IService<Tag> {
     /********************** portal ********************************/
 
     /**
-     * 获取tagVoList
-     * @return
+     * 获取标签列表
+     * @param module 模块
+     * @return 标签列表
      */
-    List<TagVO> listTagDTO(Integer module);
+    List<TagVO> listTags(Integer module);
 
 }

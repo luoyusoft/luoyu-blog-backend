@@ -2,6 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jinhx.blog.mapper.file.FileChunkMapper">
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jinhx.blog.entity.file.FileChunk">
+        <id column="id" property="id" />
+        <result column="file_md5" property="fileMd5" />
+        <result column="upload_url" property="uploadUrl" />
+        <result column="upload_status" property="uploadStatus" />
+        <result column="chunk_number" property="chunkNumber" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 查询所有结果列 -->
+    <sql id="AllColumn">
+        id,file_md5,upload_url,chunk_number,create_time,update_time
+    </sql>
+
     <select id="checkIsUploadAllChunkByFileMd5" resultType="java.lang.Integer">
         select count(*)
         from file_chunk
@@ -9,8 +25,8 @@
           and upload_status = #{uploadStatus}
     </select>
 
-    <select id="selectFileChunksByFileMd5" resultType="com.jinhx.blog.entity.file.FileChunk">
-        select *
+    <select id="selectFileChunksByFileMd5" resultMap="BaseResultMap">
+        select <include refid="AllColumn"/>
         from file_chunk
         where file_md5 = #{fileMd5}
         order by chunk_number asc

@@ -223,14 +223,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     /********************** portal ********************************/
 
     /**
-     * 获取categoryList
-     *
-     * @param module
-     * @return
+     * 获取分类列表
+     * @param module 模块
+     * @return 分类列表
      */
     @Cacheable(value = RedisKeyConstants.CATEGORYS, key = "#module")
     @Override
-    public List<Category> getCategoryList(String module) {
+    public List<Category> listCategories(String module) {
         return baseMapper.selectList(new QueryWrapper<Category>().lambda()
                 .eq(!StringUtils.isEmpty(module),Category::getModule,module));
     }

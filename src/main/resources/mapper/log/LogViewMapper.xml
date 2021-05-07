@@ -2,6 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jinhx.blog.mapper.log.LogViewMapper">
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jinhx.blog.entity.log.LogView">
+        <id column="id" property="id" />
+        <result column="module" property="module" />
+        <result column="method" property="method" />
+        <result column="headr_params" property="headrParams" />
+        <result column="time" property="time" />
+        <result column="ip" property="ip" />
+        <result column="country" property="country" />
+        <result column="region" property="region" />
+        <result column="city" property="city" />
+        <result column="border_name" property="borderName" />
+        <result column="border_version" property="borderVersion" />
+        <result column="device_manufacturer" property="deviceManufacturer" />
+        <result column="device_type" property="deviceType" />
+        <result column="os_version" property="osVersion" />
+        <result column="uri" property="uri" />
+        <result column="request_type" property="requestType" />
+        <result column="body_params" property="bodyParams" />
+        <result column="response" property="response" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 查询所有结果列 -->
+    <sql id="AllColumn">
+        id,module,method,headr_params,time,ip,country,region,city,border_name,border_version,device_manufacturer,
+        device_type,os_version,uri,request_type,body_params,response,create_time,update_time
+    </sql>
+
     <select id="selectAllPV" resultType="java.lang.Integer">
         select count(*)
         from log_view
@@ -44,8 +74,8 @@
         where id = #{id}
     </update>
 
-    <select id="selectLogViewsByPage" resultType="com.jinhx.blog.entity.log.LogView" parameterType="java.lang.Integer">
-        select *
+    <select id="selectLogViewsByPage" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select <include refid="AllColumn"/>
         from log_view
         where id &gt;= #{start} and id &lt; #{end} and (country is null or region is null or city is null)
     </select>

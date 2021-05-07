@@ -14,36 +14,32 @@ import java.util.List;
 public interface ChatService {
 
     /**
-     * 初始化
-     *
-     * @param id
-     * @return UserVO对象
+     * 新增用户
+     * @param id id
+     * @return 用户信息
      */
-    Response init(String id);
+    Response insertUser(String id);
 
     /**
-     * 登录
-     *
-     * @param user
-     * @return UserVO对象
+     * 用户登录
+     * @param user 用户对象
+     * @return 用户信息
      */
-    UserVO login(User user);
+    UserVO userLogin(User user);
 
     /**
-     * 修改
-     *
-     * @param user
-     * @return UserVO对象
+     * 用户登录
+     * @param user 用户对象
+     * @return 用户信息
      */
-    UserVO change(User user);
+    UserVO updateUser(User user);
 
     /**
-     * 根据ID从Redis中查询数据
-     *
-     * @param id
-     * @return User对象
+     * 获取当前窗口用户信息
+     * @param id id
+     * @return 当前窗口用户信息
      */
-    User findById(String id);
+    User getUser(String id);
 
     /**
      * 推送消息，储存到Redis数据库中
@@ -56,31 +52,27 @@ public interface ChatService {
 
     /**
      * 获取在线用户列表
-     *
-     * @return
+     * @return 在线用户列表
      */
-    List<UserVO> onlineList();
+    List<UserVO> listOnlineUsers();
 
     /**
-     * 获取公共消息内容 -- 群组
-     *
-     * @return
+     * 获取公共聊天消息列表
+     * @return 消息列表
      */
-    List<Message> commonList();
+    List<Message> listCommonMessages();
 
     /**
-     * 获取该用户与指定窗口的推送消息
-     *
+     * 获取指定用户的聊天消息列表
      * @param fromId 推送方ID
      * @param toId   接收方ID
-     * @return
+     * @return 消息列表
      */
-    List<Message> selfList(String fromId, String toId);
+    List<Message> listMessages(String fromId, String toId);
 
     /**
      * 删除指定ID在Redis中储存的数据
-     *
-     * @param id
+     * @param id id
      */
     void delete(String id);
 

@@ -37,18 +37,17 @@ public class ChatServiceImpl implements ChatService {
     private WebsocketServerEndpoint websocketServerEndpoint;
 
     /**
-     * 初始化
-     *
-     * @param id
-     * @return UserVO对象
+     * 新增用户
+     * @param id id
+     * @return 用户信息
      */
     @Override
-    public Response init(String id){
+    public Response insertUser(String id){
         if (websocketServerEndpoint.isOnline(id)){
             throw new MyException(ResponseEnums.CHAT_USER_REPEAT);
         }
 
-        User oldUserentity = findById(RedisKeyConstants.CHAT_USER_PREFIX + id);
+        User oldUserentity = getUser(RedisKeyConstants.CHAT_USER_PREFIX + id);
         if (oldUserentity != null) {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(oldUserentity, userVO);
@@ -59,14 +58,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     /**
-     * 登录
-     *
-     * @param user
-     * @return UserVO对象
+     * 用户登录
+     * @param user 用户对象
+     * @return 用户信息
      */
     @Override
-    public UserVO login(User user){
-        User oldUserentity = findById(user.getId());
+    public UserVO userLogin(User user){
+        User oldUserentity = getUser(user.getId());
         if (oldUserentity != null) {
             String oldName = oldUserentity.getName();
             boolean isChangeName = false;
@@ -115,14 +113,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     /**
-     * 修改
-     *
-     * @param user
-     * @return UserVO对象
+     * 用户登录
+     * @param user 用户对象
+     * @return 用户信息
      */
     @Override
-    public UserVO change(User user){
-        User oldUserentity = findById(user.getId());
+    public UserVO updateUser(User user){
+        User oldUserentity = getUser(user.getId());
         if (oldUserentity != null) {
             String oldName = oldUserentity.getName();
             boolean isChangeName = false;
@@ -156,8 +153,13 @@ public class ChatServiceImpl implements ChatService {
         throw new MyException(ResponseEnums.CHAT_USER_NOT_EXIST);
     }
 
+    /**
+     * 获取当前窗口用户信息
+     * @param id id
+     * @return 当前窗口用户信息
+     */
     @Override
-    public User findById(String id) {
+    public User getUser(String id) {
         if (id != null) {
             String value = null;
             if (id.startsWith(RedisKeyConstants.CHAT_USER_PREFIX)) {
@@ -176,11 +178,11 @@ public class ChatServiceImpl implements ChatService {
     public void pushMessage(String fromId, String toId, String message) {
         Message entity = new Message();
         entity.setMessage(message);
-        entity.setFrom(findById(fromId));
+        entity.setFrom(getUser(fromId));
         entity.setCreateTime(DateUtils.getNowTimeString());
         if (toId != null) {
             //查询接收方信息
-            entity.setTo(findById(toId));
+            entity.setTo(getUser(toId));
             //单个用户推送
             push(entity, RedisKeyConstants.CHAT_FROM_PREFIX + fromId + RedisKeyConstants.CHAT_TO_PREFIX + toId);
         } else {
@@ -192,35 +194,38 @@ public class ChatServiceImpl implements ChatService {
 
     /**
      * 推送消息
-     *
-     * @param entity Session value
-     * @param key    Session key
+     * @param message 消息对象
+     * @param key    key
      */
-    private void push(Message entity, String key) {
+    private void push(Message message, String key) {
         //这里按照 PREFIX_ID 格式，作为KEY储存消息记录
         //但一个用户可能推送很多消息，VALUE应该是数组
         List<Message> list = new ArrayList<>();
         String value = redisTemplate.boundValueOps(key).get();
         if (value == null) {
             //第一次推送消息
-            list.add(entity);
+            list.add(message);
         } else {
             //第n次推送消息
             list = Objects.requireNonNull(JsonUtils.jsonToList(value, Message.class));
-            list.add(entity);
+            list.add(message);
         }
         redisTemplate.boundValueOps(key).set(JsonUtils.objectToJson(list));
     }
 
+    /**
+     * 获取在线用户列表
+     * @return 在线用户列表
+     */
     @Override
-    public List<UserVO> onlineList() {
+    public List<UserVO> listOnlineUsers() {
         List<UserVO> list = new ArrayList<>();
         Set<String> keys = redisTemplate.keys(RedisKeyConstants.CHAT_USER_PREFIX + RedisKeyConstants.REDIS_MATCH_PREFIX);
         if (keys != null && keys.size() > 0) {
             keys.forEach(key -> {
                 if (websocketServerEndpoint.isOnline(key.substring(key.lastIndexOf(":") + 1))){
                     UserVO userVO = new UserVO();
-                    BeanUtils.copyProperties(findById(key), userVO);
+                    BeanUtils.copyProperties(getUser(key), userVO);
                     list.add(userVO);
                 }
             });
@@ -228,8 +233,12 @@ public class ChatServiceImpl implements ChatService {
         return list;
     }
 
+    /**
+     * 获取公共聊天消息列表
+     * @return 消息列表
+     */
     @Override
-    public List<Message> commonList() {
+    public List<Message> listCommonMessages() {
         List<Message> list = new ArrayList<>();
         Set<String> keys = redisTemplate.keys(RedisKeyConstants.CHAT_COMMON_PREFIX + RedisKeyConstants.REDIS_MATCH_PREFIX);
         if (keys != null && keys.size() > 0) {
@@ -243,8 +252,14 @@ public class ChatServiceImpl implements ChatService {
         return list;
     }
 
+    /**
+     * 获取指定用户的聊天消息列表
+     * @param fromId 推送方ID
+     * @param toId   接收方ID
+     * @return 消息列表
+     */
     @Override
-    public List<Message> selfList(String fromId, String toId) {
+    public List<Message> listMessages(String fromId, String toId) {
         List<Message> list = new ArrayList<>();
         //A -> B
         String fromTo = redisTemplate.boundValueOps(RedisKeyConstants.CHAT_FROM_PREFIX + fromId + RedisKeyConstants.CHAT_TO_PREFIX + toId).get();
@@ -269,6 +284,10 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
+    /**
+     * 删除指定ID在Redis中储存的数据
+     * @param id id
+     */
     @Override
     public void delete(String id) {
         if (id != null) {
@@ -277,10 +296,13 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
+    /**
+     * 清除注册时间超过30天的账户
+     */
     @Override
     public void clearUser() {
         log.info("清除注册时间超过30天的账户，以及其会话信息");
-        List<UserVO> userVOList = onlineList();
+        List<UserVO> userVOList = listOnlineUsers();
         userVOList.forEach(user -> {
             if ((DateUtils.getNowTimeLong() - DateUtils.convertTimeToLong(user.getCreateTime())) >= EXPIRES_TIME) {
                 delete(user.getId());

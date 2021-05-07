@@ -75,13 +75,12 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
     /********************** portal ********************************/
 
     /**
-     * 获取link列表
-     *
-     * @return
+     * 获取友链列表
+     * @return 友链列表
      */
     @Cacheable
     @Override
-    public List<FriendLink> listFriendLink() {
+    public List<FriendLink> listFriendLinks() {
         return baseMapper.selectList(null);
     }
 

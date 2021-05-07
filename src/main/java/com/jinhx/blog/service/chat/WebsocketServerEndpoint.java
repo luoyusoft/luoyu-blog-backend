@@ -69,7 +69,7 @@ public class WebsocketServerEndpoint {
         fromId = id;
 
         try {
-            User user = chatService.findById(fromId);
+            User user = chatService.getUser(fromId);
             //群发消息
             Map<String, Object> map = new HashMap<>();
             map.put("msg", "用户\"" + user.getName() + "\"已上线");
@@ -117,8 +117,7 @@ public class WebsocketServerEndpoint {
 
     /**
      * 推送消息
-     *
-     * @param message
+     * @param message 详细对象
      */
     private void sendMessage(String message) throws Exception {
         session.getBasicRemote().sendText(message);
@@ -126,18 +125,16 @@ public class WebsocketServerEndpoint {
 
     /**
      * 封装返回消息
-     *
      * @param toId    指定窗口ID
      * @param message 消息内容
-     * @return
-     * @throws Exception
+     * @return 返回消息
      */
     private String getData(String toId, String message) {
         Message entity = new Message();
         entity.setMessage(message);
         entity.setCreateTime(DateUtils.getNowTimeString());
-        entity.setFrom(chatService.findById(fromId));
-        entity.setTo(chatService.findById(toId));
+        entity.setFrom(chatService.getUser(fromId));
+        entity.setTo(chatService.getUser(toId));
         return JsonUtils.objectToJson(Response.success(entity));
     }
 
@@ -157,13 +154,12 @@ public class WebsocketServerEndpoint {
     }
 
     /**
-     * 指定窗口推送消息
-     *
-     * @param entity 推送消息
-     * @param toId   接收方ID
+     * 向指定窗口推送消息
+     * @param toId    接收方ID
+     * @param message 消息对象
      */
-    public void sendTo(String toId, Message entity) {
-        fromId = entity.getFrom().getId();
+    public void sendTo(String toId, Message message) {
+        fromId = message.getFrom().getId();
         if (websocketServerEndpoints.size() <= 1) {
             throw new MyException(ResponseEnums.CHAT_USER_OFF_LINE);
         }
@@ -172,10 +168,10 @@ public class WebsocketServerEndpoint {
             try {
                 if (endpoint.fromId.equals(toId)) {
                     flag = true;
-                    log.info("Websocket：" + entity.getFrom().getId() + "推送消息到窗口：" + toId + " ，推送内容：" + entity.getMessage());
+                    log.info("Websocket：" + message.getFrom().getId() + "推送消息到窗口：" + toId + " ，推送内容：" + message.getMessage());
 
-                    endpoint.sendMessage(getData(toId, entity.getMessage()));
-                    chatService.pushMessage(fromId, toId, entity.getMessage());
+                    endpoint.sendMessage(getData(toId, message.getMessage()));
+                    chatService.pushMessage(fromId, toId, message.getMessage());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -189,6 +185,8 @@ public class WebsocketServerEndpoint {
 
     /**
      * 是否在线
+     * @param id    id
+     * @return 是否在线
      */
     public Boolean isOnline(String id) {
         if (websocketServerEndpoints.size() < 1) {

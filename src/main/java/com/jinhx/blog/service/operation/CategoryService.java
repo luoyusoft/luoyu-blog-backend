@@ -76,10 +76,10 @@ public interface CategoryService extends IService<Category> {
     /********************** portal ********************************/
 
     /**
-     * 获取categoryList
-     * @param module
-     * @return
+     * 获取分类列表
+     * @param module 模块
+     * @return 分类列表
      */
-    List<Category> getCategoryList(String module);
+    List<Category> listCategories(String module);
 
 }
