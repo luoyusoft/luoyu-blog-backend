@@ -99,6 +99,11 @@ public class RedisKeyConstants {
     public final static String CHAT_TO_PREFIX = PROFIX + "chat:to:";
 
     /**
+     * ip信息
+     */
+    public final static String IP = PROFIX + "ip:";
+
+    /**
      * RedisTemplate 根据Key模糊匹配查询前缀
      */
     public final static String REDIS_MATCH_PREFIX = "*";
