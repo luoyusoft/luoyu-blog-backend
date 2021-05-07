@@ -38,7 +38,7 @@
 |       Docker        |   19.03.13    |
 
 ## 部署
-
+##### 为了防止被有心人恶意攻击，需要nacos配置文件内容的，请另外联系我获取！
 ```
 docker run -dit --name blog -v /usr/local/docker/blog/log:/usr/local/project/blog/log -v /etc/localtime:/etc/localtime:ro -p 8800:8800 -p 9999:9999 -p 465:465 jinhx128/blog:latest
 ```
