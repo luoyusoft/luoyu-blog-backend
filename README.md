@@ -1,5 +1,5 @@
 [![](https://img.shields.io/badge/个人博客-在线地址-green.svg)](https://jinhx.cc)
-[![](https://img.shields.io/badge/后台管理系统-在线地址-blue.svg)](https://jinhx.cc/manage)
+[![](https://img.shields.io/badge/后台管理系统-在线地址-blue.svg)](https://manage.jinhx.cc)
 
 # Blog
 
@@ -13,9 +13,9 @@
 ```
 
 ## 主要模块
-
+manage.
 ```
-主要包括：首页，文章，视频，时光轴，留言墙，关于，聊天室（暂不设配移动端），友链...
+主要包括：首页，文章，视频，时光轴，留言墙，关于，聊天室（暂不适配移动端），友链...
 ```
 
 ## 主要技术栈
@@ -38,7 +38,7 @@
 |       Docker        |   19.03.13    |
 
 ## 部署
-##### 为了防止被有心人恶意攻击，需要nacos配置文件内容的，请另外联系我获取！
+##### 为了防止被有心人恶意攻击，需要Nacos配置文件内容的，请另外联系我获取！
 ```
 docker run -dit --name blog -v /usr/local/docker/blog/log:/usr/local/project/blog/log -v /etc/localtime:/etc/localtime:ro -p 8800:8800 -p 9999:9999 -p 465:465 jinhx128/blog:latest
 ```
@@ -49,7 +49,7 @@ docker run -dit --name blog -v /usr/local/docker/blog/log:/usr/local/project/blo
 
 > 个人博客-->【<b><a href="https://jinhx.cc"> https://jinhx.cc </a></b>】
 
-> 后台管理系统-->【<b><a href="https://jinhx.cc/manage"> https://jinhx.cc/manage </a></b>】
+> 后台管理系统-->【<b><a href="https://manage.jinhx.cc"> https://manage.jinhx.cc </a></b>】
 >
 > 后台管理系统-->游客账号：guest，密码：guest
 
