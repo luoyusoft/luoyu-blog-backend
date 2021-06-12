@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.entity.operation.Tag;
 import com.jinhx.blog.entity.operation.vo.TagVO;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -23,10 +24,10 @@ public interface TagService extends IService<Tag> {
      *
      * @param page
      * @param limit
-     * @param key
+     * @param name
      * @return
      */
-    PageUtils queryPage(Integer page, Integer limit, String key);
+    PageUtils queryPage(Integer page, Integer limit, String name, Integer module);
 
     /**
      * 根据关联Id获取列表

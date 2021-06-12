@@ -44,8 +44,8 @@ public class TagController extends AbstractController {
      */
     @GetMapping("/manage/operation/tag/list")
     @RequiresPermissions("operation:tag:list")
-    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("key") String key){
-        PageUtils tagPage = tagService.queryPage(page, limit, key);
+    public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("name") String name, @RequestParam("module") Integer module){
+        PageUtils tagPage = tagService.queryPage(page, limit, name, module);
         return Response.success(tagPage);
     }
 

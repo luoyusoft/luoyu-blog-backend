@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -51,17 +52,19 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
      *
      * @param page
      * @param limit
-     * @param key
+     * @param name
      * @return
      */
     @Override
-    public PageUtils queryPage(Integer page, Integer limit, String key) {
+    public PageUtils queryPage(Integer page, Integer limit, String name, Integer module) {
         Map<String, Object> params = new HashMap<>();
         params.put("limit", String.valueOf(limit));
         params.put("page", String.valueOf(page));
 
         IPage<Tag> tagPage = baseMapper.selectPage(new Query<Tag>(params).getPage(),
-                new QueryWrapper<Tag>().lambda().like(StringUtils.isNotEmpty(key), Tag::getName, key));
+                new QueryWrapper<Tag>().lambda()
+                        .like(StringUtils.isNotEmpty(name), Tag::getName, name)
+                        .eq(module != null, Tag::getModule, module));
         return new PageUtils(tagPage);
     }
 
