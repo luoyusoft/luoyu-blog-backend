@@ -28,13 +28,13 @@ public class SysCaptchaServiceImpl implements SysCaptchaService {
     @Autowired
     private RedisUtils redisUtils;
 
-    /**  验证码过期时长5秒 */
+    // 验证码过期时长5分钟
     public final static long CAPTCHA_EXPIRE = 60 * 5;
+
     /**
      * 获取验证码
-     *
-     * @param uuid
-     * @return
+     * @param uuid uuid
+     * @return 验证码
      */
     @Override
     public BufferedImage getCaptcha(String uuid) {
@@ -50,20 +50,19 @@ public class SysCaptchaServiceImpl implements SysCaptchaService {
 
     /**
      * 验证验证码
-     *
-     * @param uuid
-     * @param code
-     * @return
+     * @param uuid uuid
+     * @param code 验证码
+     * @return 校验结果
      */
     @Override
     public boolean validate(String uuid, String code) {
-        if(StringUtils.isBlank(uuid)|| StringUtils.isBlank(code)){
+        if(StringUtils.isBlank(uuid) || StringUtils.isBlank(code)){
             return false;
         }
         // 从redis中取
         String redisKey=genRedisKey(uuid);
         String captchaCode=redisUtils.get(redisKey);
-        //删除验证码
+        // 删除验证码
         redisUtils.delete(redisKey);
         if(code.equalsIgnoreCase(captchaCode)){
             return true;
@@ -73,11 +72,11 @@ public class SysCaptchaServiceImpl implements SysCaptchaService {
 
     /**
      * 生成redis key
-     * @param uuid
-     * @return
+     * @param uuid uuid
+     * @return redis key
      */
     private String genRedisKey(String uuid){
-        return RedisKeyConstants.MANAGE_SYS_CAPTCHA+uuid;
+        return RedisKeyConstants.MANAGE_SYS_CAPTCHA + uuid;
     }
 
 }

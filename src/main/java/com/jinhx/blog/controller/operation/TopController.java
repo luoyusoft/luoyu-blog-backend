@@ -5,7 +5,6 @@ import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
-import com.jinhx.blog.entity.base.AbstractController;
 import com.jinhx.blog.entity.base.Response;
 import com.jinhx.blog.entity.operation.Top;
 import com.jinhx.blog.entity.operation.vo.TopVO;
@@ -26,7 +25,7 @@ import java.util.List;
  * @since 2019-02-22
  */
 @RestController
-public class TopController extends AbstractController {
+public class TopController {
 
     @Resource
     private TopService topService;

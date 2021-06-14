@@ -11,25 +11,23 @@ import org.springframework.util.StringUtils;
 
 /**
  * SysUserTokenServiceImpl
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/10/20 15:18
  * @description
  */
 @Service
 public class SysUserTokenServiceImpl implements SysUserTokenService {
 
-    //12小时后过期
+    // 12小时后过期
     private final static int EXPIRE = 3600 * 12;
 
     @Autowired
     private RedisUtils redisUtils;
 
     /**
-     * 生成Token
-     *
-     * @param userId
-     * @return
+     * 生成token
+     * @param userId 用户id
+     * @return token
      */
     @Override
     public String createToken(Integer userId) {
@@ -40,7 +38,7 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
         String userIdKey= RedisKeyConstants.MANAGE_SYS_USER_TOKEN+userId;
 
         //判断是否生成过token
-        String tokenInRedis=redisUtils.get(userIdKey);
+        String tokenInRedis = redisUtils.get(userIdKey);
         if(!StringUtils.isEmpty(tokenInRedis)){
             // 将原来的token删除
             redisUtils.delete(RedisKeyConstants.MANAGE_SYS_USER_TOKEN+tokenInRedis);
@@ -53,13 +51,12 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
     }
 
     /**
-     * 查询token
-     *
-     * @param token
-     * @return
+     * 根据token查询token用户信息
+     * @param token token
+     * @return token用户信息
      */
     @Override
-    public SysUserToken queryByToken(String token) {
+    public SysUserToken getSysUserTokenByToken(String token) {
         String userId=redisUtils.get(token);
         if(StringUtils.isEmpty(userId)){
             return null;
@@ -72,28 +69,26 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 
     /**
      * 退出登录
-     *
-     * @param userId
+     * @param userId 用户id
      */
     @Override
     public void logout(Integer userId) {
-        String userIdKey = RedisKeyConstants.MANAGE_SYS_USER_TOKEN+userId;
+        String userIdKey = RedisKeyConstants.MANAGE_SYS_USER_TOKEN + userId;
         String token = redisUtils.get(userIdKey);
-        String tokenKey = RedisKeyConstants.MANAGE_SYS_USER_TOKEN+token;
+        String tokenKey = RedisKeyConstants.MANAGE_SYS_USER_TOKEN + token;
         redisUtils.delete(userIdKey);
         redisUtils.delete(tokenKey);
     }
 
     /**
-     * 续期
-     *
-     * @param userId
-     * @param token
+     * 续期token
+     * @param userId 用户id
+     * @param accessToken 新token
      */
     @Override
-    public void refreshToken(Integer userId, String token) {
-        String tokenKey= RedisKeyConstants.MANAGE_SYS_USER_TOKEN+token;
-        String userIdKey= RedisKeyConstants.MANAGE_SYS_USER_TOKEN+userId;
+    public void refreshToken(Integer userId, String accessToken) {
+        String tokenKey = RedisKeyConstants.MANAGE_SYS_USER_TOKEN + accessToken;
+        String userIdKey = RedisKeyConstants.MANAGE_SYS_USER_TOKEN + userId;
         redisUtils.updateExpire(tokenKey);
         redisUtils.updateExpire(userIdKey);
     }

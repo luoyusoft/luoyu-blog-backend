@@ -17,9 +17,9 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     /**
      * 查询所属角色
-     * @param createUserId
+     * @param createrId
      * @return
      */
-    List<Integer> queryRoleIdList(Integer createUserId);
+    List<Integer> queryRoleIdList(Integer createrId);
 
 }

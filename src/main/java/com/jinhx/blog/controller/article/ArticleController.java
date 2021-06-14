@@ -18,8 +18,7 @@ import javax.annotation.Resource;
 
 /**
  * ArticleController
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/11/20 20:25
  * @description
  */

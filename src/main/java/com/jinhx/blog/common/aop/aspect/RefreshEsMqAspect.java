@@ -15,10 +15,9 @@ import java.lang.reflect.Method;
 
 /**
  * RefreshEsMqAspect
- *
- * @author luoyu
- * @date 2019/03/16 22:53
- * @description
+ * @author jinhx
+ * @date 2019/03/16 22:52
+ * @description RefreshEsMqAspect
  */
 @Aspect
 @Component
@@ -33,10 +32,10 @@ public class RefreshEsMqAspect {
     }
 
     @Around("pointCut()")
-    public Object around(ProceedingJoinPoint point) throws Throwable {
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         //执行方法
-        Object result = point.proceed();
-        MethodSignature signature = (MethodSignature) point.getSignature();
+        Object result = proceedingJoinPoint.proceed();
+        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
         Method method = signature.getMethod();
         RefreshEsMqSender senderAnnotation = method.getAnnotation(RefreshEsMqSender.class);
         // 发送刷新信息

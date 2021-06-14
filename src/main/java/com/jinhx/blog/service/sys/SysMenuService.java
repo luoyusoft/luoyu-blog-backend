@@ -7,17 +7,16 @@ import java.util.List;
 
 /**
  * SysMenuService
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/10/22 12:31
  * @description
  */
 public interface SysMenuService extends IService<SysMenu> {
 
     /**
-     * 获取用户的所有菜单
-     * @param userId
-     * @return
+     * 获取用户的所有菜单列表
+     * @param userId 用户id
+     * @return 用户的所有菜单列表
      */
     List<SysMenu> listUserMenu(Integer userId);
 

@@ -6,7 +6,6 @@ import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
-import com.jinhx.blog.entity.base.AbstractController;
 import com.jinhx.blog.entity.base.Response;
 import com.jinhx.blog.entity.operation.Recommend;
 import com.jinhx.blog.entity.operation.vo.RecommendVO;
@@ -27,7 +26,7 @@ import java.util.List;
  * @since 2019-02-22
  */
 @RestController
-public class RecommendController extends AbstractController {
+public class RecommendController {
 
     @Resource
     private RecommendService recommendService;

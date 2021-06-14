@@ -1,11 +1,11 @@
 package com.jinhx.blog.controller.sys;
 
-import com.jinhx.blog.common.constants.SysConstants;
+import com.jinhx.blog.common.aop.annotation.SuperAdmin;
 import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.enums.ResponseEnums;
+import com.jinhx.blog.common.util.SysAdminUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
 import com.jinhx.blog.entity.base.Response;
-import com.jinhx.blog.entity.base.AbstractController;
 import com.jinhx.blog.entity.sys.SysRole;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.validator.ValidatorUtils;
@@ -19,16 +19,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * SysRoleController
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/10/25 15:32
  * @description
  */
 @RestController
-public class SysRoleController extends AbstractController {
+public class SysRoleController {
 
     @Autowired
     private SysRoleService sysRoleService;
@@ -37,19 +37,21 @@ public class SysRoleController extends AbstractController {
     private SysRoleMenuService sysRoleMenuService;
 
     /**
-     * 分页查询角色列表
-     * @return
+     * 获取角色列表
+     * @param page 页码
+     * @param limit 页数
+     * @param roleName 角色名
+     * @return 角色列表
      */
     @GetMapping("/manage/sys/role/list")
     @RequiresPermissions("sys:role:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("roleName") String roleName){
-        //如果不是超级管理员，则只查询自己创建的角色列表
-        Integer createUserId = null;
-        if(!SysConstants.SUPER_ADMIN.equals(getUserId())){
-            createUserId = getUserId();
-        }
+        PageUtils rolePage = sysRoleService.queryPage(page, limit, roleName);
 
-        PageUtils rolePage = sysRoleService.queryPage(page, limit, roleName, createUserId);
+        // 如果不是超级管理员，则不展示超级管理员
+        if(!SysAdminUtils.isSuperAdmin()){
+            rolePage.setList(rolePage.getList().stream().filter(item -> !((SysRole)item).getId().equals(SysAdminUtils.sysSuperAdminRoleId)).collect(Collectors.toList()));
+        }
 
         return Response.success(rolePage);
     }
@@ -62,52 +64,58 @@ public class SysRoleController extends AbstractController {
     public Response select(){
         Map<String, Object> map = new HashMap<>();
 
-        //如果不是超级管理员，则只查询自己所拥有的角色列表
-        if(!SysConstants.SUPER_ADMIN.equals(getUserId())){
-            map.put("createUserId", getUserId());
-        }
         Collection<SysRole> list = sysRoleService.listByMap(map);
+
+        // 如果不是超级管理员，则不展示超级管理员
+        if(!SysAdminUtils.isSuperAdmin()){
+            return Response.success(list.stream().filter(item -> !item.getId().equals(SysAdminUtils.sysSuperAdminRoleId)).collect(Collectors.toList()));
+        }
+
         return Response.success(list);
     }
 
     /**
-     * 保存角色信息
-     * @param role
-     * @return
+     * 新增角色信息
+     * @param sysRole 角色信息
+     * @return 新增结果
      */
+    @SuperAdmin()
     @PostMapping("/manage/sys/role/save")
     @RequiresPermissions("sys:role:save")
-    public Response save(@RequestBody SysRole role){
-        ValidatorUtils.validateEntity(role, AddGroup.class);
-        role.setCreateUserId(getUserId());
-        sysRoleService.save(role);
+    public Response insertSysRole(@RequestBody SysRole sysRole){
+        ValidatorUtils.validateEntity(sysRole, AddGroup.class);
+        sysRole.setCreaterId(SysAdminUtils.getUserId());
+
+        sysRoleService.insertSysRole(sysRole);
 
         return Response.success();
     }
 
     /**
      * 更新角色信息
-     * @param role
-     * @return
+     * @param sysRole 角色信息
+     * @return 更新结果
      */
+    @SuperAdmin()
     @PutMapping("/manage/sys/role/update")
     @RequiresPermissions("sys:role:update")
-    public Response update(@RequestBody SysRole role){
-        ValidatorUtils.validateEntity(role, AddGroup.class);
-        role.setCreateUserId(getUserId());
-        sysRoleService.updateById(role);
+    public Response updateSysRoleById(@RequestBody SysRole sysRole){
+        ValidatorUtils.validateEntity(sysRole, AddGroup.class);
+        sysRole.setCreaterId(SysAdminUtils.getUserId());
+
+        sysRoleService.updateSysRoleById(sysRole);
 
         return Response.success();
     }
 
     /**
      * 获取角色信息
-     * @param roleId
-     * @return
+     * @param roleId 角色id
+     * @return 角色信息
      */
     @GetMapping("/manage/sys/role/info/{roleId}")
     @RequiresPermissions("sys:role:info")
-    public Response info(@PathVariable("roleId") Integer roleId){
+    public Response getSysRoleById(@PathVariable("roleId") Integer roleId){
         SysRole role = sysRoleService.getById(roleId);
         List<Integer> menuIdList=sysRoleMenuService.queryMenuIdList(roleId);
         role.setMenuIdList(menuIdList);
@@ -116,10 +124,10 @@ public class SysRoleController extends AbstractController {
     }
 
     /**
-     * 删除角色信息
-     * @param roleIds
-     * @return
+     * 根据角色id列表批量删除角色
+     * @param roleIds 角色id列表
      */
+    @SuperAdmin()
     @DeleteMapping("/manage/sys/role/delete")
     @RequiresPermissions("sys:role:delete")
     public Response delete(@RequestBody Integer[] roleIds){

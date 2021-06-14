@@ -29,11 +29,10 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
 /**
- * ViewLogAspect
- *
+ * ViewLog
  * @author luoyu
- * @date 2019/02/15 14:56
- * @description
+ * @date 2019/02/15 14:51
+ * @description 日志
  */
 @Aspect
 @Component
@@ -56,20 +55,20 @@ public class LogViewAspect {
     private ThreadPoolTaskExecutor taskExecutor;
 
     @Pointcut("@annotation(com.jinhx.blog.common.aop.annotation.LogView)")
-    public void logPointCut() {
+    public void logViewPointCut() {
 
     }
 
-    @Around("logPointCut()")
+    @Around("logViewPointCut()")
     @Transactional(rollbackFor = Exception.class)
-    public Object around(ProceedingJoinPoint point) throws Throwable {
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         if (profilesActive.equals(PROFILES_ACTIVE_PRO)){
             // 耗时计算
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
 
             //执行方法
-            Object result = point.proceed();
+            Object result = proceedingJoinPoint.proceed();
 
             stopWatch.stop();
 
@@ -94,17 +93,17 @@ public class LogViewAspect {
             viewLogEntity.setIp(IPUtils.getIpAddr(request));
             taskExecutor.execute(() ->{
                 //保存日志
-                saveViewLog(viewLogEntity, point, stopWatch.getTime());
+                saveViewLog(viewLogEntity, proceedingJoinPoint, stopWatch.getTime());
             });
 
             return result;
         }
 
-        return point.proceed();
+        return proceedingJoinPoint.proceed();
     }
 
-    private void saveViewLog(com.jinhx.blog.entity.log.LogView viewLogEntity, ProceedingJoinPoint joinPoint, long time) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+    private void saveViewLog(com.jinhx.blog.entity.log.LogView viewLogEntity, ProceedingJoinPoint proceedingJoinPoint, long time) {
+        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
         Method method = signature.getMethod();
         LogView viewLog = method.getAnnotation(LogView.class);
 
@@ -112,7 +111,7 @@ public class LogViewAspect {
         viewLogEntity.setModule(viewLog.module());
 
         // 请求的方法名
-        String className = joinPoint.getTarget().getClass().getName();
+        String className = proceedingJoinPoint.getTarget().getClass().getName();
         String methodName = signature.getName();
         viewLogEntity.setMethod(className + "." + methodName + "()");
 

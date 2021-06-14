@@ -1,11 +1,11 @@
 package com.jinhx.blog.controller.sys;
 
+import com.jinhx.blog.common.aop.annotation.SuperAdmin;
 import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
-import com.jinhx.blog.entity.base.AbstractController;
 import com.jinhx.blog.entity.base.Response;
 import com.jinhx.blog.entity.sys.SysParam;
 import com.jinhx.blog.service.sys.SysParamService;
@@ -18,16 +18,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * <p>
- * 系统参数 前端控制器
- * </p>
- *
- * @author luoyu
+ * SysParamController
+ * @author jinhx
  * @since 2018-12-28
  */
 @RestController
 @Slf4j
-public class SysParamController extends AbstractController {
+public class SysParamController {
 
     @Autowired
     private SysParamService paramService;
@@ -76,6 +73,7 @@ public class SysParamController extends AbstractController {
     /**
      * 修改
      */
+    @SuperAdmin()
     @PutMapping("/manage/sys/param/update")
     @RequiresPermissions("sys:param:update")
     public Response update(@RequestBody SysParam param){
@@ -88,6 +86,7 @@ public class SysParamController extends AbstractController {
     /**
      * 删除
      */
+    @SuperAdmin()
     @DeleteMapping("/manage/sys/param/delete")
     @RequiresPermissions("sys:param:delete")
     public Response delete(@RequestBody String[] ids){

@@ -14,16 +14,16 @@ public interface SysCaptchaService {
 
     /**
      * 获取验证码
-     * @param uuid
-     * @return
+     * @param uuid uuid
+     * @return 验证码
      */
     BufferedImage getCaptcha(String uuid);
 
     /**
      * 验证验证码
-     * @param uuid
-     * @param code
-     * @return
+     * @param uuid uuid
+     * @param code 验证码
+     * @return 校验结果
      */
     boolean validate(String uuid, String code);
 

@@ -3,9 +3,6 @@ package com.jinhx.blog.service.sys.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.jinhx.blog.common.constants.SysConstants;
-import com.jinhx.blog.common.enums.ResponseEnums;
-import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.util.Query;
 import com.jinhx.blog.entity.sys.SysRole;
@@ -24,8 +21,7 @@ import java.util.*;
 
 /**
  * SysRoleServiceImpl
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/10/25 15:36
  * @description
  */
@@ -42,29 +38,30 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     private SysUserRoleService sysUserRoleService;
 
     /**
-     * 分页查询角色
-     * @param page
-     * @param limit
-     * @param roleName
-     * @param createUserId
-     * @return
+     * 获取角色列表
+     * @param page 页码
+     * @param limit 页数
+     * @param roleName 角色名
+     * @return 角色列表
      */
     @Override
-    public PageUtils queryPage(Integer page, Integer limit, String roleName, Integer createUserId) {
+    public PageUtils queryPage(Integer page, Integer limit, String roleName) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
         params.put("roleName", roleName);
-        params.put("createUserId", String.valueOf(createUserId));
 
         IPage<SysRole> rolePage = baseMapper.selectPage(new Query<SysRole>(params).getPage(),
                 new QueryWrapper<SysRole>().lambda()
                 .like(StringUtils.isNotBlank(roleName), SysRole::getRoleName,roleName)
-                .eq(createUserId!=null, SysRole::getCreateUserId,createUserId)
         );
         return new PageUtils(rolePage);
     }
 
+    /**
+     * 根据角色id列表批量删除角色
+     * @param roleIds 角色id列表
+     */
     @Override
     public void deleteBatch(Integer[] roleIds) {
         //删除角色
@@ -80,58 +77,43 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     /**
      * 查询roleId
      *
-     * @param createUserId
+     * @param createrId
      * @return
      */
     @Override
-    public List<Integer> queryRoleIdList(Integer createUserId) {
-        return baseMapper.queryRoleIdList(createUserId) ;
+    public List<Integer> queryRoleIdList(Integer createrId) {
+        return baseMapper.queryRoleIdList(createrId) ;
     }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean save(SysRole role) {
-        role.setCreateTime(LocalDateTime.now());
-        baseMapper.insert(role);
-
-        //检查权限是否越权
-        checkPrems(role);
-
-        //保存角色与菜单关系
-        sysRoleMenuService.saveOrUpdate(role.getId(), role.getMenuIdList());
-        return true;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean updateById(SysRole role){
-        baseMapper.updateById(role);
-
-        //检查权限是否越权
-        checkPrems(role);
-
-        //保存角色与菜单关系
-        sysRoleMenuService.saveOrUpdate(role.getId(), role.getMenuIdList());
-        return true;
-    }
-
 
     /**
-     * 检查权限是否越权
+     * 新增角色信息
+     * @param sysRole 角色信息
+     * @return 新增结果
      */
-    private void checkPrems(SysRole role){
-        //如果不是超级管理员，则需要判断角色的权限是否超过自己的权限
-        if(SysConstants.SUPER_ADMIN.equals(role.getCreateUserId())){
-            return ;
-        }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean insertSysRole(SysRole sysRole) {
+        sysRole.setCreateTime(LocalDateTime.now());
+        baseMapper.insert(sysRole);
 
-        //查询用户所拥有的菜单列表
-        List<Integer> menuIdList = sysUserService.queryAllMenuId(role.getCreateUserId());
+        //保存角色与菜单关系
+        sysRoleMenuService.saveOrUpdate(sysRole.getId(), sysRole.getMenuIdList());
+        return true;
+    }
 
-        //判断是否越权
-        if(!menuIdList.containsAll(role.getMenuIdList())){
-            throw new MyException(ResponseEnums.NO_AUTH.getCode(), "新增角色的权限，已超出你的权限范围");
-        }
+    /**
+     * 更新角色信息
+     * @param sysRole 角色信息
+     * @return 更新结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateSysRoleById(SysRole sysRole){
+        baseMapper.updateById(sysRole);
+
+        //保存角色与菜单关系
+        sysRoleMenuService.saveOrUpdate(sysRole.getId(), sysRole.getMenuIdList());
+        return true;
     }
 
 }

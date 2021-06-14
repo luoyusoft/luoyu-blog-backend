@@ -1,9 +1,10 @@
 package com.jinhx.blog.controller.sys;
 
+import com.jinhx.blog.common.aop.annotation.SuperAdmin;
 import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.enums.ResponseEnums;
+import com.jinhx.blog.common.util.SysAdminUtils;
 import com.jinhx.blog.entity.base.Response;
-import com.jinhx.blog.entity.base.AbstractController;
 import com.jinhx.blog.entity.sys.SysMenu;
 import com.jinhx.blog.common.enums.MenuTypeEnum;
 import com.jinhx.blog.entity.sys.vo.SysMenuVO;
@@ -18,15 +19,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * <p>
- * 菜单管理 前端控制器
- * </p>
- *
- * @author luoyu
+ * SysMenuController
+ * @author jinhx
  * @since 2018-10-19
  */
 @RestController
-public class SysMenuController extends AbstractController {
+public class SysMenuController {
 
     @Autowired
     private SysMenuService sysMenuService;
@@ -35,12 +33,13 @@ public class SysMenuController extends AbstractController {
     private ShiroService shiroService;
 
     /**
-     * 信息
+     * 获取用户的所有菜单列表
+     * @return 用户的所有菜单列表
      */
     @GetMapping("/manage/sys/menu/nav")
     public Response nav(){
-        List<SysMenu> menuList = sysMenuService.listUserMenu(getUserId());
-        Set<String> permissions = shiroService.getUserPermissions(getUserId());
+        List<SysMenu> menuList = sysMenuService.listUserMenu(SysAdminUtils.getUserId());
+        Set<String> permissions = shiroService.getUserPermissions(SysAdminUtils.getUserId());
         SysMenuVO sysMenuVO = new SysMenuVO();
         sysMenuVO.setMenuList(menuList);
         sysMenuVO.setPermissions(permissions);
@@ -85,8 +84,8 @@ public class SysMenuController extends AbstractController {
 
     /**
      * 获取单个菜单信息
-     * @param menuId
-     * @return
+     * @param menuId 菜单id
+     * @return 菜单信息
      */
     @GetMapping("/manage/sys/menu/info/{menuId}")
     @RequiresPermissions("sys:menu:info")
@@ -113,6 +112,7 @@ public class SysMenuController extends AbstractController {
      * @param menu
      * @return
      */
+    @SuperAdmin()
     @PutMapping("/manage/sys/menu/update")
     @RequiresPermissions("sys:menu:update")
     public Response update(@RequestBody SysMenu menu){
@@ -128,13 +128,10 @@ public class SysMenuController extends AbstractController {
      * @param menuId
      * @return
      */
+    @SuperAdmin()
     @DeleteMapping("/manage/sys/menu/delete/{menuId}")
     @RequiresPermissions("sys:menu:delete")
     public Response delete(@PathVariable("menuId") Integer menuId){
-        if(menuId <= 29){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "系统菜单，不能删除");
-        }
-
         //判断是否有子菜单或按钮
         List<SysMenu> menuList = sysMenuService.queryListParentId(menuId);
         if(menuList.size() > 0){

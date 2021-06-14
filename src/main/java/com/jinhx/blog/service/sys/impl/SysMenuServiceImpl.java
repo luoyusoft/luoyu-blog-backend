@@ -1,7 +1,6 @@
 package com.jinhx.blog.service.sys.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.jinhx.blog.common.constants.SysConstants;
 import com.jinhx.blog.common.enums.MenuTypeEnum;
 import com.jinhx.blog.common.util.MapUtils;
 import com.jinhx.blog.entity.sys.SysMenu;
@@ -17,8 +16,7 @@ import java.util.List;
 
 /**
  * SysMenuServiceImpl
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/10/22 12:31
  * @description 1、查询用户所属菜单，2、递归构造Z-Tree需要格式的菜单
  */
@@ -30,18 +28,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
+
     /**
-     * 获取用户的所有菜单
-     *
-     * @param userId
-     * @return
+     * 获取用户的所有菜单列表
+     * @param userId 用户id
+     * @return 用户的所有菜单列表
      */
     @Override
     public List<SysMenu> listUserMenu(Integer userId) {
-        //系统管理员，拥有最高权限
-        if(SysConstants.SUPER_ADMIN.equals(userId)){
-            return getAllMenuList(null);
-        }
         //用户菜单列表
         List<Integer> menuIdList = sysUserService.queryAllMenuId(userId);
         return getAllMenuList(menuIdList);
@@ -119,11 +113,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      */
     @Override
     public List<SysMenu> getUserMenuList(Integer userId) {
-        //系统管理员，拥有最高权限
-        if(SysConstants.SUPER_ADMIN.equals(userId)){
-            return getAllMenuList(null);
-        }
-
         //用户菜单列表
         List<Integer> menuIdList = sysUserService.queryAllMenuId(userId);
         return getAllMenuList(menuIdList);

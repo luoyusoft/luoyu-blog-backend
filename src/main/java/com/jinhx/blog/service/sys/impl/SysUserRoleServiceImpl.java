@@ -2,6 +2,7 @@ package com.jinhx.blog.service.sys.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jinhx.blog.common.util.SysAdminUtils;
 import com.jinhx.blog.entity.sys.SysUserRole;
 import com.jinhx.blog.mapper.sys.SysUserRoleMapper;
 import com.jinhx.blog.service.sys.SysUserRoleService;
@@ -14,14 +15,17 @@ import java.util.List;
 
 /**
  * SysUserRoleServiceImpl
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/10/26 00:01
  * @description
  */
 @Service
 public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUserRole> implements SysUserRoleService {
 
+    /**
+     * 批量删除roleId
+     * @param roleIds
+     */
     @Override
     public void deleteBatchByRoleId(Integer[] roleIds) {
         Arrays.stream(roleIds).forEach(roleId -> {
@@ -30,6 +34,10 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
         });
     }
 
+    /**
+     * 批量删除userId
+     * @param userIds
+     */
     @Override
     public void deleteBatchByUserId(Integer[] userIds) {
         Arrays.stream(userIds).forEach(userId -> {
@@ -38,6 +46,11 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
         });
     }
 
+    /**
+     * 更新或保存用户角色
+     * @param userId
+     * @param roleIdList
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveOrUpdate(Integer userId, List<Integer> roleIdList) {
@@ -62,14 +75,33 @@ public class SysUserRoleServiceImpl extends ServiceImpl<SysUserRoleMapper, SysUs
     }
 
     /**
-     * 根据userId查询roleId
-     *
+     * 根据用户id查询角色id列表
+     * @param userId 用户id
+     * @return 角色id列表
+     */
+    @Override
+    public List<Integer> getRoleIdListByUserId(Integer userId) {
+        return baseMapper.getRoleIdListByUserId(userId);
+    }
+
+    /**
+     * 根据userId查询roleName
      * @param userId
      * @return
      */
     @Override
-    public List<Integer> queryRoleIdList(Integer userId) {
-        return baseMapper.queryRoleIdList(userId);
+    public List<String> queryRoleNameList(Integer userId) {
+        return baseMapper.queryRoleNameList(userId);
+    }
+
+    /**
+     * 是否包含超级管理员
+     * @param userIds 用户id列表
+     * @return 是否包含超级管理员
+     */
+    @Override
+    public boolean isHaveSuperAdmin(Integer[] userIds) {
+        return baseMapper.countSysUserRoleByRoleIdAndUserIds(userIds, SysAdminUtils.sysSuperAdminRoleId) > 0;
     }
 
 }

@@ -4,10 +4,9 @@ import java.lang.annotation.*;
 
 /**
  * RefreshEsMqSender
- *
- * @author luoyu
+ * @author jinhx
  * @date 2019/03/16 22:52
- * @description
+ * @description RefreshEsMqSender
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

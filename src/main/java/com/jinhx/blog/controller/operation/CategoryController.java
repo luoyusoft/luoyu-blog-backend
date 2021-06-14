@@ -4,7 +4,6 @@ import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
-import com.jinhx.blog.entity.base.AbstractController;
 import com.jinhx.blog.entity.base.Response;
 import com.jinhx.blog.entity.operation.Category;
 import com.jinhx.blog.service.operation.CategoryService;
@@ -23,7 +22,7 @@ import java.util.List;
  * @since 2018-12-17
  */
 @RestController
-public class CategoryController extends AbstractController {
+public class CategoryController {
 
     @Resource
     private CategoryService categoryService;

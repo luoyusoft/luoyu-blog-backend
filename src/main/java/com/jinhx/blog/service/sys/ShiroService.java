@@ -3,6 +3,7 @@ package com.jinhx.blog.service.sys;
 
 import com.jinhx.blog.entity.sys.SysUser;
 import com.jinhx.blog.entity.sys.SysUserToken;
+import com.jinhx.blog.entity.sys.dto.SysUserDTO;
 
 import java.util.Set;
 
@@ -23,23 +24,23 @@ public interface ShiroService {
     Set<String> getUserPermissions(Integer userId);
 
     /**
-     * 查询token
-     * @param token
-     * @return
+     * 根据token查询token用户信息
+     * @param token token
+     * @return token用户信息
      */
-    SysUserToken queryByToken(String token);
+    SysUserToken getSysUserTokenByToken(String token);
 
     /**
-     * 查询用户信息
-     * @param userId
-     * @return
+     * 根据用户id获取SysUserDTO
+     * @param userId 用户id
+     * @return SysUserDTO
      */
-    SysUser queryUser(Integer userId);
+    SysUser getSysUserDTOByUserId(Integer userId);
 
     /**
-     * 续期
-     * @param userId
-     * @param accessToken
+     * 续期token
+     * @param userId 用户id
+     * @param accessToken 新token
      */
     void refreshToken(Integer userId, String accessToken);
 

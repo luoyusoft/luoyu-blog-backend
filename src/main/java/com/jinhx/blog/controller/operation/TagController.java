@@ -7,7 +7,6 @@ import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
-import com.jinhx.blog.entity.base.AbstractController;
 import com.jinhx.blog.entity.base.Response;
 import com.jinhx.blog.entity.operation.Tag;
 import com.jinhx.blog.entity.operation.TagLink;
@@ -31,7 +30,7 @@ import java.util.List;
  * @since 2019-01-21
  */
 @RestController
-public class TagController extends AbstractController {
+public class TagController {
 
     @Resource
     private TagService tagService;

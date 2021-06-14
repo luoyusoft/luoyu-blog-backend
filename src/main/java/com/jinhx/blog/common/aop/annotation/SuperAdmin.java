@@ -3,17 +3,14 @@ package com.jinhx.blog.common.aop.annotation;
 import java.lang.annotation.*;
 
 /**
- * ViewLog
- * @author luoyu
+ * SuperAdmin
+ * @author jinhx
  * @date 2019/02/15 14:51
- * @description 日志
+ * @description 超级管理员权限
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface LogView {
-
-     // 0：article，1：video，2：聊天室
-     int module();
+public @interface SuperAdmin {
 
 }

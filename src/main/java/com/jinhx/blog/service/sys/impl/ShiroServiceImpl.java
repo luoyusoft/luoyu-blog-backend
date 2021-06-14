@@ -1,19 +1,16 @@
 package com.jinhx.blog.service.sys.impl;
 
 import com.jinhx.blog.common.constants.RedisKeyConstants;
-import com.jinhx.blog.common.constants.SysConstants;
-import com.jinhx.blog.entity.sys.SysMenu;
 import com.jinhx.blog.entity.sys.SysUser;
 import com.jinhx.blog.entity.sys.SysUserToken;
 import com.jinhx.blog.mapper.sys.SysMenuMapper;
-import com.jinhx.blog.mapper.sys.SysUserMapper;
 import com.jinhx.blog.service.sys.ShiroService;
+import com.jinhx.blog.service.sys.SysUserService;
 import com.jinhx.blog.service.sys.SysUserTokenService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +27,7 @@ import java.util.stream.Collectors;
 public class ShiroServiceImpl implements ShiroService {
 
     @Autowired
-    private SysUserMapper sysUserMapper;
+    private SysUserService sysUserService;
 
     @Autowired
     private SysMenuMapper sysMenuMapper;
@@ -46,16 +43,7 @@ public class ShiroServiceImpl implements ShiroService {
      */
     @Override
     public Set<String> getUserPermissions(Integer userId) {
-         List<String> permsList;
-
-         //系统管理员，拥有最高权限
-        if(SysConstants.SUPER_ADMIN.equals(userId)){
-            List<SysMenu> menuList=sysMenuMapper.selectList(null);
-            permsList=new ArrayList<>(menuList.size());
-            menuList.forEach(menu ->  permsList.add(menu.getPerms()));
-        }else {
-            permsList = sysUserMapper.queryAllPerms(userId);
-        }
+        List<String> permsList = sysUserService.getAllPermsByUserId(userId);
         //返回用户权限列表
         return permsList.stream()
                 // 过滤空置的字符串
@@ -67,36 +55,33 @@ public class ShiroServiceImpl implements ShiroService {
     }
 
     /**
-     * 查询token
-     *
-     * @param token
-     * @return
+     * 根据token查询token用户信息
+     * @param token token
+     * @return token用户信息
      */
     @Override
-    public SysUserToken queryByToken(String token) {
-        return sysUserTokenService.queryByToken(RedisKeyConstants.MANAGE_SYS_USER_TOKEN+token);
+    public SysUserToken getSysUserTokenByToken(String token) {
+        return sysUserTokenService.getSysUserTokenByToken(RedisKeyConstants.MANAGE_SYS_USER_TOKEN+token);
     }
 
     /**
-     * 查询用户信息
-     *
-     * @param userId
-     * @return
+     * 根据用户id获取SysUserDTO
+     * @param userId 用户id
+     * @return SysUserDTO
      */
     @Override
-    public SysUser queryUser(Integer userId) {
-        return sysUserMapper.selectById(userId);
+    public SysUser getSysUserDTOByUserId(Integer userId) {
+        return sysUserService.getSysUserDTOByUserId(userId);
     }
 
     /**
-     * 续期
-     *
-     * @param userId
-     * @param accessToken
+     * 续期token
+     * @param userId 用户id
+     * @param accessToken 新token
      */
     @Override
     public void refreshToken(Integer userId, String accessToken) {
-        sysUserTokenService.refreshToken(userId,accessToken);
+        sysUserTokenService.refreshToken(userId, accessToken);
     }
 
 }

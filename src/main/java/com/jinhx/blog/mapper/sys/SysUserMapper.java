@@ -16,17 +16,38 @@ import java.util.List;
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
     /**
-     * 查询用户所有权限
-     * @param userId
-     * @return
+     * 根据用户id查询用户有权限所有菜单列表
+     * @param userId 用户id
+     * @return 用户有权限所有菜单列表
      */
-    List<String> queryAllPerms(Integer userId);
+    List<String> getAllPermsByUserId(Integer userId);
 
     /**
-     * 查询用户的menuId
-     * @param userId
-     * @return
+     * 查询用户菜单列表
+     * @param userId 用户id
+     * @return 用户菜单列表
      */
     List<Integer> queryAllMenuId(Integer userId);
+
+    /**
+     * 根据用户名查询用户信息
+     * @param username 用户名
+     * @return 用户信息
+     */
+    SysUser getSysUserByUsername(String username);
+
+    /**
+     * 根据用户名查询用户信息
+     * @param userId 用户id
+     * @return 用户信息
+     */
+    SysUser getSysUserByUserId(Integer userId);
+
+    /**
+     * 根据用户名查询用户个数
+     * @param username 用户名
+     * @return 用户个数
+     */
+    Integer countSysUserByUsername(String username);
 
 }

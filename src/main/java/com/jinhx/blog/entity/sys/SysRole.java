@@ -37,7 +37,7 @@ public class SysRole extends BaseEntity implements Serializable {
     private String remark;
 
     @ApiModelProperty(value = "创建者id")
-    private Integer createUserId;
+    private Integer createrId;
 
     @TableField(exist=false)
     private List<Integer> menuIdList;

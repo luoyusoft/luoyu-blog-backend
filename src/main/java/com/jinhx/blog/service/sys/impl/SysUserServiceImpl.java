@@ -3,22 +3,24 @@ package com.jinhx.blog.service.sys.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.jinhx.blog.common.constants.SysConstants;
 import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.util.Query;
+import com.jinhx.blog.common.util.SysAdminUtils;
 import com.jinhx.blog.entity.sys.SysUser;
+import com.jinhx.blog.entity.sys.dto.SysUserDTO;
 import com.jinhx.blog.mapper.sys.SysUserMapper;
-import com.jinhx.blog.service.sys.SysRoleService;
 import com.jinhx.blog.service.sys.SysUserRoleService;
 import com.jinhx.blog.service.sys.SysUserService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.util.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +28,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * <p>
- *  服务实现类
- * </p>
- *
- * @author luoyu
+ * SysUserServiceImpl
+ * @author jinhx
  * @since 2018-10-08
  */
 @Service
@@ -39,16 +38,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private SysUserRoleService sysUserRoleService;
 
-    @Autowired
-    @Lazy
-    private SysRoleService sysRoleService;
-
 
     /**
-     * 查询用户菜单
-     *
-     * @param userId
-     * @return
+     * 查询用户菜单列表
+     * @param userId 用户id
+     * @return 用户菜单列表
      */
     @Override
     public List<Integer> queryAllMenuId(Integer userId) {
@@ -56,28 +50,37 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     /**
-     * 分页查询用户信息
-     *
-     * @param page
-     * @param limit
-     * @param username
-     * @param createUserId
-     * @return
+     * 分页查询用户信息列表
+     * @param page 页码
+     * @param limit 页数
+     * @param username 用户名
+     * @return 用户信息列表
      */
     @Override
-    public PageUtils queryPage(Integer page, Integer limit, String username, Integer createUserId) {
+    public PageUtils queryPage(Integer page, Integer limit, String username) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
         params.put("username", username);
-        params.put("createUserId", String.valueOf(createUserId));
 
-        IPage<SysUser> userPage = baseMapper.selectPage(
+        IPage<SysUser> sysUserPage = baseMapper.selectPage(
                 new Query<SysUser>(params).getPage(),
                 new QueryWrapper<SysUser>().lambda()
-                        .like(StringUtils.isNotBlank(username),SysUser::getUsername, username)
-                        .eq(createUserId != null,SysUser::getCreateUserId, createUserId));
-        return new PageUtils(userPage);
+                        .like(StringUtils.isNotBlank(username),SysUser::getUsername, username));
+
+        List<SysUserDTO> sysUserDTOList = new ArrayList<>();
+        sysUserPage.getRecords().forEach(item -> {
+            SysUserDTO sysUserDTO = new SysUserDTO();
+            BeanUtils.copyProperties(item, sysUserDTO);
+            sysUserDTO.setRoleNameStr(String.join(",", sysUserRoleService.queryRoleNameList(item.getId())));
+            sysUserDTOList.add(sysUserDTO);
+        });
+
+        IPage<SysUserDTO> sysUserDTOPage = new Page<>();
+        BeanUtils.copyProperties(sysUserPage, sysUserDTOPage);
+        sysUserDTOPage.setRecords(sysUserDTOList);
+
+        return new PageUtils(sysUserDTOPage);
     }
 
     /**
@@ -96,70 +99,127 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .eq(SysUser::getId,userId).eq(SysUser::getPassword,password));
     }
 
+    /**
+     * 新增用户信息
+     * @param sysUserDTO 用户信息
+     * @return 新增结果
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean save(SysUser user) {
-        user.setCreateTime(LocalDateTime.now());
+    public boolean insertSysUser(SysUserDTO sysUserDTO) {
+        if (baseMapper.countSysUserByUsername(sysUserDTO.getUsername()) > 0){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该用户名已存在");
+        }
+
+        sysUserDTO.setCreateTime(LocalDateTime.now());
         //sha256加密
         String salt = RandomStringUtils.randomAlphanumeric(20);
-        user.setPassword(new Sha256Hash(user.getPassword(), salt).toHex());
-        user.setSalt(salt);
-        baseMapper.insert(user);
+        sysUserDTO.setPassword(new Sha256Hash(sysUserDTO.getPassword(), salt).toHex());
+        sysUserDTO.setSalt(salt);
+        baseMapper.insert(sysUserDTO);
 
-        //检查角色是否越权
-        checkRole(user);
-
-        //保存用户与角色关系
-        sysUserRoleService.saveOrUpdate(user.getId(), user.getRoleIdList());
-        return true;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean updateById(SysUser user) {
-        if(StringUtils.isBlank(user.getPassword())){
-            user.setPassword(null);
-        }else{
-            user.setPassword(new Sha256Hash(user.getPassword(), user.getSalt()).toHex());
+        // 如果新增超级管理员，需要当前用户拥有超级管理员权限
+        if (!CollectionUtils.isEmpty(sysUserDTO.getRoleIdList()) && SysAdminUtils.isHaveSuperAdmin(sysUserDTO.getRoleIdList())){
+            SysAdminUtils.checkSuperAdmin();
         }
-        baseMapper.updateById(user);
-
-        //检查角色是否越权
-        checkRole(user);
 
         //保存用户与角色关系
-        sysUserRoleService.saveOrUpdate(user.getId(), user.getRoleIdList());
+        sysUserRoleService.saveOrUpdate(sysUserDTO.getId(), sysUserDTO.getRoleIdList());
         return true;
     }
 
+    /**
+     * 根据用户id更新用户信息
+     * @param sysUserDTO 用户信息
+     * @return 更新结果
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteBatch(Integer[] userIds) {
+    public boolean updateSysUserById(SysUserDTO sysUserDTO) {
+        SysUser sysUser = baseMapper.selectById(sysUserDTO.getId());
+        if (!sysUser.getUsername().equals(sysUserDTO.getUsername()) && baseMapper.countSysUserByUsername(sysUserDTO.getUsername()) > 0){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该用户名已存在");
+        }
+
+        if(StringUtils.isBlank(sysUserDTO.getPassword())){
+            sysUserDTO.setPassword(null);
+        }else{
+            sysUserDTO.setPassword(new Sha256Hash(sysUserDTO.getPassword(), sysUserDTO.getSalt()).toHex());
+        }
+        baseMapper.updateById(sysUserDTO);
+
+        // 如果修改包含超级管理员，需要当前用户拥有超级管理员权限
+        if (!CollectionUtils.isEmpty(sysUserDTO.getRoleIdList()) &&
+                (SysAdminUtils.isHaveSuperAdmin(sysUserDTO.getRoleIdList()) || SysAdminUtils.isHaveSuperAdmin(sysUserRoleService.getRoleIdListByUserId(sysUserDTO.getId())))){
+            SysAdminUtils.checkSuperAdmin();
+        }
+
+        //保存用户与角色关系
+        sysUserRoleService.saveOrUpdate(sysUserDTO.getId(), sysUserDTO.getRoleIdList());
+        return true;
+    }
+
+    /**
+     * 根据用户id列表批量删除用户
+     * @param userIds 用户id列表
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteBatch(Integer[] userIds) {
+        // 如果包括超级管理员，需要当前用户拥有超级管理员权限
+        if (sysUserRoleService.isHaveSuperAdmin(userIds)){
+            SysAdminUtils.checkSuperAdmin();
+        }
+
         this.removeByIds(Arrays.asList(userIds));
         //删除用户与角色关联
         sysUserRoleService.deleteBatchByUserId(userIds);
 
+        return true;
     }
 
     /**
-     * 检查角色是否越权
+     * 根据用户id查询用户有权限所有菜单列表
+     * @param userId 用户id
+     * @return 用户有权限所有菜单列表
      */
-    private void checkRole(SysUser user){
-        if(user.getRoleIdList() == null || user.getRoleIdList().size() == 0){
-            return;
-        }
-        //如果不是超级管理员，则需要判断用户的角色是否自己创建
-        if(SysConstants.SUPER_ADMIN.equals(user.getCreateUserId())){
-            return ;
-        }
+    @Override
+    public List<String> getAllPermsByUserId(Integer userId) {
+        return baseMapper.getAllPermsByUserId(userId);
+    }
 
-        //查询用户创建的角色列表
-        List<Integer> roleIdList = sysRoleService.queryRoleIdList(user.getCreateUserId());
-
-        //判断是否越权
-        if(!roleIdList.containsAll(user.getRoleIdList())){
-            throw new MyException(ResponseEnums.NO_AUTH.getCode(), "新增用户所选角色，不是本人创建");
+    /**
+     * 根据用户名获取SysUserDTO
+     * @param username 用户名
+     * @return SysUserDTO
+     */
+    @Override
+    public SysUserDTO getSysUserDTOByUsername(String username) {
+        SysUser sysUser = baseMapper.getSysUserByUsername(username);
+        if (sysUser == null){
+            return null;
         }
+        SysUserDTO sysUserDTO = new SysUserDTO();
+        BeanUtils.copyProperties(sysUser, sysUserDTO);
+        sysUserDTO.setRoleIdList(sysUserRoleService.getRoleIdListByUserId(sysUser.getId()));
+        return sysUserDTO;
+    }
+
+    /**
+     * 根据用户id获取SysUserDTO
+     * @param userId 用户id
+     * @return SysUserDTO
+     */
+    @Override
+    public SysUserDTO getSysUserDTOByUserId(Integer userId) {
+        SysUser sysUser = baseMapper.getSysUserByUserId(userId);
+        if (sysUser == null){
+            return null;
+        }
+        SysUserDTO sysUserDTO = new SysUserDTO();
+        BeanUtils.copyProperties(sysUser, sysUserDTO);
+        sysUserDTO.setRoleIdList(sysUserRoleService.getRoleIdListByUserId(sysUser.getId()));
+        return sysUserDTO;
     }
 
 }

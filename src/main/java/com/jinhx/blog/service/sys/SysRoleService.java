@@ -16,26 +16,39 @@ import java.util.List;
 public interface SysRoleService extends IService<SysRole> {
 
     /**
-     * 分页查询角色
-     * @param page
-     * @param limit
-     * @param roleName
-     * @param createUserId
-     * @return
+     * 获取角色列表
+     * @param page 页码
+     * @param limit 页数
+     * @param roleName 角色名
+     * @return 角色列表
      */
-    PageUtils queryPage(Integer page, Integer limit, String roleName, Integer createUserId);
+    PageUtils queryPage(Integer page, Integer limit, String roleName);
 
     /**
-     * 批量删除
-     * @param roleIds
+     * 根据角色id列表批量删除角色
+     * @param roleIds 角色id列表
      */
     void deleteBatch(Integer[] roleIds);
 
     /**
      * 查询roleId
-     * @param createUserId
+     * @param createrId
      * @return
      */
-    List<Integer> queryRoleIdList(Integer createUserId);
+    List<Integer> queryRoleIdList(Integer createrId);
+
+    /**
+     * 新增角色信息
+     * @param sysRole 角色信息
+     * @return 新增结果
+     */
+    boolean insertSysRole(SysRole sysRole);
+
+    /**
+     * 更新角色信息
+     * @param sysRole 角色信息
+     * @return 更新结果
+     */
+    boolean updateSysRoleById(SysRole sysRole);
 
 }

@@ -2,6 +2,7 @@ package com.jinhx.blog.common.auth;
 
 import com.jinhx.blog.entity.sys.SysUser;
 import com.jinhx.blog.entity.sys.SysUserToken;
+import com.jinhx.blog.entity.sys.dto.SysUserDTO;
 import com.jinhx.blog.service.sys.ShiroService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -37,8 +38,8 @@ public class OAuth2Realm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        SysUser user = (SysUser)principals.getPrimaryPrincipal();
-        Integer userId = user.getId();
+        SysUserDTO sysUserDTO = (SysUserDTO) principals.getPrimaryPrincipal();
+        Integer userId = sysUserDTO.getId();
 
         //用户权限列表
         Set<String> permsSet = shiroService.getUserPermissions(userId);
@@ -55,24 +56,24 @@ public class OAuth2Realm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         String accessToken = (String) token.getPrincipal();
 
-        //根据accessToken，查询用户信息
-        SysUserToken tokenEntity = shiroService.queryByToken(accessToken);
-        //token失效
-        if(tokenEntity == null){
+        // 根据accessToken，查询用户信息
+        SysUserToken sysUserToken = shiroService.getSysUserTokenByToken(accessToken);
+        // token失效
+        if(sysUserToken == null){
             throw new IncorrectCredentialsException("token失效，请重新登录");
         }
 
-        //查询用户信息
-        SysUser user = shiroService.queryUser(tokenEntity.getUserId());
-        //账号锁定
-        if(user.getStatus() == 0){
+        // 查询用户信息
+        SysUser sysUser = shiroService.getSysUserDTOByUserId(sysUserToken.getUserId());
+        // 账号锁定
+        if(sysUser.getStatus() == 0){
             throw new LockedAccountException("账号已被锁定,请联系管理员");
         }
 
-        // 续期
-        shiroService.refreshToken(tokenEntity.getUserId(),accessToken);
+        // 续期token
+        shiroService.refreshToken(sysUserToken.getUserId(),accessToken);
 
-        return new SimpleAuthenticationInfo(user, accessToken, getName());
+        return new SimpleAuthenticationInfo(sysUser, accessToken, getName());
     }
 
 }

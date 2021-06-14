@@ -7,21 +7,25 @@
         <id column="id" property="id" />
         <result column="username" property="username" />
         <result column="password" property="password" />
+        <result column="status" property="status" />
+        <result column="mobile" property="mobile" />
         <result column="email" property="email" />
         <result column="salt" property="salt" />
-        <result column="create_user_id" property="createUserId" />
-        <result column="status" property="status" />
+        <result column="nickname" property="nickname" />
+        <result column="profile" property="profile" />
+        <result column="creater_id" property="createrId" />
+        <result column="cupdater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
-        id, username, password, email,salt,create_user_id,status,create_time,update_time
+        id, username, password, status, mobile,email,salt,nickname,profile,creater_id,updater_id,create_time,update_time
     </sql>
 
-    <!--查询用户的所有权限-->
-    <select id="queryAllPerms" resultType="java.lang.String">
+    <!-- 根据用户id查询用户有权限所有菜单列表 -->
+    <select id="getAllPermsByUserId" resultType="java.lang.String">
         select sm.perms from sys_user_role sur
           left join sys_role_menu srm on sur.role_id=srm.role_id
           left join sys_menu sm on srm.menu_id = sm.id
@@ -34,5 +38,28 @@
 			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
 		where ur.user_id = #{userId}
 	</select>
+
+    <!-- 根据用户名查询用户信息 -->
+    <select id="getSysUserByUsername" resultMap="BaseResultMap">
+        select
+        <include refid="AllColumn"/>
+        from sys_user
+        where username = #{username}
+	</select>
+
+    <!-- 根据用户id查询用户信息 -->
+    <select id="getSysUserByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="AllColumn"/>
+        from sys_user
+        where id = #{userId}
+	</select>
+
+    <!-- 根据用户名查询用户信息 -->
+    <select id="countSysUserByUsername" resultType="java.lang.Integer">
+        select count(*)
+        from sys_user
+        where username = #{username}
+    </select>
 
 </mapper>

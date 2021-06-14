@@ -7,18 +7,18 @@
         <id column="id" property="id" />
         <result column="role_name" property="roleName" />
         <result column="remark" property="remark" />
-        <result column="create_user_id" property="createUserId" />
+        <result column="creater_id" property="createrId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
-        id, role_name, remark, create_user_id, create_time,update_time
+        id, role_name, remark, creater_id, create_time,update_time
     </sql>
 
     <select id="queryRoleIdList" resultType="java.lang.Integer">
-        select sr.role_id from sys_role sr where sr.create_user_id=#{createUserId}
+        select sr.id from sys_role sr where sr.creater_id = #{createrId}
     </select>
 
 </mapper>
