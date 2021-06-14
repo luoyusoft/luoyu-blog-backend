@@ -26,4 +26,9 @@ public class ArticleDTO extends Article {
      */
     private List<Tag> tagList;
 
+    /**
+     * 文章作者
+     */
+    private String author;
+
 }

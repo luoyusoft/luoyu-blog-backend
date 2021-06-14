@@ -31,9 +31,6 @@ public class Article extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "文章描述")
     private String description;
 
-    @ApiModelProperty(value = "文章作者")
-    private String author;
-
     @ApiModelProperty(value = "文章内容")
     private String content;
 

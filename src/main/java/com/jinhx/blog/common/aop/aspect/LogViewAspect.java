@@ -130,9 +130,8 @@ public class LogViewAspect {
         }
 
         viewLogEntity.setTime(time);
-        LocalDateTime now = LocalDateTime.now();
-        viewLogEntity.setCreateTime(now);
-        viewLogEntity.setUpdateTime(now);
+        viewLogEntity.setCreaterId(com.jinhx.blog.entity.log.LogView.CREATER_UPDATER_SYS_ID);
+        viewLogEntity.setUpdaterId(com.jinhx.blog.entity.log.LogView.CREATER_UPDATER_SYS_ID);
         logViewMapper.insert(viewLogEntity);
     }
 

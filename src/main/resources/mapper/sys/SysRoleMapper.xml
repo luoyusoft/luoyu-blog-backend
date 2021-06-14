@@ -8,13 +8,14 @@
         <result column="role_name" property="roleName" />
         <result column="remark" property="remark" />
         <result column="creater_id" property="createrId" />
+        <result column="updater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
-        id, role_name, remark, creater_id, create_time,update_time
+        id, role_name, remark, creater_id,updater_id, create_time,update_time
     </sql>
 
     <select id="queryRoleIdList" resultType="java.lang.Integer">

@@ -22,6 +22,8 @@
         <result column="request_type" property="requestType" />
         <result column="body_params" property="bodyParams" />
         <result column="response" property="response" />
+        <result column="creater_id" property="createrId" />
+        <result column="updater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
@@ -29,7 +31,7 @@
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
         id,module,method,headr_params,time,ip,country,region,city,border_name,border_version,device_manufacturer,
-        device_type,os_version,uri,request_type,body_params,response,create_time,update_time
+        device_type,os_version,uri,request_type,body_params,response,creater_id,updater_id,create_time,update_time
     </sql>
 
     <select id="selectAllPV" resultType="java.lang.Integer">

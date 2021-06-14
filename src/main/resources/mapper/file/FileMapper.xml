@@ -16,13 +16,15 @@
         <result column="is_chunk" property="isChunk" />
         <result column="chunk_count" property="chunkCount" />
         <result column="upload_status" property="uploadStatus" />
+        <result column="creater_id" property="createrId" />
+        <result column="updater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
-        id,file_name,url,storage_type,bucket_name,module,file_md5,file_size,suffix,is_chunk,chunk_count,upload_status,create_time,update_time
+        id,file_name,url,storage_type,bucket_name,module,file_md5,file_size,suffix,is_chunk,chunk_count,upload_status,creater_id,updater_id,create_time,update_time
     </sql>
 
     <select id="selectFileByFileMd5AndModule" resultMap="BaseResultMap">
@@ -43,6 +45,7 @@
             <if test="url != null">
                 url = #{url},
             </if>
+            updater_id = #{updateId},
             update_time = #{updateTime}
         </set>
         where file_md5 = #{fileMd5}

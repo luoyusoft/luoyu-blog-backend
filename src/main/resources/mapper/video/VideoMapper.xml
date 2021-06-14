@@ -9,7 +9,6 @@
         <result column="alternate_name" property="alternateName" />
         <result column="cover" property="cover" />
         <result column="video_url" property="videoUrl" />
-        <result column="author" property="author" />
         <result column="category_id" property="categoryId" />
         <result column="production_region" property="productionRegion" />
         <result column="director" property="director" />
@@ -23,6 +22,8 @@
         <result column="publish" property="publish" />
         <result column="watch_num" property="watchNum" />
         <result column="like_num" property="likeNum" />
+        <result column="creater_id" property="createrId" />
+        <result column="updater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
@@ -33,8 +34,8 @@
 
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
-       id,title,alternate_name,cover,video_url,author,category_id,production_region,director,release_time,duration,language,
-        to_star,score,screenwriter,synopsis,watch_num,like_num,publish,create_time,update_time
+       id,title,alternate_name,cover,video_url,category_id,production_region,director,release_time,duration,language,
+        to_star,score,screenwriter,synopsis,watch_num,like_num,publish,creater_id,updater_id,create_time,update_time
     </sql>
 
     <select id="selectPublishCount" resultType="java.lang.Integer">
@@ -100,9 +101,6 @@
             <if test="videoUrl!=null">
                 video_url = #{videoUrl},
             </if>
-            <if test="author!=null">
-                author = #{author},
-            </if>
             <if test="categoryId!=null">
                 category_id = #{categoryId},
             </if>
@@ -144,6 +142,9 @@
             </if>
             <if test="updateTime!=null">
                 update_time = #{updateTime},
+            </if>
+            <if test="updaterId!=null">
+                updater_id = #{updaterId}
             </if>
         </set>
         where id = #{id}

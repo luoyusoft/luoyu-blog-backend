@@ -7,9 +7,8 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * ArticleVO
- *
- * @author luoyu
+ * VideoVO
+ * @author jinhx
  * @date 2019/01/08 19:04
  * @description
  */
@@ -35,5 +34,10 @@ public class VideoVO extends Video {
      * 置顶
      */
     private Boolean top;
+
+    /**
+     * 上传者
+     */
+    private String author;
 
 }

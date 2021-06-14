@@ -26,10 +26,10 @@ public interface VideoService extends IService<Video> {
 
     /**
      * 分页查询视频列表
-     * @param page
-     * @param limit
-     * @param title
-     * @return
+     * @param page 页码
+     * @param limit 页数
+     * @param title 标题
+     * @return 视频列表
      */
     PageUtils queryPage(Integer page, Integer limit, String title);
 

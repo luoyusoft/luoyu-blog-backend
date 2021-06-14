@@ -7,11 +7,11 @@ import com.jinhx.blog.common.util.ElasticSearchUtils;
 import com.jinhx.blog.common.util.JsonUtils;
 import com.jinhx.blog.common.util.RabbitMQUtils;
 import com.jinhx.blog.service.operation.TagService;
-import com.jinhx.blog.entity.article.Article;
 import com.jinhx.blog.entity.article.dto.ArticleDTO;
 import com.jinhx.blog.entity.article.vo.ArticleVO;
 import com.jinhx.blog.mapper.article.ArticleMapper;
 import com.jinhx.blog.service.search.ArticleEsServer;
+import com.jinhx.blog.service.sys.SysUserService;
 import com.rabbitmq.client.Channel;
 import com.xxl.job.core.log.XxlJobLogger;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +43,9 @@ public class ArticleEsServerImpl implements ArticleEsServer {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private SysUserService sysUserService;
+
     @Override
     public boolean initArticleList() throws Exception {
         if(elasticSearchUtils.deleteIndex(ElasticSearchConstants.BLOG_SEARCH_ARTICLE_INDEX)){
@@ -54,6 +57,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
                     articleDTOList.forEach(x -> {
                         ArticleVO articleVO = new ArticleVO();
                         BeanUtils.copyProperties(x, articleVO);
+                        articleVO.setAuthor(sysUserService.getNicknameByUserId(articleVO.getCreaterId()));
                         rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
                     });
                     return true;
@@ -73,8 +77,8 @@ public class ArticleEsServerImpl implements ArticleEsServer {
             //手动确认消息已经被消费
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             if(message != null && message.getBody() != null){
-                Article article = JsonUtils.jsonToObject(new String(message.getBody()), Article.class);
-                elasticSearchUtils.addDocument(ElasticSearchConstants.BLOG_SEARCH_ARTICLE_INDEX, article.getId().toString(), JsonUtils.objectToJson(article));
+                ArticleVO articleVO = JsonUtils.jsonToObject(new String(message.getBody()), ArticleVO.class);
+                elasticSearchUtils.addDocument(ElasticSearchConstants.BLOG_SEARCH_ARTICLE_INDEX, articleVO.getId().toString(), JsonUtils.objectToJson(articleVO));
                 log.info("新增文章，rabbitmq监听器，添加到es中成功：id:" + new String(message.getBody()));
             }else {
                 log.info("新增文章，rabbitmq监听器，添加到es中失败：article:" + new String(message.getBody()));
@@ -95,8 +99,8 @@ public class ArticleEsServerImpl implements ArticleEsServer {
             //手动确认消息已经被消费
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             if(message != null && message.getBody() != null){
-                Article article = JsonUtils.jsonToObject(new String(message.getBody()), Article.class);
-                elasticSearchUtils.updateDocument(ElasticSearchConstants.BLOG_SEARCH_ARTICLE_INDEX, article.getId().toString(), JsonUtils.objectToJson(article));
+                ArticleVO articleVO = JsonUtils.jsonToObject(new String(message.getBody()), ArticleVO.class);
+                elasticSearchUtils.updateDocument(ElasticSearchConstants.BLOG_SEARCH_ARTICLE_INDEX, articleVO.getId().toString(), JsonUtils.objectToJson(articleVO));
                 log.info("更新文章，rabbitmq监听器，更新到es成功：id:" + new String(message.getBody()));
             }else {
                 log.info("更新文章，rabbitmq监听器，更新到es失败：article:" + new String(message.getBody()));

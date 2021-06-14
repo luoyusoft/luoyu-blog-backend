@@ -31,7 +31,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -283,7 +282,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
         fileChunk.setFileMd5(fileVO.getFileMd5());
         fileChunk.setUploadStatus(FileChunk.UPLOAD_STATUS_1);
         fileChunk.setChunkNumber(fileVO.getChunkNumber());
-        fileChunk.setUpdateTime(LocalDateTime.now());
+        fileChunk.setUpdateInfo();
         return fileChunkService.updateFileChunkByFileMd5AndChunkNumber(fileChunk);
     }
 
@@ -329,7 +328,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements Fi
             file.setModule(fileVO.getModule());
             file.setUrl(url);
             file.setUploadStatus(File.UPLOAD_STATUS_1);
-            file.setUpdateTime(LocalDateTime.now());
+            file.setUpdateInfo();
             fileMapper.updateFileByFileMd5AndModule(file);
             return url;
         }

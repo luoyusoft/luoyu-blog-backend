@@ -7,11 +7,10 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * ArticleDTO
- *
- * @author luoyu
+ * VideoDTO
+ * @author jinhx
  * @date 2019/01/09 16:51
- * @description 文章列表VO
+ * @description VideoDTO
  */
 @Data
 public class VideoDTO extends Video {
@@ -25,5 +24,10 @@ public class VideoDTO extends Video {
      * 所属标签
      */
     private List<Tag> tagList;
+
+    /**
+     * 上传者
+     */
+    private String author;
 
 }

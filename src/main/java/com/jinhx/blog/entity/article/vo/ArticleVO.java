@@ -36,4 +36,9 @@ public class ArticleVO extends Article {
      */
     private Boolean top;
 
+    /**
+     * 文章作者
+     */
+    private String author;
+
 }

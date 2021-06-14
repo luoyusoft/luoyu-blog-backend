@@ -23,6 +23,7 @@ import com.jinhx.blog.service.cache.CacheServer;
 import com.jinhx.blog.service.operation.CategoryService;
 import com.jinhx.blog.service.operation.RecommendService;
 import com.jinhx.blog.service.operation.TagService;
+import com.jinhx.blog.service.sys.SysUserService;
 import com.jinhx.blog.service.video.VideoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     @Resource
     private RabbitMQUtils rabbitmqUtils;
 
+    @Autowired
+    private SysUserService sysUserService;
+
     @Resource(name = "taskExecutor")
     private ThreadPoolTaskExecutor taskExecutor;
 
@@ -79,12 +83,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     }
 
     /**
-     * 分页查询文章列表
-     *
-     * @param page
-     * @param limit
-     * @param title
-     * @return
+     * 分页查询视频列表
+     * @param page 页码
+     * @param limit 页数
+     * @param title 标题
+     * @return 视频列表
      */
     @Override
     public PageUtils queryPage(Integer page, Integer limit, String title) {
@@ -113,6 +116,9 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                     } else {
                         videoVO.setRecommend(false);
                     }
+
+                    videoVO.setAuthor(sysUserService.getNicknameByUserId(videoVO.getCreaterId()));
+
                     videoVOList.add(videoVO);
                 })));
         Page<VideoVO> videoVOPage = new Page<>();
@@ -164,8 +170,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                     recommend.setModule(ModuleTypeConstants.VIDEO);
                     recommend.setLinkId(videoVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
-                    recommend.setCreateTime(now);
-                    recommend.setUpdateTime(now);
+                    recommend.setCreateAndUpdateInfo();
                     recommendService.insertRecommend(recommend);
                 }
             }else {
@@ -213,8 +218,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                     recommend.setModule(ModuleTypeConstants.VIDEO);
                     recommend.setLinkId(videoVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
-                    recommend.setCreateTime(now);
-                    recommend.setUpdateTime(now);
+                    recommend.setCreateAndUpdateInfo();
                     recommendService.insertRecommend(recommend);
                 }
             }else {
@@ -246,6 +250,9 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         }else {
             videoVO.setRecommend(false);
         }
+
+        videoVO.setAuthor(sysUserService.getNicknameByUserId(videoVO.getCreaterId()));
+
         return videoVO;
     }
 
@@ -329,6 +336,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         if (videoDTOList == null){
             videoDTOList = new ArrayList<>();
         }
+
+        videoDTOList.forEach(videoDTOListItem -> {
+            videoDTOListItem.setAuthor(sysUserService.getNicknameByUserId(videoDTOListItem.getCreaterId()));
+        });
+
         videoDTOPage.setRecords(videoDTOList);
         return new PageUtils(videoDTOPage);
     }
@@ -347,6 +359,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         }
         VideoDTO videoDTO = new VideoDTO();
         BeanUtils.copyProperties(video, videoDTO);
+        videoDTO.setAuthor(sysUserService.getNicknameByUserId(videoDTO.getCreaterId()));
         videoDTO.setTagList(tagService.listByLinkId(id, ModuleTypeConstants.VIDEO));
         // 观看数量
         baseMapper.updateWatchNum(id);

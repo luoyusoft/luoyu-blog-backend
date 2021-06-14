@@ -8,10 +8,10 @@ import com.jinhx.blog.common.util.JsonUtils;
 import com.jinhx.blog.common.util.RabbitMQUtils;
 import com.jinhx.blog.mapper.video.VideoMapper;
 import com.jinhx.blog.service.operation.TagService;
-import com.jinhx.blog.entity.video.Video;
 import com.jinhx.blog.entity.video.dto.VideoDTO;
 import com.jinhx.blog.entity.video.vo.VideoVO;
 import com.jinhx.blog.service.search.VideoEsServer;
+import com.jinhx.blog.service.sys.SysUserService;
 import com.rabbitmq.client.Channel;
 import com.xxl.job.core.log.XxlJobLogger;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +46,9 @@ public class VideoEsServerImpl implements VideoEsServer {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private SysUserService sysUserService;
+
     @Override
     public boolean initVideoList() throws Exception {
         if(elasticSearchUtils.deleteIndex(ElasticSearchConstants.BLOG_SEARCH_VIDEO_INDEX)){
@@ -57,6 +60,7 @@ public class VideoEsServerImpl implements VideoEsServer {
                     videoDTOList.forEach(x -> {
                         VideoVO videoVO = new VideoVO();
                         BeanUtils.copyProperties(x, videoVO);
+                        videoVO.setAuthor(sysUserService.getNicknameByUserId(videoVO.getCreaterId()));
                         rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_VIDEO_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_VIDEO_ADD_ROUTINGKEY, JsonUtils.objectToJson(videoVO));
                     });
                     return true;
@@ -76,9 +80,9 @@ public class VideoEsServerImpl implements VideoEsServer {
             //手动确认消息已经被消费
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             if(message.getBody() != null){
-                Video video = JsonUtils.jsonToObject(new String(message.getBody()), Video.class);
-                if (video != null){
-                    elasticSearchUtils.addDocument(ElasticSearchConstants.BLOG_SEARCH_VIDEO_INDEX, video.getId().toString(), JsonUtils.objectToJson(video));
+                VideoVO videoVO = JsonUtils.jsonToObject(new String(message.getBody()), VideoVO.class);
+                if (videoVO != null){
+                    elasticSearchUtils.addDocument(ElasticSearchConstants.BLOG_SEARCH_VIDEO_INDEX, videoVO.getId().toString(), JsonUtils.objectToJson(videoVO));
                     log.info("新增视频，rabbitmq监听器，添加到es中成功：id:" + new String(message.getBody()));
                 }
             }else {
@@ -100,9 +104,9 @@ public class VideoEsServerImpl implements VideoEsServer {
             //手动确认消息已经被消费
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
             if(message.getBody() != null){
-                Video video = JsonUtils.jsonToObject(new String(message.getBody()), Video.class);
-                if (video != null){
-                    elasticSearchUtils.updateDocument(ElasticSearchConstants.BLOG_SEARCH_VIDEO_INDEX, video.getId().toString(), JsonUtils.objectToJson(video));
+                VideoVO videoVO = JsonUtils.jsonToObject(new String(message.getBody()), VideoVO.class);
+                if (videoVO != null){
+                    elasticSearchUtils.updateDocument(ElasticSearchConstants.BLOG_SEARCH_VIDEO_INDEX, videoVO.getId().toString(), JsonUtils.objectToJson(videoVO));
                     log.info("更新视频，rabbitmq监听器，更新到es成功：id:" + new String(message.getBody()));
                 }
             }else {

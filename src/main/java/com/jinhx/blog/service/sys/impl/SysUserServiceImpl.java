@@ -222,4 +222,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return sysUserDTO;
     }
 
+    /**
+     * 根据用户id获取用户昵称
+     * @param userId 用户id
+     * @return 用户昵称
+     */
+    @Override
+    public String getNicknameByUserId(Integer userId) {
+        return baseMapper.getNicknameByUserId(userId);
+    }
+
 }

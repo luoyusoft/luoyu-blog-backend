@@ -50,4 +50,11 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      */
     Integer countSysUserByUsername(String username);
 
+    /**
+     * 根据用户id获取用户昵称
+     * @param userId 用户id
+     * @return 用户昵称
+     */
+    String getNicknameByUserId(Integer userId);
+
 }

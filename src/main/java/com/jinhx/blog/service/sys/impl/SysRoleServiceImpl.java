@@ -15,8 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -93,7 +91,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insertSysRole(SysRole sysRole) {
-        sysRole.setCreateTime(LocalDateTime.now());
         baseMapper.insert(sysRole);
 
         //保存角色与菜单关系

@@ -133,6 +133,8 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
             }
         }
         messageWall.setProfile(messageWallDefaultProfile);
+        messageWall.setCreaterId(MessageWall.CREATER_UPDATER_GUEST_ID);
+        messageWall.setUpdaterId(MessageWall.CREATER_UPDATER_GUEST_ID);
 
         baseMapper.insert(messageWall);
     }

@@ -25,6 +25,10 @@ public class LogView extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final Integer CREATER_UPDATER_SYS_ID = -1;
+
+    public static final String CREATER_UPDATER_GUEST_NAME = "sys";
+
     @ApiModelProperty(value = "浏览模块")
     private Integer module;
 

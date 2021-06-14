@@ -9,13 +9,15 @@
         <result column="upload_url" property="uploadUrl" />
         <result column="upload_status" property="uploadStatus" />
         <result column="chunk_number" property="chunkNumber" />
+        <result column="creater_id" property="createrId" />
+        <result column="updater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
-        id,file_md5,upload_url,chunk_number,create_time,update_time
+        id,file_md5,upload_url,chunk_number,creater_id,updater_id,create_time,update_time
     </sql>
 
     <select id="checkIsUploadAllChunkByFileMd5" resultType="java.lang.Integer">
@@ -38,15 +40,11 @@
             <if test="uploadStatus != null">
                 upload_status = #{uploadStatus},
             </if>
+            updater_id = #{updateId},
             update_time = #{updateTime}
         </set>
         where file_md5 = #{fileMd5}
           and chunk_number = #{chunkNumber}
     </update>
-
-    <insert id="insertFileChunk" parameterType="com.jinhx.blog.entity.file.FileChunk">
-        insert into file_chunk(file_md5, upload_url, upload_status, chunk_number)
-        values (#{fileMd5}, #{uploadUrl}, #{uploadStatus}, #{chunkNumber})
-    </insert>
 
 </mapper>

@@ -41,12 +41,4 @@ public interface FileChunkMapper extends BaseMapper<FileChunk> {
      */
     Boolean updateFileChunkByFileMd5AndChunkNumber(FileChunk fileChunk);
 
-    /**
-     * 新增
-     *
-     * @param fileChunk fileResource
-     * @return
-     */
-    Boolean insertFileChunk(FileChunk fileChunk);
-
 }

@@ -29,6 +29,10 @@ public class MessageWall extends BaseEntity implements Serializable {
 
     public static final Integer REPLY_ID_LAYER_MASTER = -1;
 
+    public static final Integer CREATER_UPDATER_GUEST_ID = -1;
+
+    public static final String CREATER_UPDATER_GUEST_NAME = "游客";
+
     @ApiModelProperty(value = "楼层数")
     private Integer floorNum;
 

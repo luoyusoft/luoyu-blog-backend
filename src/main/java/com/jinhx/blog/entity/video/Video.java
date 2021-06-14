@@ -43,9 +43,6 @@ public class Video extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "视频地址")
     private String videoUrl;
 
-    @ApiModelProperty(value = "上传者")
-    private String author;
-
     @ApiModelProperty(value = "视频分类类别（存在多级分类，用逗号隔开）")
     private String categoryId;
 

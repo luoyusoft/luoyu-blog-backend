@@ -79,6 +79,10 @@ public class LogViewServiceImpl extends ServiceImpl<LogViewMapper, LogView> impl
         return new PageUtils(logViewIPage);
     }
 
+    /**
+     * 清洗城市信息
+     * @return
+     */
     @Override
     public void cleanCityInfo() {
         log.info("开始清洗log_view表");
@@ -97,7 +101,7 @@ public class LogViewServiceImpl extends ServiceImpl<LogViewMapper, LogView> impl
                     logViewsItem.setCity(ipInfo.getCity());
                     logViewsItem.setUpdateTime(LocalDateTime.now());
                     baseMapper.updateLogViewById(logViewsItem);
-                    log.info("清洗成功：{}", logViewsItem.toString());
+                    log.info("清洗成功：{}", logViewsItem);
                     XxlJobLogger.log("清洗成功：{}", logViewsItem.toString());
                     Thread.sleep(1000);
                 }catch (Exception e){

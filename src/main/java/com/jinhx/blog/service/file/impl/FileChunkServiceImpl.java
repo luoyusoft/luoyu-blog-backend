@@ -40,7 +40,7 @@ public class FileChunkServiceImpl extends ServiceImpl<FileChunkMapper, FileChunk
 
     @Override
     public Boolean insertFileChunk(FileChunk fileChunk) {
-        return fileChunkMapper.insertFileChunk(fileChunk);
+        return fileChunkMapper.insert(fileChunk) > 0;
     }
 
 }

@@ -7,10 +7,7 @@ import com.jinhx.blog.common.constants.GitalkConstants;
 import com.jinhx.blog.common.constants.ModuleTypeConstants;
 import com.jinhx.blog.common.constants.RabbitMQConstants;
 import com.jinhx.blog.common.constants.RedisKeyConstants;
-import com.jinhx.blog.common.util.JsonUtils;
-import com.jinhx.blog.common.util.PageUtils;
-import com.jinhx.blog.common.util.Query;
-import com.jinhx.blog.common.util.RabbitMQUtils;
+import com.jinhx.blog.common.util.*;
 import com.jinhx.blog.entity.article.Article;
 import com.jinhx.blog.entity.article.dto.ArticleDTO;
 import com.jinhx.blog.entity.article.vo.ArticleVO;
@@ -26,6 +23,7 @@ import com.jinhx.blog.service.operation.RecommendService;
 import com.jinhx.blog.service.operation.TagService;
 import com.jinhx.blog.service.operation.TopService;
 import com.jinhx.blog.entity.article.vo.HomeArticleInfoVO;
+import com.jinhx.blog.service.sys.SysUserService;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +61,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Autowired
     private TopService topService;
 
+    @Autowired
+    private SysUserService sysUserService;
+
     @Resource
     private RabbitMQUtils rabbitmqUtils;
 
@@ -86,11 +87,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     /**
      * 分页查询文章列表
-     *
-     * @param page
-     * @param limit
-     * @param title
-     * @return
+     * @param page 页码
+     * @param limit 页数
+     * @param title 标题
+     * @return 文章列表
      */
     @Override
     public PageUtils queryPage(Integer page, Integer limit, String title) {
@@ -119,6 +119,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     } else {
                         articleVO.setRecommend(false);
                     }
+
+                    articleVO.setAuthor(sysUserService.getNicknameByUserId(articleDTO.getCreaterId()));
+
                     articleVOList.add(articleVO);
                 })));
         Page<ArticleVO> articleVOPage = new Page<>();
@@ -159,7 +162,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         tagService.deleteTagLink(articleVO.getId(), ModuleTypeConstants.ARTICLE);
         // 更新所属标签
         tagService.saveTagAndNew(articleVO.getTagList(),articleVO.getId(), ModuleTypeConstants.ARTICLE);
-        // 更新博文
         baseMapper.updateArticleById(articleVO);
         if (articleVO.getRecommend() != null){
             if (articleVO.getRecommend()){
@@ -170,8 +172,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     recommend.setModule(ModuleTypeConstants.ARTICLE);
                     recommend.setLinkId(articleVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
-                    recommend.setCreateTime(now);
-                    recommend.setUpdateTime(now);
+                    recommend.setCreateAndUpdateInfo();
                     recommendService.insertRecommend(recommend);
                 }
             }else {
@@ -193,8 +194,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     /**
      * 更新文章状态
-     *
-     * @param articleVO
+     * @param articleVO 文章信息
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -219,8 +219,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     recommend.setModule(ModuleTypeConstants.ARTICLE);
                     recommend.setLinkId(articleVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
-                    recommend.setCreateTime(now);
-                    recommend.setUpdateTime(now);
+                    recommend.setCreateAndUpdateInfo();
                     recommendService.insertRecommend(recommend);
                 }
             }else {
@@ -233,10 +232,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     /**
-     * 获取文章对象
-     *
-     * @param articleId
-     * @return
+     * 根据文章id获取文章信息
+     * @param articleId 文章id
+     * @return 文章信息
      */
     @Override
     public ArticleVO getArticle(Integer articleId) {
@@ -251,6 +249,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }else {
             articleVO.setRecommend(false);
         }
+
+        articleVO.setAuthor(sysUserService.getNicknameByUserId(article.getCreaterId()));
+
         return articleVO;
     }
 
@@ -334,6 +335,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (articleList == null){
             articleList = new ArrayList<>();
         }
+
+        articleList.forEach(articleListItem -> {
+            articleListItem.setAuthor(sysUserService.getNicknameByUserId(articleListItem.getCreaterId()));
+        });
+
         articleDTOPage.setRecords(articleList);
         return new PageUtils(articleDTOPage);
     }
@@ -364,6 +370,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 if (topVOsItem.getOrderNum() > (page - 1) * limit && topVOsItem.getOrderNum() < page * limit){
                     ArticleVO articleVO = getArticle(topVOsItem.getLinkId());
                     articleVO.setTop(true);
+                    articleVO.setAuthor(sysUserService.getNicknameByUserId(articleVO.getCreaterId()));
                     articleVOS[(topVOsItem.getOrderNum() - (page - 1) * limit) -1] = articleVO;
                 }
             });
@@ -393,8 +400,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             return null;
         }
         ArticleDTO articleDTO = new ArticleDTO();
-        BeanUtils.copyProperties(article,articleDTO);
+        BeanUtils.copyProperties(article, articleDTO);
         articleDTO.setTagList(tagService.listByLinkId(id, ModuleTypeConstants.ARTICLE));
+        articleDTO.setAuthor(sysUserService.getNicknameByUserId(articleDTO.getCreaterId()));
         // 浏览数量
         baseMapper.updateReadNum(id);
         return articleDTO;

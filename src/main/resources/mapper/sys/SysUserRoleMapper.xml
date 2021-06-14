@@ -7,13 +7,15 @@
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="role_id" property="roleId" />
+        <result column="creater_id" property="createrId" />
+        <result column="updater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
-        id, user_id, role_id,create_time,update_time
+        id, user_id, role_id,creater_id,updater_id,create_time,update_time
     </sql>
 
     <!-- 根据用户id查询角色id列表 -->

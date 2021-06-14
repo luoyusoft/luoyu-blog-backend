@@ -26,10 +26,10 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 分页查询文章列表
-     * @param page
-     * @param limit
-     * @param title
-     * @return
+     * @param page 页码
+     * @param limit 页数
+     * @param title 标题
+     * @return 文章列表
      */
     PageUtils queryPage(Integer page, Integer limit, String title);
 
@@ -53,14 +53,14 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 更新文章状态
-     * @param articleVO
+     * @param articleVO 文章信息
      */
     void updateArticleStatus(ArticleVO articleVO);
 
     /**
-     * 获取文章对象
-     * @param articleId
-     * @return
+     * 根据文章id获取文章信息
+     * @param articleId 文章id
+     * @return 文章信息
      */
     ArticleVO getArticle(Integer articleId);
 

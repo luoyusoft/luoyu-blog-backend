@@ -9,13 +9,15 @@
         <result column="url" property="url" />
         <result column="avatar" property="avatar" />
         <result column="description" property="description" />
+        <result column="creater_id" property="createrId" />
+        <result column="updater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
 
     <!-- 查询所有结果列 -->
     <sql id="Base_Column_List">
-        id, title, url, avatar,description,create_time,update_time
+        id, title, url, avatar,description,creater_id,updater_id,create_time,update_time
     </sql>
 
     <select id="checkByFile" resultType="java.lang.Integer">

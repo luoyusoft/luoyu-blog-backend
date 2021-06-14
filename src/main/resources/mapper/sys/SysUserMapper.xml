@@ -62,4 +62,11 @@
         where username = #{username}
     </select>
 
+    <!-- 根据用户id获取用户昵称 -->
+    <select id="getNicknameByUserId" resultType="java.lang.String">
+        select nickname
+        from sys_user
+        where id = #{userId}
+    </select>
+
 </mapper>
