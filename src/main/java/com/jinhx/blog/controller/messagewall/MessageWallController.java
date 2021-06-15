@@ -124,6 +124,9 @@ public class MessageWallController {
             }
         }
 
+        // //可以替换大部分空白字符，不限于空格
+        messageWall.getName().replaceAll("\\s*", "");
+
         if (messageWall.getName().length() > 50){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "昵称长度不能大于50");
         }

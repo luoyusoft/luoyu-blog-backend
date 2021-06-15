@@ -123,6 +123,7 @@ public class MessageWallServiceImpl extends ServiceImpl<MessageWallMapper, Messa
      */
     @Override
     public void insertMessageWall(MessageWall messageWall) {
+        messageWall.setName(MessageWall.NAME_PREFIX + messageWall.getName());
         // 新楼层
         if (MessageWall.REPLY_ID_LAYER_MASTER.equals(messageWall.getReplyId()) || messageWall.getReplyId() == null){
             messageWall.setReplyId(MessageWall.REPLY_ID_LAYER_MASTER);

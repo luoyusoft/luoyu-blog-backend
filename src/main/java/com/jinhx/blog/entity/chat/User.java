@@ -26,7 +26,7 @@ public class User implements Serializable {
     @ApiModelProperty(value = "ip")
     private String ip;
 
-    @ApiModelProperty(value = "浏览器名字")
+    @ApiModelProperty(value = "浏览器名称")
     private String borderName;
 
     @ApiModelProperty(value = "浏览器版本")

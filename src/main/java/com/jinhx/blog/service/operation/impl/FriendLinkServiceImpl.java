@@ -56,7 +56,6 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
-        params.put("title", title);
         IPage<FriendLink> linkPage = baseMapper.selectPage(new Query<FriendLink>(params).getPage(),
                 new QueryWrapper<FriendLink>().lambda().like(StringUtils.isNotEmpty(title), FriendLink::getTitle,title));
         return new PageUtils(linkPage);

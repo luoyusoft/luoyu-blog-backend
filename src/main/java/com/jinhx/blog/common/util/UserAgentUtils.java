@@ -133,7 +133,7 @@ public class UserAgentUtils {
     }
 
     /**
-     * 获取操作系统的名字
+     * 获取操作系统的名称
      * @param request
      * @return
      */
@@ -147,7 +147,7 @@ public class UserAgentUtils {
     }
 
     /**
-     * 获取操作系统的名字
+     * 获取操作系统的名称
      * @param userAgent
      * @return
      */
@@ -378,14 +378,14 @@ public class UserAgentUtils {
         String winUserAgent = "\"Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
 
         System.out.println("浏览器组：" + getBorderGroup(winUserAgent));
-        System.out.println("浏览器名字：" + getBorderName(winUserAgent));
+        System.out.println("浏览器名称：" + getBorderName(winUserAgent));
         System.out.println("浏览器类型：" + getBorderType(winUserAgent));
         System.out.println("浏览器生产商：" + getBrowserManufacturer(winUserAgent));
         System.out.println("浏览器版本：" + getBrowserVersion(winUserAgent));
         System.out.println("设备生产厂商：" + getDeviceManufacturer(winUserAgent));
         System.out.println("设备类型：" + getDeviceType(winUserAgent));
         System.out.println("设备操作系统：" + getOs(winUserAgent));
-        System.out.println("操作系统的名字：" + getOsName(winUserAgent));
+        System.out.println("操作系统的名称：" + getOsName(winUserAgent));
         System.out.println("操作系统的版本号：" + getOsVersion(winUserAgent));
         System.out.println("操作系统浏览器的渲染引擎：" + getBorderRenderingEngine(winUserAgent));
     }

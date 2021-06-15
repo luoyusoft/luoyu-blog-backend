@@ -26,9 +26,10 @@ public interface SysUserService extends IService<SysUser> {
      * @param page 页码
      * @param limit 页数
      * @param username 用户名
+     * @param id 用户id
      * @return 用户信息列表
      */
-    PageUtils queryPage(Integer page, Integer limit, String username);
+    PageUtils queryPage(Integer page, Integer limit, String username, Integer id);
 
     /**
      * 更新密码

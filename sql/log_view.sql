@@ -10,7 +10,7 @@ create table log_view
     country             varchar(64)                        null comment '国家',
     region              varchar(64)                        null comment '省份',
     city                varchar(64)                        null comment '城市',
-    border_name         varchar(64)                        null comment '浏览器名字',
+    border_name         varchar(64)                        null comment '浏览器名称',
     border_version      varchar(64)                        null comment '浏览器版本',
     device_manufacturer varchar(64)                        null comment '设备生产厂商',
     device_type         varchar(64)                        null comment '设备类型',

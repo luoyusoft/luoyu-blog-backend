@@ -10,12 +10,15 @@ import com.jinhx.blog.mapper.sys.SysRoleMapper;
 import com.jinhx.blog.service.sys.SysRoleMenuService;
 import com.jinhx.blog.service.sys.SysRoleService;
 import com.jinhx.blog.service.sys.SysUserRoleService;
-import com.jinhx.blog.service.sys.SysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * SysRoleServiceImpl
@@ -28,9 +31,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
-
-    @Autowired
-    private SysUserService sysUserService;
 
     @Autowired
     private SysUserRoleService sysUserRoleService;
@@ -47,7 +47,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
-        params.put("roleName", roleName);
 
         IPage<SysRole> rolePage = baseMapper.selectPage(new Query<SysRole>(params).getPage(),
                 new QueryWrapper<SysRole>().lambda()

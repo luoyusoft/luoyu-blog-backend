@@ -53,7 +53,7 @@ public class LogView extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "城市")
     private String city;
 
-    @ApiModelProperty(value = "浏览器名字")
+    @ApiModelProperty(value = "浏览器名称")
     private String borderName;
 
     @ApiModelProperty(value = "浏览器版本")

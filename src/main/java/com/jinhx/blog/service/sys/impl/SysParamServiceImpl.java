@@ -35,8 +35,6 @@ public class SysParamServiceImpl extends ServiceImpl<SysParamMapper, SysParam> i
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
-        params.put("menuUrl", menuUrl);
-        params.put("type", type);
 
         IPage<SysParam> paramPage = baseMapper.selectPage(new Query<SysParam>(params).getPage(),
                 new QueryWrapper<SysParam>().lambda()

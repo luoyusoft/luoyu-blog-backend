@@ -28,8 +28,8 @@ public class Tag extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "标签名字")
-    @NotBlank(message="标签名字不能为空", groups = {AddGroup.class})
+    @ApiModelProperty(value = "标签名称")
+    @NotBlank(message="标签名称不能为空", groups = {AddGroup.class})
     private String name;
 
     @ApiModelProperty(value = "标签所属模块：0文章，1视频")

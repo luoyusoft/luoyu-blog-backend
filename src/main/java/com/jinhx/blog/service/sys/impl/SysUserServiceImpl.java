@@ -54,22 +54,27 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @param page 页码
      * @param limit 页数
      * @param username 用户名
+     * @param id 用户id
      * @return 用户信息列表
      */
     @Override
-    public PageUtils queryPage(Integer page, Integer limit, String username) {
+    public PageUtils queryPage(Integer page, Integer limit, String username, Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
-        params.put("username", username);
 
         IPage<SysUser> sysUserPage = baseMapper.selectPage(
                 new Query<SysUser>(params).getPage(),
                 new QueryWrapper<SysUser>().lambda()
-                        .like(StringUtils.isNotBlank(username),SysUser::getUsername, username));
+                        .eq(id != null, SysUser::getId, id)
+                        .like(StringUtils.isNotBlank(username), SysUser::getUsername, username));
 
         List<SysUserDTO> sysUserDTOList = new ArrayList<>();
         sysUserPage.getRecords().forEach(item -> {
+            // 如果不是超级管理员，则不展示超级管理员
+            if(!SysAdminUtils.isSuperAdmin() && SysAdminUtils.isHaveSuperAdmin(sysUserRoleService.getRoleIdListByUserId(item.getId()))){
+                return;
+            }
             SysUserDTO sysUserDTO = new SysUserDTO();
             BeanUtils.copyProperties(item, sysUserDTO);
             sysUserDTO.setRoleNameStr(String.join(",", sysUserRoleService.queryRoleNameList(item.getId())));

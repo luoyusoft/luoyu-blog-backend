@@ -33,6 +33,8 @@ public class MessageWall extends BaseEntity implements Serializable {
 
     public static final String CREATER_UPDATER_GUEST_NAME = "游客";
 
+    public static final String NAME_PREFIX = "游客-";
+
     @ApiModelProperty(value = "楼层数")
     private Integer floorNum;
 

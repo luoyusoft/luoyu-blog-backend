@@ -1,11 +1,11 @@
 package com.jinhx.blog.controller.sys;
 
-import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.enums.ResponseEnums;
+import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.util.PageUtils;
+import com.jinhx.blog.common.util.SysAdminUtils;
 import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
-import com.jinhx.blog.common.util.SysAdminUtils;
 import com.jinhx.blog.entity.base.Response;
 import com.jinhx.blog.entity.sys.SysUser;
 import com.jinhx.blog.entity.sys.dto.SysUserDTO;
@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * SysUserController
@@ -50,18 +49,14 @@ public class SysUserController {
      * @param page 页码
      * @param limit 页数
      * @param username 用户名
+     * @param id 用户id
      * @return 用户信息列表
      */
     @GetMapping("/manage/sys/user/list")
     @RequiresPermissions("sys:user:list")
-    public Response listSysUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("username") String username){
-        PageUtils userPage = sysUserService.queryPage(page, limit, username);
-
-        // 如果不是超级管理员，则不展示超级管理员
-        if(!SysAdminUtils.isSuperAdmin()){
-            userPage.setList(userPage.getList().stream().filter(item -> !((SysUser)item).getId().equals(SysAdminUtils.sysSuperAdminRoleId)).collect(Collectors.toList()));
-        }
-
+    public Response listSysUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+                                 @RequestParam("username") String username, @RequestParam("id") Integer id){
+        PageUtils userPage = sysUserService.queryPage(page, limit, username, id);
         return Response.success(userPage);
     }
 
