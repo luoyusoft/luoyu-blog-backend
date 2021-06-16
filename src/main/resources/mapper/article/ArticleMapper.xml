@@ -21,7 +21,7 @@
         <result column="update_time" property="updateTime" />
     </resultMap>
 
-    <resultMap id="WithTagList" type="com.jinhx.blog.entity.article.vo.ArticleVO" extends="BaseResultMap">
+    <resultMap id="WithTagList" type="com.jinhx.blog.entity.article.dto.ArticleDTO" extends="BaseResultMap">
         <association property="tagList" column="{linkId=id, module=module}" select="com.jinhx.blog.mapper.operation.TagMapper.listByLinkId"/>
     </resultMap>
 
