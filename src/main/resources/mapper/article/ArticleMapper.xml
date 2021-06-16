@@ -30,6 +30,11 @@
        id,title,description,content,content_format,read_num,like_num,cover,cover_type,category_id,publish,creater_id,updater_id,create_time,update_time
     </sql>
 
+    <!-- 后台列表结果列 -->
+    <sql id="ManageListColumn">
+        id,title,description,read_num,like_num,cover,cover_type,category_id,publish,creater_id,updater_id,create_time,update_time
+    </sql>
+
     <select id="selectPublishCount" resultType="java.lang.Integer">
         select count(*) from article where publish = true
     </select>
@@ -39,7 +44,7 @@
     </select>
 
     <select id="listArticleDTO" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
-        select <include refid="AllColumn"/> from article
+        select <include refid="ManageListColumn"/> from article
         <where>
             <if test="params.title!=null and params.title !=''">
                 and title like concat('%',#{params.title},'%')
