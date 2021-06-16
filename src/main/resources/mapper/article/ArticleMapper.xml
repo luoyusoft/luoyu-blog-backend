@@ -31,7 +31,7 @@
     </sql>
 
     <!-- 后台列表结果列 -->
-    <sql id="ManageListColumn">
+    <sql id="ListColumn">
         id,title,description,read_num,like_num,cover,cover_type,category_id,publish,creater_id,updater_id,create_time,update_time
     </sql>
 
@@ -44,7 +44,7 @@
     </select>
 
     <select id="listArticleDTO" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
-        select <include refid="ManageListColumn"/> from article
+        select <include refid="ListColumn"/> from article
         <where>
             <if test="params.title!=null and params.title !=''">
                 and title like concat('%',#{params.title},'%')
@@ -143,7 +143,7 @@
     </select>
 
     <select id="queryPageCondition" resultMap="WithTagList">
-        select <include refid="AllColumn"/> , 0 as `module` from article
+        select <include refid="ListColumn"/> , 0 as `module` from article
         <where>
             publish = true
             <if test="params.categoryId !=null and params.categoryId != ''">
@@ -162,7 +162,7 @@
     </select>
 
     <select id="queryHomePageCondition" resultMap="WithTagList">
-        select <include refid="AllColumn"/>, 0 as `module`
+        select <include refid="ListColumn"/>, 0 as `module`
         from article
         where publish = true
           and id not in (select link_id from recommend where module = 0)

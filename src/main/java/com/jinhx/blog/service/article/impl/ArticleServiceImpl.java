@@ -358,7 +358,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         params.put("limit", String.valueOf(limit));
 
         Page<ArticleVO> articleVOPage = new Query<ArticleVO>(params).getPage();
-        List<ArticleVO> articleList = baseMapper.queryHomePageCondition(articleVOPage, params);
+        List<ArticleDTO> articleList = baseMapper.queryHomePageCondition(articleVOPage, params);
         if (articleList == null){
             articleList = new ArrayList<>();
         }
@@ -374,10 +374,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     articleVOS[(topVOsItem.getOrderNum() - (page - 1) * limit) -1] = articleVO;
                 }
             });
-            Queue<ArticleVO> articleVOQueue = new LinkedList<>(articleList);
+            Queue<ArticleDTO> articleDTOQueue = new LinkedList<>(articleList);
             for (int i = 0; i < articleVOS.length; i++) {
                 if (articleVOS[i] == null){
-                    articleVOS[i] = articleVOQueue.poll();
+                    ArticleDTO articleDTO = articleDTOQueue.poll();
+                    ArticleVO articleVO = new ArticleVO();
+                    BeanUtils.copyProperties(articleDTO, articleVO);
+                    articleVOS[i] = articleVO;
                 }
             }
         }

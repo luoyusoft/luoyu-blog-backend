@@ -101,7 +101,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param params
      * @return
      */
-    List<ArticleVO> queryHomePageCondition(Page<ArticleVO> page, @Param("params") Map<String, Object> params);
+    List<ArticleDTO> queryHomePageCondition(Page<ArticleVO> page, @Param("params") Map<String, Object> params);
 
     /**
      * 获取简单的对象

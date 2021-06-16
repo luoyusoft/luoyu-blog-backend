@@ -26,8 +26,8 @@ public class MybatisPlusAutoFillHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         LocalDateTime now = LocalDateTime.now();
         // 解决游客新增留言，日志记录问题
-        if (!((metaObject.getOriginalObject() instanceof MessageWall && ((MessageWall) metaObject.getOriginalObject()).getCreaterId() != null))
-                || metaObject.getOriginalObject() instanceof LogView) {
+        if (!((metaObject.getOriginalObject() instanceof MessageWall && ((MessageWall) metaObject.getOriginalObject()).getCreaterId() != null)
+                || metaObject.getOriginalObject() instanceof LogView)) {
             this.setFieldValByName("createrId", SysAdminUtils.getUserId(), metaObject);
             this.setFieldValByName("updaterId", SysAdminUtils.getUserId(), metaObject);
         }
