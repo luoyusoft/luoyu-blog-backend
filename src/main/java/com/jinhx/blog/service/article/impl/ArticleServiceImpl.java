@@ -3,10 +3,13 @@ package com.jinhx.blog.service.article.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jinhx.blog.common.config.params.ParamsHttpServletRequestWrapper;
 import com.jinhx.blog.common.constants.GitalkConstants;
 import com.jinhx.blog.common.constants.ModuleTypeConstants;
 import com.jinhx.blog.common.constants.RabbitMQConstants;
 import com.jinhx.blog.common.constants.RedisKeyConstants;
+import com.jinhx.blog.common.enums.ResponseEnums;
+import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.util.*;
 import com.jinhx.blog.entity.article.Article;
 import com.jinhx.blog.entity.article.dto.ArticleDTO;
@@ -38,13 +41,15 @@ import java.util.*;
 
 /**
  * articleAdminServiceImpl
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/11/21 12:48
  * @description
  */
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
+
+    // 每天重新计算点赞，key
+    private static final String BLOG_ARTICLE_LIKE_LOCK_KEY = "blog:article:like:lock:";
 
     @Autowired
     private TagService tagService;
@@ -63,6 +68,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private SysUserService sysUserService;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @Resource
     private RabbitMQUtils rabbitmqUtils;
@@ -434,7 +442,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @return 点赞结果
      */
     @Override
-    public Boolean updateArticle(Integer id) {
+    public Boolean updateArticle(Integer id) throws Exception {
+        //获取request
+        ParamsHttpServletRequestWrapper request = (ParamsHttpServletRequestWrapper) HttpContextUtils.getHttpServletRequest();
+        String userId = EncodeUtils.encoderByMD5(IPUtils.getIpAddr(request) + UserAgentUtils.getBrowserName(request) +
+                UserAgentUtils.getBrowserVersion(request) + UserAgentUtils.getDeviceManufacturer(request) +
+                UserAgentUtils.getDeviceType(request) + UserAgentUtils.getOsVersion(request));
+        // 每天重新计算点赞
+        if (!redisUtils.setIfAbsent(BLOG_ARTICLE_LIKE_LOCK_KEY + userId + ":" + id, "1", DateUtils.getRemainMilliSecondsOneDay())){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "1天只能点赞1次，请明天再来点赞");
+        }
+
         return baseMapper.updateLikeNum(id);
     }
 

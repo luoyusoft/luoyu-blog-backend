@@ -3,10 +3,7 @@ package com.jinhx.blog.common.aop.aspect;
 import com.jinhx.blog.common.aop.annotation.LogView;
 import com.jinhx.blog.common.api.IPApi;
 import com.jinhx.blog.common.config.params.ParamsHttpServletRequestWrapper;
-import com.jinhx.blog.common.util.HttpContextUtils;
-import com.jinhx.blog.common.util.IPUtils;
-import com.jinhx.blog.common.util.JsonUtils;
-import com.jinhx.blog.common.util.UserAgentUtils;
+import com.jinhx.blog.common.util.*;
 import com.jinhx.blog.entity.sys.IPInfo;
 import com.jinhx.blog.mapper.log.LogViewMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +23,6 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 
 /**
  * ViewLog
@@ -42,11 +38,20 @@ public class LogViewAspect {
 
     private static final String PROFILES_ACTIVE_PRO = "prod";
 
+    // 每隔1小时重新计算pv，时间，单位：毫秒
+    private static final long LOG_VIEW_LOCK_TIME = 60 * 60 * 1000;
+
+    // 每隔1小时重新计算pv，key
+    private static final String BLOG_LOG_VIEW_LOCK_KEY = "blog:log:view:lock:";
+
     @Value("${spring.profiles.active}")
     private String profilesActive;
 
     @Autowired
     private IPApi ipApi;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @Resource
     private LogViewMapper logViewMapper;
@@ -76,9 +81,8 @@ public class LogViewAspect {
             viewLogEntity.setResponse(JsonUtils.objectToJson(result));
             //获取request
             ParamsHttpServletRequestWrapper request = (ParamsHttpServletRequestWrapper) HttpContextUtils.getHttpServletRequest();
-            //获取request
-            viewLogEntity.setBorderName(UserAgentUtils.getBorderName(request));
-            viewLogEntity.setBorderVersion(UserAgentUtils.getBrowserVersion(request));
+            viewLogEntity.setBrowserName(UserAgentUtils.getBrowserName(request));
+            viewLogEntity.setBrowserVersion(UserAgentUtils.getBrowserVersion(request));
             viewLogEntity.setDeviceManufacturer(UserAgentUtils.getDeviceManufacturer(request));
             viewLogEntity.setDeviceType(UserAgentUtils.getDeviceType(request));
             viewLogEntity.setOsVersion(UserAgentUtils.getOsVersion(request));
@@ -91,10 +95,18 @@ public class LogViewAspect {
 
             //设置IP地址
             viewLogEntity.setIp(IPUtils.getIpAddr(request));
-            taskExecutor.execute(() ->{
-                //保存日志
-                saveViewLog(viewLogEntity, proceedingJoinPoint, stopWatch.getTime());
-            });
+
+            String id = EncodeUtils.encoderByMD5(viewLogEntity.getIp() + viewLogEntity.getBrowserName() +
+                    viewLogEntity.getBrowserVersion() + viewLogEntity.getDeviceManufacturer() +
+                    viewLogEntity.getDeviceType() + viewLogEntity.getOsVersion());
+
+            // 每隔1小时重新计算pv
+            if (redisUtils.setIfAbsent(BLOG_LOG_VIEW_LOCK_KEY + id, "1", LOG_VIEW_LOCK_TIME)){
+                taskExecutor.execute(() ->{
+                    //保存日志
+                    saveViewLog(viewLogEntity, proceedingJoinPoint, stopWatch.getTime());
+                });
+            }
 
             return result;
         }

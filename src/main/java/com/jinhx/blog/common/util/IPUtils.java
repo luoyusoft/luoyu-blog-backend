@@ -6,20 +6,19 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * DateUtils
- *
- * @author luoyu
+ * IPUtils
+ * @author jinhx
  * @date 2018/10/20 13:26
- * @description IP工具类
+ * @description IPUtils
  */
 @Slf4j
 public class IPUtils {
 
 	/**
-	 * 获取IP地址
-	 * 
-	 * 使用Nginx等反向代理软件， 则不能通过request.getRemoteAddr()获取IP地址
+	 * 获取IP地址，使用Nginx等反向代理软件，则不能通过request.getRemoteAddr()获取IP地址
 	 * 如果使用了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP地址，X-Forwarded-For中第一个非unknown的有效IP字符串，则为真实IP地址
+     * @param request request
+     * @return ip
 	 */
 	public static String getIpAddr(HttpServletRequest request) {
     	String ip = null;
@@ -44,7 +43,7 @@ public class IPUtils {
         	log.error("IPUtils ERROR ", e);
         }
 
-//        //使用代理，则获取第一个IP地址
+        //使用代理，则获取第一个IP地址
 //        if(StringUtils.isEmpty(ip) && ip.length() > 15) {
 //			if(ip.indexOf(",") > 0) {
 //				ip = ip.substring(0, ip.indexOf(","));

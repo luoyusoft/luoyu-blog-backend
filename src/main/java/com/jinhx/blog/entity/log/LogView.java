@@ -27,7 +27,7 @@ public class LogView extends BaseEntity implements Serializable {
 
     public static final Integer CREATER_UPDATER_SYS_ID = -1;
 
-    public static final String CREATER_UPDATER_GUEST_NAME = "sys";
+    public static final String CREATER_UPDATER_SYS_NAME = "sys";
 
     @ApiModelProperty(value = "浏览模块")
     private Integer module;
@@ -54,10 +54,10 @@ public class LogView extends BaseEntity implements Serializable {
     private String city;
 
     @ApiModelProperty(value = "浏览器名称")
-    private String borderName;
+    private String browserName;
 
     @ApiModelProperty(value = "浏览器版本")
-    private String borderVersion;
+    private String browserVersion;
 
     @ApiModelProperty(value = "设备生产厂商")
     private String deviceManufacturer;

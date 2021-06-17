@@ -110,6 +110,6 @@ public interface VideoService extends IService<Video> {
      * @param id id
      * @return 点赞结果
      */
-    Boolean updateVideo(Integer id);
+    Boolean updateVideo(Integer id) throws Exception;
 
 }

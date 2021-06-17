@@ -3,15 +3,15 @@ package com.jinhx.blog.service.video.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jinhx.blog.common.config.params.ParamsHttpServletRequestWrapper;
 import com.jinhx.blog.common.constants.GitalkConstants;
 import com.jinhx.blog.common.constants.RabbitMQConstants;
 import com.jinhx.blog.common.constants.RedisKeyConstants;
+import com.jinhx.blog.common.enums.ResponseEnums;
+import com.jinhx.blog.common.exception.MyException;
+import com.jinhx.blog.common.util.*;
 import com.jinhx.blog.mapper.video.VideoMapper;
 import com.jinhx.blog.common.constants.ModuleTypeConstants;
-import com.jinhx.blog.common.util.JsonUtils;
-import com.jinhx.blog.common.util.PageUtils;
-import com.jinhx.blog.common.util.Query;
-import com.jinhx.blog.common.util.RabbitMQUtils;
 import com.jinhx.blog.entity.gitalk.InitGitalkRequest;
 import com.jinhx.blog.entity.operation.Category;
 import com.jinhx.blog.entity.operation.Recommend;
@@ -38,13 +38,15 @@ import java.util.*;
 
 /**
  * VideoServiceImpl
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/11/21 12:48
  * @description
  */
 @Service
 public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements VideoService {
+
+    // 每天重新计算点赞，key
+    private static final String BLOG_VIDEO_LIKE_LOCK_KEY = "blog:video:like:lock:";
 
     @Autowired
     private TagService tagService;
@@ -60,6 +62,9 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     @Resource
     private RabbitMQUtils rabbitmqUtils;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @Autowired
     private SysUserService sysUserService;
@@ -389,7 +394,17 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
      * @return 点赞结果
      */
     @Override
-    public Boolean updateVideo(Integer id) {
+    public Boolean updateVideo(Integer id) throws Exception {
+        //获取request
+        ParamsHttpServletRequestWrapper request = (ParamsHttpServletRequestWrapper) HttpContextUtils.getHttpServletRequest();
+        String userId = EncodeUtils.encoderByMD5(IPUtils.getIpAddr(request) + UserAgentUtils.getBrowserName(request) +
+                UserAgentUtils.getBrowserVersion(request) + UserAgentUtils.getDeviceManufacturer(request) +
+                UserAgentUtils.getDeviceType(request) + UserAgentUtils.getOsVersion(request));
+        // 每天重新计算点赞
+        if (!redisUtils.setIfAbsent(BLOG_VIDEO_LIKE_LOCK_KEY + userId + ":" + id, "1", DateUtils.getRemainMilliSecondsOneDay())){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "1天只能点赞1次，请明天再来点赞");
+        }
+
         return baseMapper.updateLikeNum(id);
     }
 

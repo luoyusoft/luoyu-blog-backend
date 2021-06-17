@@ -130,7 +130,10 @@ public class VideoController {
      */
     @PutMapping("/video/{id}")
     @LogView(module = 1)
-    public Response updateVideo(@PathVariable Integer id) {
+    public Response updateVideo(@PathVariable Integer id) throws Exception{
+        if (id == null) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id不能为空");
+        }
         return Response.success(videoService.updateVideo(id));
     }
 

@@ -118,6 +118,6 @@ public interface ArticleService extends IService<Article> {
      * @param id id
      * @return 点赞结果
      */
-    Boolean updateArticle(Integer id);
+    Boolean updateArticle(Integer id) throws Exception ;
 
 }

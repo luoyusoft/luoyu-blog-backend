@@ -129,7 +129,10 @@ public class ArticleController {
      */
     @PutMapping("/article/{id}")
     @LogView(module = 0)
-    public Response updateArticle(@PathVariable Integer id) {
+    public Response updateArticle(@PathVariable Integer id) throws Exception {
+        if (id == null) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "id不能为空");
+        }
         return Response.success(articleService.updateArticle(id));
     }
 

@@ -19,7 +19,7 @@ import org.springframework.util.StringUtils;
 public class SysUserTokenServiceImpl implements SysUserTokenService {
 
     // 12小时后过期
-    private final static int EXPIRE = 3600 * 12;
+    private final static int EXPIRE = 12 * 60 * 60 * 1000;
 
     @Autowired
     private RedisUtils redisUtils;
@@ -44,8 +44,8 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
             redisUtils.delete(RedisKeyConstants.MANAGE_SYS_USER_TOKEN+tokenInRedis);
         }
         // 将token存进redis
-        redisUtils.set(tokenKey,userId,EXPIRE);
-        redisUtils.set(userIdKey,token,EXPIRE);
+        redisUtils.set(tokenKey, userId, EXPIRE);
+        redisUtils.set(userIdKey, token, EXPIRE);
 
         return token;
     }

@@ -3,6 +3,7 @@ package com.jinhx.blog.common.util;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Date;
@@ -106,6 +107,26 @@ public class DateUtils {
      */
     public static LocalDateTime endOfThisMonth() {
         return LocalDateTime.of(lastDayOfThisMonth(), LocalTime.MAX);
+    }
+
+    /**
+     * 获取当前时间距离一天结束的剩余秒数
+     */
+    public static int getRemainSecondsOneDay(){
+        // 从一个Instant和区域ID获得LocalDateTime实例
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
+        // 获取第第二天零点时刻的实例
+        LocalDateTime toromorrowTime = LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault())
+                .plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        // ChronoUnit日期枚举类,between方法计算两个时间对象之间的时间量
+        return (int) ChronoUnit.SECONDS.between(localDateTime, toromorrowTime);
+    }
+
+    /**
+     * 获取当前时间距离一天结束的剩余毫秒数
+     */
+    public static int getRemainMilliSecondsOneDay(){
+        return getRemainSecondsOneDay() * 1000;
     }
 
 }

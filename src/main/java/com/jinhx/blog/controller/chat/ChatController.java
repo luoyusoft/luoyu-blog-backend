@@ -47,13 +47,13 @@ public class ChatController {
     @PostMapping("/user")
     public Response insertUser(HttpServletRequest request) throws Exception {
         String ip = IPUtils.getIpAddr(request);
-        String borderName = UserAgentUtils.getBorderName(request);
+        String browserName = UserAgentUtils.getBrowserName(request);
         String browserVersion = UserAgentUtils.getBrowserVersion(request);
         String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
-        String devicetype = UserAgentUtils.getDeviceType(request);
+        String deviceType = UserAgentUtils.getDeviceType(request);
         String osVersion = UserAgentUtils.getOsVersion(request);
 
-        String id = EncodeUtils.encoderByMD5(ip + borderName + browserVersion + deviceManufacturer + devicetype + osVersion);
+        String id = EncodeUtils.encoderByMD5(ip + browserName + browserVersion + deviceManufacturer + deviceType + osVersion);
 
         return chatService.insertUser(id);
     }
@@ -72,7 +72,7 @@ public class ChatController {
         }
 
         String ip = IPUtils.getIpAddr(request);
-        String borderName = UserAgentUtils.getBorderName(request);
+        String borderName = UserAgentUtils.getBrowserName(request);
         String browserVersion = UserAgentUtils.getBrowserVersion(request);
         String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
         String devicetype = UserAgentUtils.getDeviceType(request);
@@ -110,7 +110,7 @@ public class ChatController {
         }
 
         String ip = IPUtils.getIpAddr(request);
-        String borderName = UserAgentUtils.getBorderName(request);
+        String borderName = UserAgentUtils.getBrowserName(request);
         String browserVersion = UserAgentUtils.getBrowserVersion(request);
         String deviceManufacturer = UserAgentUtils.getDeviceManufacturer(request);
         String devicetype = UserAgentUtils.getDeviceType(request);
