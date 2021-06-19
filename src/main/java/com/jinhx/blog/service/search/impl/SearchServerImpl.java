@@ -77,44 +77,44 @@ public class SearchServerImpl implements SearchServer {
         }
 
         // 处理视频
-        List<VideoVO> videoVOList = videoEsServer.searchVideoList(keyword);
-        List<TopVO> videoTopVOs = topService.listTopVO(ModuleTypeConstants.VIDEO);
-        VideoVO[] videoVOTopArray = new VideoVO[videoVOList.size()];
-        Queue<VideoVO> videoVONoTopQueue = new LinkedList<>();
-        List<VideoVO> videoVOResultList = new ArrayList<>();
-
-        Set<Integer> videoVOTopSet = new HashSet<>();
-        Set<Integer> videoVONoToSet = new HashSet<>();
-
-        if (!CollectionUtils.isEmpty(videoTopVOs)){
-            videoVOList.forEach(videoVOListItem -> {
-                videoTopVOs.forEach(topVOsItem -> {
-                    if(topVOsItem.getLinkId().equals(videoVOListItem.getId())){
-                        if (!videoVOTopSet.contains(videoVOListItem.getId()) && !videoVONoToSet.contains(videoVOListItem.getId())) {
-                            videoVOListItem.setTop(true);
-                            videoVOTopArray[topVOsItem.getOrderNum() - 1] = videoVOListItem;
-                            videoVOTopSet.add(videoVOListItem.getId());
-                        }
-                    }else {
-                        if (!videoVOTopSet.contains(videoVOListItem.getId()) && !videoVONoToSet.contains(videoVOListItem.getId())) {
-                            videoVONoTopQueue.add(videoVOListItem);
-                            videoVONoToSet.add(videoVOListItem.getId());
-                        }
-                    }
-                });
-            });
-            for (int i = 0; i < videoVOTopArray.length; i++) {
-                if (videoVOTopArray[i] == null){
-                    videoVOTopArray[i] = videoVONoTopQueue.poll();
-                }
-            }
-            videoVOResultList.addAll(Arrays.asList(videoVOTopArray));
-        }else {
-            videoVOResultList.addAll(videoVOList);
-        }
+//        List<VideoVO> videoVOList = videoEsServer.searchVideoList(keyword);
+//        List<TopVO> videoTopVOs = topService.listTopVO(ModuleTypeConstants.VIDEO);
+//        VideoVO[] videoVOTopArray = new VideoVO[videoVOList.size()];
+//        Queue<VideoVO> videoVONoTopQueue = new LinkedList<>();
+//        List<VideoVO> videoVOResultList = new ArrayList<>();
+//
+//        Set<Integer> videoVOTopSet = new HashSet<>();
+//        Set<Integer> videoVONoToSet = new HashSet<>();
+//
+//        if (!CollectionUtils.isEmpty(videoTopVOs)){
+//            videoVOList.forEach(videoVOListItem -> {
+//                videoTopVOs.forEach(topVOsItem -> {
+//                    if(topVOsItem.getLinkId().equals(videoVOListItem.getId())){
+//                        if (!videoVOTopSet.contains(videoVOListItem.getId()) && !videoVONoToSet.contains(videoVOListItem.getId())) {
+//                            videoVOListItem.setTop(true);
+//                            videoVOTopArray[topVOsItem.getOrderNum() - 1] = videoVOListItem;
+//                            videoVOTopSet.add(videoVOListItem.getId());
+//                        }
+//                    }else {
+//                        if (!videoVOTopSet.contains(videoVOListItem.getId()) && !videoVONoToSet.contains(videoVOListItem.getId())) {
+//                            videoVONoTopQueue.add(videoVOListItem);
+//                            videoVONoToSet.add(videoVOListItem.getId());
+//                        }
+//                    }
+//                });
+//            });
+//            for (int i = 0; i < videoVOTopArray.length; i++) {
+//                if (videoVOTopArray[i] == null){
+//                    videoVOTopArray[i] = videoVONoTopQueue.poll();
+//                }
+//            }
+//            videoVOResultList.addAll(Arrays.asList(videoVOTopArray));
+//        }else {
+//            videoVOResultList.addAll(videoVOList);
+//        }
 
         SearchListVO searchListVO = new SearchListVO();
-        searchListVO.setVideoList(videoVOResultList);
+//        searchListVO.setVideoList(videoVOResultList);
         searchListVO.setArticleList(articleVOResultList);
         return searchListVO;
     }

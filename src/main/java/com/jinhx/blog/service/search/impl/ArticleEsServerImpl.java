@@ -142,6 +142,11 @@ public class ArticleEsServerImpl implements ArticleEsServer {
         }
     }
 
+    /**
+     * 搜索文章
+     * @param keyword 关键字
+     * @return 搜索结果
+     */
     @Override
     public List<ArticleVO> searchArticleList(String keyword) throws Exception {
         List<String> highlightBuilderList = Arrays.asList("title", "description");

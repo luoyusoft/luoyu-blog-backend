@@ -137,7 +137,7 @@
     </select>
 
     <select id="getHotReadList" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
-        select <include refid="AllColumn"/> from article where publish = true and open = true order by read_num desc limit 5
+        select <include refid="ListColumn"/> from article where publish = true and open = true order by read_num desc limit 5
     </select>
 
     <select id="selectArticleById" parameterType="java.lang.Integer" resultMap="BaseResultMap">

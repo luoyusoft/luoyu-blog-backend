@@ -149,6 +149,11 @@ public class VideoEsServerImpl implements VideoEsServer {
         }
     }
 
+    /**
+     * 搜索视频
+     * @param keyword 关键字
+     * @return 搜索结果
+     */
     @Override
     public List<VideoVO> searchVideoList(String keyword) throws Exception {
         List<String> highlightBuilderList = Arrays.asList("title", "alternateName");
