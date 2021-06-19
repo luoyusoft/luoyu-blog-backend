@@ -95,7 +95,7 @@ public class SysUserController {
         }
 
         // sha256加密
-        boolean flag = sysUserService.resetPassword(passwordVO.getId(), new Sha256Hash(passwordVO.getPassword(), SysAdminUtils.getUserDTO().getSalt()).toHex());
+        boolean flag = sysUserService.resetPassword(passwordVO.getId(), passwordVO.getPassword());
         if(!flag){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "重置失败");
         }

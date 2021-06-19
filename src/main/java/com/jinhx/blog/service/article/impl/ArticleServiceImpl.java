@@ -174,7 +174,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (article == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
         }
-        if (!ObjectUtils.equals(articleVO.getCreaterId(), SysAdminUtils.getUserId()) && !article.getOpen()){
+        if (!ObjectUtils.equals(article.getCreaterId(), SysAdminUtils.getUserId()) && !article.getOpen()){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "未公开的文章只能由创建者修改");
         }
 
@@ -207,11 +207,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
         rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
 
-        if (article.getPublish() && !articleVO.getPublish()){
+        if (article.getPublish() && articleVO.getPublish()){
+            rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
+        }else if (article.getPublish() && !articleVO.getPublish()){
             Integer[] ids = {articleVO.getId()};
             rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
-        }else {
-            rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
+        }else if (!article.getPublish() && articleVO.getPublish()){
+            rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
         }
 
         cleanArticlesCache(new Integer[]{articleVO.getId()});
@@ -228,20 +230,29 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (article == null){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
         }
-        if (!ObjectUtils.equals(articleVO.getCreaterId(), SysAdminUtils.getUserId()) && !article.getOpen()){
+        if (!ObjectUtils.equals(article.getCreaterId(), SysAdminUtils.getUserId()) && !article.getOpen()){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "未公开的文章只能由创建者修改");
         }
 
-        if (articleVO.getPublish() != null || articleVO.getOpen() != null){
-            // 更新发布状态
+        if (articleVO.getPublish() != null){
+            // 更新发布，公开状态
             baseMapper.updateArticleById(articleVO);
             if (article.getPublish() && articleVO.getPublish()){
                 rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectArticleById(articleVO.getId())));
-            }else {
+            }else if (article.getPublish() && !articleVO.getPublish()){
                 Integer[] ids = {articleVO.getId()};
                 rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
+            }else if (!article.getPublish() && articleVO.getPublish()){
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectArticleById(articleVO.getId())));
+            }
+        }else if (articleVO.getOpen() != null){
+            // 更新公开状态
+            baseMapper.updateArticleById(articleVO);
+            if (article.getPublish()){
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectArticleById(articleVO.getId())));
             }
         }
+
         if (articleVO.getRecommend() != null){
             // 更新推荐状态
             if (articleVO.getRecommend()){

@@ -126,9 +126,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             }
         }
 
+        SysUser oldSysUser = baseMapper.selectById(userId);
+        if (oldSysUser == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "用户不存在");
+        }
+
         SysUser sysUser = new SysUser();
-        sysUser.setPassword(password);
-        return update(sysUser, new UpdateWrapper<SysUser>().lambda().eq(SysUser::getId,userId));
+        sysUser.setPassword(new Sha256Hash(password, oldSysUser.getSalt()).toHex());
+        return update(sysUser, new UpdateWrapper<SysUser>().lambda().eq(SysUser::getId, userId));
     }
 
     /**
