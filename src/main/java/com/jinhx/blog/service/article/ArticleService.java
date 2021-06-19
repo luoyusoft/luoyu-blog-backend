@@ -35,19 +35,19 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 保存文章
-     * @param article
+     * @param articleVO 文章信息
      */
-    void saveArticle(ArticleVO article);
+    void saveArticle(ArticleVO articleVO);
 
     /**
      * 批量删除
-     * @param ids
+     * @param ids 文章id列表
      */
     void deleteArticles(Integer[] ids);
 
     /**
      * 更新文章
-     * @param articleVO
+     * @param articleVO 文章信息
      */
     void updateArticle(ArticleVO articleVO);
 
@@ -63,6 +63,13 @@ public interface ArticleService extends IService<Article> {
      * @return 文章信息
      */
     ArticleVO getArticle(Integer articleId);
+
+    /**
+     * 查看未公开文章时检测密码是否正确
+     * @param articleId 文章id
+     * @param password 密码
+     */
+    void checkPassword(Integer articleId, String password);
 
     /**
      * 判断类别下是否有文章
@@ -103,9 +110,10 @@ public interface ArticleService extends IService<Article> {
     /**
      * 获取ArticleDTO对象
      * @param id id
+     * @param password password
      * @return ArticleDTO
      */
-    ArticleDTO getArticleDTO(Integer id);
+    ArticleDTO getArticleDTO(Integer id, String password);
 
     /**
      * 获取热读榜

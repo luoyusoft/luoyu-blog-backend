@@ -4,8 +4,7 @@ import lombok.Data;
 
 /**
  * PasswordVO
- *
- * @author luoyu
+ * @author jinhx
  * @date 2018/10/26 17:40
  * @description
  */
@@ -13,6 +12,7 @@ import lombok.Data;
 public class PasswordVO {
 
     private String password;
+    private Integer id;
     private String newPassword;
 
 }

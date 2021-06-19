@@ -3,8 +3,11 @@ package com.jinhx.blog.service.sys.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jinhx.blog.common.enums.ResponseEnums;
+import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.util.Query;
+import com.jinhx.blog.common.util.SysAdminUtils;
 import com.jinhx.blog.entity.sys.SysRole;
 import com.jinhx.blog.mapper.sys.SysRoleMapper;
 import com.jinhx.blog.service.sys.SysRoleMenuService;
@@ -52,6 +55,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
                 new QueryWrapper<SysRole>().lambda()
                 .like(StringUtils.isNotBlank(roleName), SysRole::getRoleName,roleName)
         );
+
         return new PageUtils(rolePage);
     }
 
@@ -60,7 +64,11 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @param roleIds 角色id列表
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteBatch(Integer[] roleIds) {
+        if (SysAdminUtils.isHaveSuperAdmin(Arrays.asList(roleIds))){
+            throw new MyException(ResponseEnums.NO_AUTH.getCode(), "超级管理员角色不可以删除");
+        }
         //删除角色
         this.removeByIds(Arrays.asList(roleIds));
 
@@ -72,10 +80,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     /**
-     * 查询roleId
-     *
-     * @param createrId
-     * @return
+     * 查询角色列表
+     * @param createrId 创建者id
+     * @return 角色列表
      */
     @Override
     public List<Integer> queryRoleIdList(Integer createrId) {

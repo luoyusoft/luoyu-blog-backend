@@ -31,9 +31,9 @@ public interface SysRoleService extends IService<SysRole> {
     void deleteBatch(Integer[] roleIds);
 
     /**
-     * 查询roleId
-     * @param createrId
-     * @return
+     * 查询角色列表
+     * @param createrId 创建者id
+     * @return 角色列表
      */
     List<Integer> queryRoleIdList(Integer createrId);
 

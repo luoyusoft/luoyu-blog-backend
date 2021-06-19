@@ -3,12 +3,14 @@ package com.jinhx.blog.entity.sys;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jinhx.blog.common.util.SysAdminUtils;
+import com.jinhx.blog.common.validator.group.UpdateGroup;
 import com.jinhx.blog.entity.base.BaseEntity;
 import com.jinhx.blog.common.validator.group.AddGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -42,11 +44,13 @@ public class SysUser extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank(message = "用户名不能为空" , groups = {AddGroup.class})
+    @NotBlank(message = "用户名不能为空" , groups = {AddGroup.class, UpdateGroup.class})
+    @Length(min = 4, max = 20, message = "用户名长度必须位于4到20之间", groups = {AddGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "用户名")
     private String username;
 
-    @NotBlank(message = "密码不能为空" ,groups = AddGroup.class)
+    @NotBlank(message = "密码不能为空" ,groups = {AddGroup.class})
+    @Length(min = 6, max = 20, message = "密码长度必须位于6到20之间", groups = {AddGroup.class})
     @ApiModelProperty(value = "密码")
     private String password;
 
@@ -62,7 +66,8 @@ public class SysUser extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "密码盐")
     private String salt;
 
-    @NotBlank(message = "昵称不能为空" ,groups = AddGroup.class)
+    @NotBlank(message = "昵称不能为空" ,groups = {AddGroup.class, UpdateGroup.class})
+    @Length(min = 2, max = 20, message = "昵称长度必须位于2到20之间", groups = {AddGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "昵称")
     private String nickname;
 

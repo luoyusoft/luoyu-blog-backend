@@ -5,13 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jinhx.blog.common.config.params.ParamsHttpServletRequestWrapper;
 import com.jinhx.blog.common.constants.GitalkConstants;
+import com.jinhx.blog.common.constants.ModuleTypeConstants;
 import com.jinhx.blog.common.constants.RabbitMQConstants;
 import com.jinhx.blog.common.constants.RedisKeyConstants;
 import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.util.*;
-import com.jinhx.blog.mapper.video.VideoMapper;
-import com.jinhx.blog.common.constants.ModuleTypeConstants;
 import com.jinhx.blog.entity.gitalk.InitGitalkRequest;
 import com.jinhx.blog.entity.operation.Category;
 import com.jinhx.blog.entity.operation.Recommend;
@@ -19,6 +18,7 @@ import com.jinhx.blog.entity.video.Video;
 import com.jinhx.blog.entity.video.dto.VideoDTO;
 import com.jinhx.blog.entity.video.vo.HomeVideoInfoVO;
 import com.jinhx.blog.entity.video.vo.VideoVO;
+import com.jinhx.blog.mapper.video.VideoMapper;
 import com.jinhx.blog.service.cache.CacheServer;
 import com.jinhx.blog.service.operation.CategoryService;
 import com.jinhx.blog.service.operation.RecommendService;
@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -171,7 +170,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 if (recommendService.selectRecommendByLinkIdAndType(videoVO.getId(), ModuleTypeConstants.VIDEO) == null){
                     Integer maxOrderNum = recommendService.selectRecommendMaxOrderNum();
                     Recommend recommend = new Recommend();
-                    LocalDateTime now = LocalDateTime.now();
                     recommend.setModule(ModuleTypeConstants.VIDEO);
                     recommend.setLinkId(videoVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
@@ -219,7 +217,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 if (recommendService.selectRecommendByLinkIdAndType(videoVO.getId(), ModuleTypeConstants.VIDEO) == null){
                     Integer maxOrderNum = recommendService.selectRecommendMaxOrderNum();
                     Recommend recommend = new Recommend();
-                    LocalDateTime now = LocalDateTime.now();
                     recommend.setModule(ModuleTypeConstants.VIDEO);
                     recommend.setLinkId(videoVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);

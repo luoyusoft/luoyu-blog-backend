@@ -33,12 +33,20 @@ public interface SysUserService extends IService<SysUser> {
 
     /**
      * 更新密码
-     * @param userId
-     * @param password
-     * @param newPassword
-     * @return
+     * @param userId 用户id
+     * @param password 旧密码
+     * @param newPassword 新密码
+     * @return 更新结果
      */
     boolean updatePassword(Integer userId, String password, String newPassword);
+
+    /**
+     * 重置密码
+     * @param userId 用户id
+     * @param password 新密码
+     * @return 重置结果
+     */
+    boolean resetPassword(Integer userId, String password);
 
     /**
      * 新增用户信息

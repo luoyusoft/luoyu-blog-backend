@@ -2,14 +2,12 @@ package com.jinhx.blog.common.util;
 
 import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.exception.MyException;
-import com.jinhx.blog.entity.base.BaseEntity;
 import com.jinhx.blog.entity.sys.dto.SysUserDTO;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * AbstractController
@@ -39,7 +37,10 @@ public class SysAdminUtils {
      * 获取当前登录用户的用户id
      */
     public static Integer getUserId(){
-        return Optional.ofNullable(getUserDTO()).map(BaseEntity::getId).get();
+        if (getUserDTO() == null){
+            return null;
+        }
+        return getUserDTO().getId();
     }
 
     /**

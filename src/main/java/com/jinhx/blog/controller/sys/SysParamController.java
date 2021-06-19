@@ -35,8 +35,7 @@ public class SysParamController {
     @GetMapping("/manage/sys/param/list")
     @RequiresPermissions("sys:param:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("menuUrl") String menuUrl, @RequestParam("type") String type){
-        PageUtils paramPage = paramService.queryPage(page, limit, menuUrl, type);
-        return Response.success(paramPage);
+        return Response.success(paramService.queryPage(page, limit, menuUrl, type));
     }
 
     /**
@@ -44,8 +43,7 @@ public class SysParamController {
      */
     @GetMapping("/manage/sys/param/all")
     public Response listAll(){
-        List<SysParam> sysParamList = paramService.list(null);
-        return Response.success(sysParamList);
+        return Response.success(paramService.list(null));
     }
 
     /**
@@ -54,8 +52,7 @@ public class SysParamController {
     @GetMapping("/manage/sys/param/info/{id}")
     @RequiresPermissions("sys:param:info")
     public Response info(@PathVariable("id") String id){
-       SysParam param = paramService.getById(id);
-        return Response.success(param);
+       return Response.success(paramService.getById(id));
     }
 
     /**

@@ -15,6 +15,7 @@
         <result column="cover" property="cover" />
         <result column="category_id" property="categoryId" />
         <result column="publish" property="publish" />
+        <result column="open" property="open" />
         <result column="creater_id" property="createrId" />
         <result column="updater_id" property="updaterId" />
         <result column="create_time" property="createTime" />
@@ -27,12 +28,12 @@
 
     <!-- 查询所有结果列 -->
     <sql id="AllColumn">
-       id,title,description,content,content_format,read_num,like_num,cover,cover_type,category_id,publish,creater_id,updater_id,create_time,update_time
+       id,title,description,content,content_format,read_num,like_num,cover,cover_type,category_id,publish,open,creater_id,updater_id,create_time,update_time
     </sql>
 
     <!-- 后台列表结果列 -->
     <sql id="ListColumn">
-        id,title,description,read_num,like_num,cover,cover_type,category_id,publish,creater_id,updater_id,create_time,update_time
+        id,title,description,read_num,like_num,cover,cover_type,category_id,publish,open,creater_id,updater_id,create_time,update_time
     </sql>
 
     <select id="selectPublishCount" resultType="java.lang.Integer">
@@ -122,6 +123,9 @@
             <if test="publish!=null">
                 publish = #{publish},
             </if>
+            <if test="open!=null">
+                open = #{open}
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -133,7 +137,7 @@
     </select>
 
     <select id="getHotReadList" resultType="com.jinhx.blog.entity.article.dto.ArticleDTO">
-        select <include refid="AllColumn"/> from article where publish = true order by read_num desc limit 5
+        select <include refid="AllColumn"/> from article where publish = true and open = true order by read_num desc limit 5
     </select>
 
     <select id="selectArticleById" parameterType="java.lang.Integer" resultMap="BaseResultMap">

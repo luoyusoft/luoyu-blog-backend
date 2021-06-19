@@ -14,10 +14,12 @@ import com.jinhx.blog.common.util.*;
 import com.jinhx.blog.entity.article.Article;
 import com.jinhx.blog.entity.article.dto.ArticleDTO;
 import com.jinhx.blog.entity.article.vo.ArticleVO;
+import com.jinhx.blog.entity.article.vo.HomeArticleInfoVO;
 import com.jinhx.blog.entity.gitalk.InitGitalkRequest;
 import com.jinhx.blog.entity.operation.Category;
 import com.jinhx.blog.entity.operation.Recommend;
 import com.jinhx.blog.entity.operation.vo.TopVO;
+import com.jinhx.blog.entity.sys.dto.SysUserDTO;
 import com.jinhx.blog.mapper.article.ArticleMapper;
 import com.jinhx.blog.service.article.ArticleService;
 import com.jinhx.blog.service.cache.CacheServer;
@@ -25,8 +27,10 @@ import com.jinhx.blog.service.operation.CategoryService;
 import com.jinhx.blog.service.operation.RecommendService;
 import com.jinhx.blog.service.operation.TagService;
 import com.jinhx.blog.service.operation.TopService;
-import com.jinhx.blog.entity.article.vo.HomeArticleInfoVO;
 import com.jinhx.blog.service.sys.SysUserService;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +40,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -140,32 +143,41 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     /**
      * 保存文章
-     *
-     * @param article
+     * @param articleVO 文章信息
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void saveArticle(ArticleVO article) {
-        baseMapper.insert(article);
-        tagService.saveTagAndNew(article.getTagList(),article.getId(), ModuleTypeConstants.ARTICLE);
-        InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
-        initGitalkRequest.setId(article.getId());
-        initGitalkRequest.setTitle(article.getTitle());
-        initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
-        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
-        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(article));
+    public void saveArticle(ArticleVO articleVO) {
+        baseMapper.insert(articleVO);
+        tagService.saveTagAndNew(articleVO.getTagList(),articleVO.getId(), ModuleTypeConstants.ARTICLE);
+        // 当文章是发布状态时，需要新增到es中
+        if (articleVO.getPublish()){
+            InitGitalkRequest initGitalkRequest = new InitGitalkRequest();
+            initGitalkRequest.setId(articleVO.getId());
+            initGitalkRequest.setTitle(articleVO.getTitle());
+            initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
+            rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
+            rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
+        }
 
         cleanArticlesCache(new Integer[]{});
     }
 
     /**
      * 更新文章
-     *
-     * @param articleVO
+     * @param articleVO 文章信息
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateArticle(ArticleVO articleVO) {
+        Article article = baseMapper.selectById(articleVO.getId());
+        if (article == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
+        }
+        if (!ObjectUtils.equals(articleVO.getCreaterId(), SysAdminUtils.getUserId()) && !article.getOpen()){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "未公开的文章只能由创建者修改");
+        }
+
         // 删除多对多所属标签
         tagService.deleteTagLink(articleVO.getId(), ModuleTypeConstants.ARTICLE);
         // 更新所属标签
@@ -176,7 +188,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 if (recommendService.selectRecommendByLinkIdAndType(articleVO.getId(), ModuleTypeConstants.ARTICLE) == null){
                     Integer maxOrderNum = recommendService.selectRecommendMaxOrderNum();
                     Recommend recommend = new Recommend();
-                    LocalDateTime now = LocalDateTime.now();
                     recommend.setModule(ModuleTypeConstants.ARTICLE);
                     recommend.setLinkId(articleVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
@@ -195,7 +206,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         initGitalkRequest.setTitle(articleVO.getTitle());
         initGitalkRequest.setType(GitalkConstants.GITALK_TYPE_ARTICLE);
         rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_GITALK_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_GITALK_INIT_ROUTINGKEY, JsonUtils.objectToJson(initGitalkRequest));
-        rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
+
+        if (article.getPublish() && !articleVO.getPublish()){
+            Integer[] ids = {articleVO.getId()};
+            rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
+        }else {
+            rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(articleVO));
+        }
 
         cleanArticlesCache(new Integer[]{articleVO.getId()});
     }
@@ -207,11 +224,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateArticleStatus(ArticleVO articleVO) {
-        if (articleVO.getPublish() != null){
+        Article article = baseMapper.selectById(articleVO.getId());
+        if (article == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
+        }
+        if (!ObjectUtils.equals(articleVO.getCreaterId(), SysAdminUtils.getUserId()) && !article.getOpen()){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "未公开的文章只能由创建者修改");
+        }
+
+        if (articleVO.getPublish() != null || articleVO.getOpen() != null){
             // 更新发布状态
             baseMapper.updateArticleById(articleVO);
-            if (articleVO.getPublish()){
-                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_ADD_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectArticleById(articleVO.getId())));
+            if (article.getPublish() && articleVO.getPublish()){
+                rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_UPDATE_ROUTINGKEY, JsonUtils.objectToJson(baseMapper.selectArticleById(articleVO.getId())));
             }else {
                 Integer[] ids = {articleVO.getId()};
                 rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
@@ -223,7 +248,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 if (recommendService.selectRecommendByLinkIdAndType(articleVO.getId(), ModuleTypeConstants.ARTICLE) == null){
                     Integer maxOrderNum = recommendService.selectRecommendMaxOrderNum();
                     Recommend recommend = new Recommend();
-                    LocalDateTime now = LocalDateTime.now();
                     recommend.setModule(ModuleTypeConstants.ARTICLE);
                     recommend.setLinkId(articleVO.getId());
                     recommend.setOrderNum(maxOrderNum + 1);
@@ -236,6 +260,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 }
             }
         }
+
         cleanArticlesCache(new Integer[]{articleVO.getId()});
     }
 
@@ -246,8 +271,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      */
     @Override
     public ArticleVO getArticle(Integer articleId) {
-        ArticleVO articleVO = new ArticleVO();
         Article article = baseMapper.selectById(articleId);
+        if (article == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
+        }
+
+        if (!ObjectUtils.equals(SysAdminUtils.getUserId(), article.getCreaterId()) && !article.getOpen()){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "后台查看未公开的文章只能由创建者查看");
+        }
+
+        ArticleVO articleVO = new ArticleVO();
         BeanUtils.copyProperties(article, articleVO);
         // 查询所属标签
         articleVO.setTagList(tagService.listByLinkId(articleId, ModuleTypeConstants.ARTICLE));
@@ -261,6 +294,33 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleVO.setAuthor(sysUserService.getNicknameByUserId(article.getCreaterId()));
 
         return articleVO;
+    }
+
+    /**
+     * 查看未公开文章时检测密码是否正确
+     * @param articleId 文章id
+     * @param password 密码
+     */
+    @Override
+    public void checkPassword(Integer articleId, String password) {
+        Article article = baseMapper.selectById(articleId);
+        if (article == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
+        }
+
+        if (!ObjectUtils.equals(SysAdminUtils.getUserId(), article.getCreaterId()) && !article.getOpen()){
+            if (StringUtils.isEmpty(password)){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "请输入密码");
+            }
+            SysUserDTO sysUserDTO = sysUserService.getSysUserDTOByUserId(article.getCreaterId());
+            if (sysUserDTO == null){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章创建者不存在");
+            }
+
+            if (!sysUserDTO.getPassword().equals(new Sha256Hash(password, sysUserDTO.getSalt()).toHex())){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "密码错误");
+            }
+        }
     }
 
     /**
@@ -285,19 +345,27 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     /**
      * 批量删除
-     *
-     * @param ids
+     * @param ids 文章id列表
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteArticles(Integer[] ids) {
-        //先删除博文标签多对多关联
         Arrays.stream(ids).forEach(articleId -> {
-            tagService.deleteTagLink(articleId, ModuleTypeConstants.ARTICLE);
-        });
-        baseMapper.deleteBatchIds(Arrays.asList(ids));
+            Article article = baseMapper.selectById(articleId);
+            if (article == null){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
+            }
+            if (!ObjectUtils.equals(article.getCreaterId(), SysAdminUtils.getUserId()) && !article.getOpen()){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "未公开的文章只能由创建者删除");
+            }
 
-        recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(ids), ModuleTypeConstants.ARTICLE);
+            //先删除博文标签多对多关联
+            tagService.deleteTagLink(articleId, ModuleTypeConstants.ARTICLE);
+            baseMapper.deleteBatchIds(Arrays.asList(articleId));
+
+            recommendService.deleteRecommendsByLinkIdsAndType(Arrays.asList(articleId), ModuleTypeConstants.ARTICLE);
+        });
+
         // 发送rabbitmq消息同步到es
         rabbitmqUtils.sendByRoutingKey(RabbitMQConstants.BLOG_ARTICLE_TOPIC_EXCHANGE, RabbitMQConstants.TOPIC_ES_ARTICLE_DELETE_ROUTINGKEY, JsonUtils.objectToJson(ids));
 
@@ -376,8 +444,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (!CollectionUtils.isEmpty(topVOs) && !CollectionUtils.isEmpty(articleList)){
             topVOs.forEach(topVOsItem -> {
                 if (topVOsItem.getOrderNum() > (page - 1) * limit && topVOsItem.getOrderNum() < page * limit){
-                    ArticleVO articleVO = getArticle(topVOsItem.getLinkId());
+                    Article article = baseMapper.selectArticleById(topVOsItem.getLinkId());
+                    ArticleVO articleVO = new ArticleVO();
+                    BeanUtils.copyProperties(article, articleVO);
                     articleVO.setTop(true);
+                    articleVO.setTagList(tagService.listByLinkId(topVOsItem.getLinkId(), ModuleTypeConstants.ARTICLE));
                     articleVO.setAuthor(sysUserService.getNicknameByUserId(articleVO.getCreaterId()));
                     articleVOS[(topVOsItem.getOrderNum() - (page - 1) * limit) -1] = articleVO;
                 }
@@ -401,15 +472,31 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     /**
      * 获取ArticleDTO对象
      * @param id id
+     * @param password password
      * @return ArticleDTO
      */
-    @Cacheable(value = RedisKeyConstants.ARTICLE, key = "#id")
+    @Cacheable(value = RedisKeyConstants.ARTICLE, key = "#id + ':' + #password")
     @Override
-    public ArticleDTO getArticleDTO(Integer id) {
-        Article article = baseMapper.selectArticleById(id);
+    public ArticleDTO getArticleDTO(Integer id, String password) {
+        Article article = baseMapper.selectById(id);
         if (article == null){
-            return null;
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
         }
+
+        if (!ObjectUtils.equals(SysAdminUtils.getUserId(), article.getCreaterId()) && !article.getOpen()){
+            if (StringUtils.isEmpty(password)){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "请输入密码");
+            }
+            SysUserDTO sysUserDTO = sysUserService.getSysUserDTOByUserId(article.getCreaterId());
+            if (sysUserDTO == null){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章创建者不存在");
+            }
+
+            if (!sysUserDTO.getPassword().equals(new Sha256Hash(password, sysUserDTO.getSalt()).toHex())){
+                throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "密码错误");
+            }
+        }
+
         ArticleDTO articleDTO = new ArticleDTO();
         BeanUtils.copyProperties(article, articleDTO);
         articleDTO.setTagList(tagService.listByLinkId(id, ModuleTypeConstants.ARTICLE));

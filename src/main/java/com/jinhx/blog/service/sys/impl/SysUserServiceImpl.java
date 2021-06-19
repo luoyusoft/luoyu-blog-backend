@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -71,7 +70,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         List<SysUserDTO> sysUserDTOList = new ArrayList<>();
         sysUserPage.getRecords().forEach(item -> {
-            // 如果不是超级管理员，则不展示超级管理员
+            // 如果当前用户不是超级管理员，则不展示超级管理员
             if(!SysAdminUtils.isSuperAdmin() && SysAdminUtils.isHaveSuperAdmin(sysUserRoleService.getRoleIdListByUserId(item.getId()))){
                 return;
             }
@@ -90,18 +89,46 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     /**
      * 更新密码
-     *
-     * @param userId
-     * @param password
-     * @param newPassword
-     * @return
+     * @param userId 用户id
+     * @param password 旧密码
+     * @param newPassword 新密码
+     * @return 更新结果
      */
     @Override
     public boolean updatePassword(Integer userId, String password, String newPassword) {
-        SysUser sysUser=new SysUser();
+        // 如果不是本人操作，且操作用户为超级管理员，则需要当前用户拥有超级管理员权限
+        if (!userId.equals(SysAdminUtils.getUserId())){
+            List<Integer> roleIdList = sysUserRoleService.getRoleIdListByUserId(userId);
+            if (!CollectionUtils.isEmpty(roleIdList) && SysAdminUtils.isHaveSuperAdmin(roleIdList)){
+                SysAdminUtils.checkSuperAdmin();
+            }
+        }
+
+        SysUser sysUser = new SysUser();
         sysUser.setPassword(newPassword);
-        return this.update(sysUser, new UpdateWrapper<SysUser>().lambda()
+        return update(sysUser, new UpdateWrapper<SysUser>().lambda()
                 .eq(SysUser::getId,userId).eq(SysUser::getPassword,password));
+    }
+
+    /**
+     * 重置密码
+     * @param userId 用户id
+     * @param password 新密码
+     * @return 重置结果
+     */
+    @Override
+    public boolean resetPassword(Integer userId, String password) {
+        // 如果不是本人操作，且操作用户为超级管理员，则需要当前用户拥有超级管理员权限
+        if (!userId.equals(SysAdminUtils.getUserId())){
+            List<Integer> roleIdList = sysUserRoleService.getRoleIdListByUserId(userId);
+            if (!CollectionUtils.isEmpty(roleIdList) && SysAdminUtils.isHaveSuperAdmin(roleIdList)){
+                SysAdminUtils.checkSuperAdmin();
+            }
+        }
+
+        SysUser sysUser = new SysUser();
+        sysUser.setPassword(password);
+        return update(sysUser, new UpdateWrapper<SysUser>().lambda().eq(SysUser::getId,userId));
     }
 
     /**
@@ -112,21 +139,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insertSysUser(SysUserDTO sysUserDTO) {
+        // 如果新增超级管理员，需要当前用户拥有超级管理员权限
+        if (!CollectionUtils.isEmpty(sysUserDTO.getRoleIdList()) && SysAdminUtils.isHaveSuperAdmin(sysUserDTO.getRoleIdList())){
+            SysAdminUtils.checkSuperAdmin();
+        }
+
         if (baseMapper.countSysUserByUsername(sysUserDTO.getUsername()) > 0){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该用户名已存在");
         }
 
-        sysUserDTO.setCreateTime(LocalDateTime.now());
         //sha256加密
         String salt = RandomStringUtils.randomAlphanumeric(20);
         sysUserDTO.setPassword(new Sha256Hash(sysUserDTO.getPassword(), salt).toHex());
         sysUserDTO.setSalt(salt);
         baseMapper.insert(sysUserDTO);
-
-        // 如果新增超级管理员，需要当前用户拥有超级管理员权限
-        if (!CollectionUtils.isEmpty(sysUserDTO.getRoleIdList()) && SysAdminUtils.isHaveSuperAdmin(sysUserDTO.getRoleIdList())){
-            SysAdminUtils.checkSuperAdmin();
-        }
 
         //保存用户与角色关系
         sysUserRoleService.saveOrUpdate(sysUserDTO.getId(), sysUserDTO.getRoleIdList());
@@ -141,6 +167,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateSysUserById(SysUserDTO sysUserDTO) {
+        // 如果不是本人操作，且操作用户为超级管理员，则需要当前用户拥有超级管理员权限
+        if (!sysUserDTO.getId().equals(SysAdminUtils.getUserId())){
+            List<Integer> roleIdList = sysUserRoleService.getRoleIdListByUserId(sysUserDTO.getId());
+            if (!CollectionUtils.isEmpty(roleIdList) && SysAdminUtils.isHaveSuperAdmin(roleIdList)){
+                SysAdminUtils.checkSuperAdmin();
+            }
+        }
+
         SysUser sysUser = baseMapper.selectById(sysUserDTO.getId());
         if (!sysUser.getUsername().equals(sysUserDTO.getUsername()) && baseMapper.countSysUserByUsername(sysUserDTO.getUsername()) > 0){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "该用户名已存在");
@@ -152,12 +186,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             sysUserDTO.setPassword(new Sha256Hash(sysUserDTO.getPassword(), sysUserDTO.getSalt()).toHex());
         }
         baseMapper.updateById(sysUserDTO);
-
-        // 如果修改包含超级管理员，需要当前用户拥有超级管理员权限
-        if (!CollectionUtils.isEmpty(sysUserDTO.getRoleIdList()) &&
-                (SysAdminUtils.isHaveSuperAdmin(sysUserDTO.getRoleIdList()) || SysAdminUtils.isHaveSuperAdmin(sysUserRoleService.getRoleIdListByUserId(sysUserDTO.getId())))){
-            SysAdminUtils.checkSuperAdmin();
-        }
 
         //保存用户与角色关系
         sysUserRoleService.saveOrUpdate(sysUserDTO.getId(), sysUserDTO.getRoleIdList());
@@ -176,7 +204,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             SysAdminUtils.checkSuperAdmin();
         }
 
-        this.removeByIds(Arrays.asList(userIds));
+        removeByIds(Arrays.asList(userIds));
         //删除用户与角色关联
         sysUserRoleService.deleteBatchByUserId(userIds);
 

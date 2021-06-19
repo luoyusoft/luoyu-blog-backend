@@ -90,8 +90,7 @@ public class SysMenuController {
     @GetMapping("/manage/sys/menu/info/{menuId}")
     @RequiresPermissions("sys:menu:info")
     public Response update(@PathVariable("menuId") Integer menuId){
-        SysMenu menu = sysMenuService.getById(menuId);
-        return Response.success(menu);
+        return Response.success(sysMenuService.getById(menuId));
     }
 
     /**

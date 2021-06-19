@@ -2,25 +2,21 @@ package com.jinhx.blog.controller.sys;
 
 import com.jinhx.blog.common.enums.ResponseEnums;
 import com.jinhx.blog.common.exception.MyException;
-import com.jinhx.blog.common.util.PageUtils;
 import com.jinhx.blog.common.util.SysAdminUtils;
 import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
+import com.jinhx.blog.common.validator.group.UpdateGroup;
 import com.jinhx.blog.entity.base.Response;
 import com.jinhx.blog.entity.sys.SysUser;
 import com.jinhx.blog.entity.sys.dto.SysUserDTO;
 import com.jinhx.blog.entity.sys.vo.PasswordVO;
-import com.jinhx.blog.service.sys.SysUserRoleService;
 import com.jinhx.blog.service.sys.SysUserService;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * SysUserController
@@ -33,11 +29,9 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
-    @Autowired
-    private SysUserRoleService sysUserRoleService;
-
     /**
-     * 获取登录的用户信息
+     * 获取登录用户信息
+     * @return 登录用户信息
      */
     @GetMapping("/manage/sys/user/info")
     public Response info(){
@@ -56,28 +50,54 @@ public class SysUserController {
     @RequiresPermissions("sys:user:list")
     public Response listSysUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                                  @RequestParam("username") String username, @RequestParam("id") Integer id){
-        PageUtils userPage = sysUserService.queryPage(page, limit, username, id);
-        return Response.success(userPage);
+        return Response.success(sysUserService.queryPage(page, limit, username, id));
     }
 
     /**
-     * 修改密码
-     * @param passwordVO
-     * @return
+     * 更新密码
+     * @param passwordVO 密码信息
+     * @return 更新结果
      */
     @PutMapping("/manage/sys/user/password")
     public Response password(@RequestBody PasswordVO passwordVO){
         if(StringUtils.isEmpty(passwordVO.getNewPassword())) {
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "新密码不能为空");
         }
-        //sha256加密
+        if(passwordVO.getNewPassword().length() < 6) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "新密码长度不能低于6位");
+        }
+
+        // sha256加密
         String password = new Sha256Hash(passwordVO.getPassword(), SysAdminUtils.getUserDTO().getSalt()).toHex();
-        //sha256加密
+        // sha256加密
         String newPassword = new Sha256Hash(passwordVO.getNewPassword(), SysAdminUtils.getUserDTO().getSalt()).toHex();
 
         boolean flag = sysUserService.updatePassword(SysAdminUtils.getUserId(), password, newPassword);
         if(!flag){
             throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "原密码不正确");
+        }
+
+        return Response.success();
+    }
+
+    /**
+     * 重置密码
+     * @param passwordVO 密码信息
+     * @return 重置结果
+     */
+    @PutMapping("/manage/sys/user/resetPassword")
+    public Response resetPassword(@RequestBody PasswordVO passwordVO){
+        if(StringUtils.isEmpty(passwordVO.getPassword())) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "新密码不能为空");
+        }
+        if(passwordVO.getPassword().length() < 6) {
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "新密码长度不能低于6位");
+        }
+
+        // sha256加密
+        boolean flag = sysUserService.resetPassword(passwordVO.getId(), new Sha256Hash(passwordVO.getPassword(), SysAdminUtils.getUserDTO().getSalt()).toHex());
+        if(!flag){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "重置失败");
         }
 
         return Response.success();
@@ -93,8 +113,6 @@ public class SysUserController {
     public Response insertSysUser(@RequestBody SysUserDTO sysUserDTO){
         ValidatorUtils.validateEntity(sysUserDTO, AddGroup.class);
 
-        sysUserDTO.setCreaterId(SysAdminUtils.getUserId());
-        sysUserDTO.setUpdaterId(SysAdminUtils.getUserId());
         if(StringUtils.isEmpty(sysUserDTO.getProfile())){
             sysUserDTO.setProfile(SysUser.sysUserDefaultProfile);
         }
@@ -111,8 +129,8 @@ public class SysUserController {
     @PutMapping("/manage/sys/user/update")
     @RequiresPermissions("sys:user:update")
     public Response updateSysUserById(@RequestBody SysUserDTO sysUserDTO){
-        sysUserDTO.setCreaterId(SysAdminUtils.getUserId());
-        sysUserDTO.setUpdaterId(SysAdminUtils.getUserId());
+        ValidatorUtils.validateEntity(sysUserDTO, UpdateGroup.class);
+
         sysUserService.updateSysUserById(sysUserDTO);
 
         return Response.success();
@@ -134,7 +152,7 @@ public class SysUserController {
         }
 
         if(ArrayUtils.contains(userIds, SysAdminUtils.getUserId())){
-            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "当前用户不能删除");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "当前登录用户不能删除");
         }
 
         sysUserService.deleteBatch(userIds);
@@ -148,14 +166,7 @@ public class SysUserController {
     @GetMapping("/manage/sys/user/info/{userId}")
     @RequiresPermissions("sys:user:info")
     public Response info(@PathVariable("userId") Integer userId){
-        SysUser user = sysUserService.getById(userId);
-        SysUserDTO sysUserDTO = new SysUserDTO();
-        BeanUtils.copyProperties(user, sysUserDTO);
-        // 获取用户所属的角色列表
-        List<Integer> roleIdList = sysUserRoleService.getRoleIdListByUserId(userId);
-        sysUserDTO.setRoleIdList(roleIdList);
-
-        return Response.success(sysUserDTO);
+        return Response.success(sysUserService.getSysUserDTOByUserId(userId));
     }
 
 }

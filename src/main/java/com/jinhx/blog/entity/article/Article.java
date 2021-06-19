@@ -52,6 +52,9 @@ public class Article extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "发布状态")
     private Boolean publish;
 
+    @ApiModelProperty(value = "公开状态（0：不公开，1：公开）")
+    private Boolean open;
+
     @ApiModelProperty(value = "格式化后的内容")
     private String contentFormat;
 

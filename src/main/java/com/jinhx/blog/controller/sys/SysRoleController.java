@@ -1,14 +1,13 @@
 package com.jinhx.blog.controller.sys;
 
 import com.jinhx.blog.common.aop.annotation.SuperAdmin;
-import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.enums.ResponseEnums;
+import com.jinhx.blog.common.exception.MyException;
 import com.jinhx.blog.common.util.SysAdminUtils;
+import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.common.validator.group.AddGroup;
 import com.jinhx.blog.entity.base.Response;
 import com.jinhx.blog.entity.sys.SysRole;
-import com.jinhx.blog.common.util.PageUtils;
-import com.jinhx.blog.common.validator.ValidatorUtils;
 import com.jinhx.blog.service.sys.SysRoleMenuService;
 import com.jinhx.blog.service.sys.SysRoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -46,14 +45,7 @@ public class SysRoleController {
     @GetMapping("/manage/sys/role/list")
     @RequiresPermissions("sys:role:list")
     public Response list(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("roleName") String roleName){
-        PageUtils rolePage = sysRoleService.queryPage(page, limit, roleName);
-
-        // 如果不是超级管理员，则不展示超级管理员
-        if(!SysAdminUtils.isSuperAdmin()){
-            rolePage.setList(rolePage.getList().stream().filter(item -> !((SysRole)item).getId().equals(SysAdminUtils.sysSuperAdminRoleId)).collect(Collectors.toList()));
-        }
-
-        return Response.success(rolePage);
+        return Response.success(sysRoleService.queryPage(page, limit, roleName));
     }
 
     /**
@@ -109,9 +101,9 @@ public class SysRoleController {
     }
 
     /**
-     * 获取角色信息
+     * 获取角色菜单列表
      * @param roleId 角色id
-     * @return 角色信息
+     * @return 角色菜单列表
      */
     @GetMapping("/manage/sys/role/info/{roleId}")
     @RequiresPermissions("sys:role:info")
