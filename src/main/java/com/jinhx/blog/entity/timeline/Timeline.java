@@ -18,6 +18,8 @@ public class Timeline {
 
     private Integer count;
 
+    private Boolean open;
+
     private List<TimelineMonth> months;
 
 }

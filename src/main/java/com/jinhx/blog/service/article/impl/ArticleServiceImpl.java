@@ -554,4 +554,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return baseMapper.updateLikeNum(id);
     }
 
+    /**
+     * 根据文章id获取公开状态
+     * @param articleId 文章id
+     * @return 公开状态
+     */
+    @Override
+    public Boolean getArticleOpenById(Integer articleId) {
+        Article article = baseMapper.selectById(articleId);
+        if (article == null){
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "文章不存在");
+        }
+        return article.getOpen();
+    }
+
 }

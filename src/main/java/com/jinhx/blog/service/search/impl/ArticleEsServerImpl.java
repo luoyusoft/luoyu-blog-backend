@@ -161,6 +161,7 @@ public class ArticleEsServerImpl implements ArticleEsServer {
             articleVO.setUpdateTime(LocalDateTime.parse(x.get("updateTime").toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             articleVO.setReadNum(Long.valueOf(x.get("readNum").toString()));
             articleVO.setTitle(x.get("title").toString());
+            articleVO.setOpen(Boolean.valueOf(x.get("open").toString()));
             articleVO.setAuthor(x.get("author").toString());
             articleVO.setDescription(x.get("description").toString());
             articleVO.setLikeNum(Long.valueOf(x.get("likeNum").toString()));

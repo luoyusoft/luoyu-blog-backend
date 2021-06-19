@@ -174,4 +174,15 @@ public class ArticleController {
         return Response.success(articleService.listHotReadArticles());
     }
 
+    /**
+     * 根据文章id获取公开状态
+     * @param id 文章id
+     * @return 公开状态
+     */
+    @GetMapping("/article/open")
+    @LogView(module = 0)
+    public Response getArticleOpenById(@RequestParam("id") Integer id){
+        return Response.success(articleService.getArticleOpenById(id));
+    }
+
 }

@@ -12,7 +12,7 @@
     <select id="listTimelinePost" resultType="com.jinhx.blog.entity.timeline.TimelinePost">
         select *
         from (
-                 select a.id, a.title, a.description, a.create_time, 'article' as postType
+                 select a.id, a.title, a.description, a.create_time, a.open, 'article' as postType
                  from article a
                  where DATE_FORMAT(a.create_time, '%Y') = #{year}
                    and DATE_FORMAT(a.create_time, '%m') = #{month}

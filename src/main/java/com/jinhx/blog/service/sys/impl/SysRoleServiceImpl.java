@@ -67,7 +67,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Transactional(rollbackFor = Exception.class)
     public void deleteBatch(Integer[] roleIds) {
         if (SysAdminUtils.isHaveSuperAdmin(Arrays.asList(roleIds))){
-            throw new MyException(ResponseEnums.NO_AUTH.getCode(), "超级管理员角色不可以删除");
+            throw new MyException(ResponseEnums.PARAM_ERROR.getCode(), "超级管理员角色不可以删除");
         }
         //删除角色
         this.removeByIds(Arrays.asList(roleIds));

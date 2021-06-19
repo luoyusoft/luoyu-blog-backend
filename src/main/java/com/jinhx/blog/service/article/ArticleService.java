@@ -126,6 +126,13 @@ public interface ArticleService extends IService<Article> {
      * @param id id
      * @return 点赞结果
      */
-    Boolean updateArticle(Integer id) throws Exception ;
+    Boolean updateArticle(Integer id) throws Exception;
+
+    /**
+     * 根据文章id获取公开状态
+     * @param articleId 文章id
+     * @return 公开状态
+     */
+    Boolean getArticleOpenById(Integer articleId);
 
 }
